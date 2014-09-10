@@ -1,0 +1,12 @@
+#notifications {
+    position: absolute;
+    padding-right: 7px;
+    line-height: 30px;
+    left: 20px;
+    background-image: linear-gradient(to bottom, #f6f8fa, white);
+    top: 13px; }
+
+#backgroundcheck {
+    text-align: right; }
+    #backgroundcheck::-webkit-outer-spin-button, #backgroundcheck::-webkit-inner-spin-button {
+        height: 100%; }

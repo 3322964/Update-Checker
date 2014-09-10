@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link rel="stylesheet" href="base.css">
+        <link rel="stylesheet" href="options.css">
+    </head>
+    <body>
+        <div id="widget" hidden>
+            <li class="widget-list-header">
+                <input id="backgroundcheck" class="checkout-input" type="time">
+                <span id="notifications"></span>
+                <div class="table">
+                    <div class="cell">
+                        <input id="restoreh" type="file" accept=".json" hidden>
+                        <input id="restore" type="button" class="checkout-btn">
+                    </div>
+                    <div class="cell"><input id="backup" type="button" class="checkout-btn"></div>
+                </div>
+                <div id="results" class="checkout" hidden></div>
+            </li>
+        </div>
+        <script src="options.js"></script>
+    </body>
+</html>

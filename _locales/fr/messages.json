@@ -1,0 +1,104 @@
+{
+    "description": {
+        "message": "Update Checker vous permet de suivre les séries, films, Blu-ray, RSS et plus encore..."
+    },
+    // uc.html
+    "series": {
+        "message": "Séries"
+    },
+    "movies": {
+        "message": "Films"
+    },
+    "blurays": {
+        "message": "Blu-ray"
+    },
+    "rss": {
+        "message": "RSS"
+    },
+    "news": {
+        "message": "Actualités"
+    },
+    "name": {
+        "message": "Nom"
+    },
+    "search": {
+        "message": "Rechercher"
+    },
+    "add": {
+        "message": "Ajouter"
+    },
+    "link": {
+        "message": "Lien"
+    },
+    "maxitems": {
+        "message": "Nombre maximum de nouveautés"
+    },
+    "yes": {
+        "message": "Oui"
+    },
+    "no": {
+        "message": "Non"
+    },
+    "ok": {
+        "message": "OK"
+    },
+    "cancel": {
+        "message": "Annuler"
+    },
+    // uc.js
+    "unreachable": {
+        "message": "Lien inaccessible"
+    },
+    "error": {
+        "message": "Erreur"
+    },
+    "noresults": {
+        "message": "Aucun résultat trouvé"
+    },
+    "alreadyexists": {
+        "message": "Ceci existe déjà"
+    },
+    "empty": {
+        "message": "Ce champ ne peut être vide"
+    },
+    "number": {
+        "message": "Ce champ doit contenir un entier positif ou nul (par défaut si vide : 0)"
+    },
+    "confirm": {
+        "message": "Êtes-vous sûr(e) ?"
+    },
+    "delete": {
+        "message": "Supprimer"
+    },
+    "edit": {
+        "message": "Éditer"
+    },
+    "newitems": {
+        "message": "Nouveautés : $count$",
+        "placeholders": {
+            "count": {
+                "content": "$1"
+            }
+        }
+    },
+    // options.html
+    "options": {
+        "message": "Options"
+    },
+    "notifications": {
+        "message": "Cycle de notifications : "
+    },
+    "restore": {
+        "message": "Restaurer..."
+    },
+    "backup": {
+        "message": "Sauvegarder"
+    },
+    // options.js
+    "jsonrestored": {
+        "message": "JSON restauré"
+    },
+    "jsoncompliant": {
+        "message": "JSON non conforme"
+    }
+}

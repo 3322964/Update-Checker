@@ -1,0 +1,104 @@
+{
+    "description": {
+        "message": "Update Checker allows you to track series, movies, Blu-ray, RSS and more..."
+    },
+    // uc.html
+    "series": {
+        "message": "Series"
+    },
+    "movies": {
+        "message": "Movies"
+    },
+    "blurays": {
+        "message": "Blu-ray"
+    },
+    "rss": {
+        "message": "RSS"
+    },
+    "news": {
+        "message": "News"
+    },
+    "name": {
+        "message": "Name"
+    },
+    "search": {
+        "message": "Search"
+    },
+    "add": {
+        "message": "Add"
+    },
+    "link": {
+        "message": "Link"
+    },
+    "maxitems": {
+        "message": "Maximum new item count"
+    },
+    "yes": {
+        "message": "Yes"
+    },
+    "no": {
+        "message": "No"
+    },
+    "ok": {
+        "message": "OK"
+    },
+    "cancel": {
+        "message": "Cancel"
+    },
+    // uc.js
+    "unreachable": {
+        "message": "Unreachable link"
+    },
+    "error": {
+        "message": "Error"
+    },
+    "noresults": {
+        "message": "No results found"
+    },
+    "alreadyexists": {
+        "message": "This already exists"
+    },
+    "empty": {
+        "message": "This field cannot be empty"
+    },
+    "number": {
+        "message": "This field must contain a positive integer or zero (default if empty: 0)"
+    },
+    "confirm": {
+        "message": "Are you sure?"
+    },
+    "delete": {
+        "message": "Delete"
+    },
+    "edit": {
+        "message": "Edit"
+    },
+    "newitems": {
+        "message": "New items: $count$",
+        "placeholders": {
+            "count": {
+                "content": "$1"
+            }
+        }
+    },
+    // options.html
+    "options": {
+        "message": "Options"
+    },
+    "notifications": {
+        "message": "Notification cycle: "
+    },
+    "restore": {
+        "message": "Restore..."
+    },
+    "backup": {
+        "message": "Backup"
+    },
+    // options.js
+    "jsonrestored": {
+        "message": "JSON restored"
+    },
+    "jsoncompliant": {
+        "message": "JSON non compliant"
+    }
+}

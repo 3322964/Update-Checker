@@ -1,0 +1,234 @@
+sup {
+    color: black;
+    line-height: .8em; }
+
+span.inputerror {
+    position: absolute;
+    font-style: italic;
+    color: #fe4652;
+    padding-left: 7px;
+    line-height: 30px;
+    right: 20px;
+    background-image: linear-gradient(to bottom, #f6f8fa, white);
+    top: 13px; }
+    span.inputerror:nth-child(4) {
+        top: 50px; }
+    span.inputerror:nth-child(6) {
+        top: 87px; }
+
+.widget-tabs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 9px 12px 0;
+    text-align: left;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    border-radius: 3px 3px 0 0; }
+
+.widget-tab {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 3px;
+    line-height: 36px;
+    font-weight: normal;
+    color: #999;
+    background: #fcfcfc;
+    border: solid #ddd;
+    border-width: 1px 1px 0;
+    border-radius: 4px 4px 0 0;
+    margin-right: -1px;
+    cursor: pointer;
+    min-width: 60px;
+    padding: 0 15px;
+    text-align: center;
+    text-decoration: none; }
+    .widget-tab.active-tab {
+        bottom: -1px;
+        margin-top: 0;
+        padding-bottom: 2px;
+        line-height: 34px;
+        font-weight: bold;
+        color: #555;
+        background: white;
+        border-top: 0;
+        margin: 0 -1px;
+        border-top: 4px solid #4cc8f1; }
+    .widget-tab.green {
+        color: #0C0; }
+    .widget-tab.red {
+        color: red; }
+
+.widget-list {
+    display: none;
+    padding-top: 50px; }
+    .widget-list.active-list {
+        display: block; }
+    .widget-list > li + li {
+        border-top: 1px solid #e8e8e8; }
+
+.widget-list-link {
+    display: block;
+    overflow: hidden;
+    padding: 10px 12px;
+    cursor: pointer; }
+    .widget-list-link:hover {
+        background: #f7f7f7; }
+    li:last-child > .widget-list-link {
+        border-radius: 0 0 3px 3px; }
+    .widget-list-link > div {
+        position: relative;
+        float: left;
+        width: 510px;
+        margin-right: 12px;
+        line-height: 31px;
+        font-weight: bold;
+        color: #555;
+        text-decoration: none;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis; }
+        .widget-list-link > div.rssnews {
+            width: 519px; }
+        .widget-list-link > div > span {
+            cursor: pointer;
+            display: block;
+            font-size: 11px;
+            font-weight: normal;
+            color: #999;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis; }
+            .widget-list-link > div > span.green {
+                color: #0C0; }
+            .widget-list-link > div > span.red {
+                color: red; }
+    .widget-list-link > img.full {
+        position: relative;
+        float: left;
+        width: 42px;
+        height: 62px;
+        margin-right: 12px; }
+    .widget-list-link > img.button {
+        cursor: pointer;
+        float: right;
+        width: 30px;
+        height: 30px;
+        margin-top: 11px;
+        border: 5px solid transparent;
+        border-radius: 3px; }
+        .widget-list-link:hover > img.button:hover {
+            background: lightblue; }
+        .widget-list-link > img.button + img.button {
+            margin-right: 5px; }
+
+.tasks-list-cb {
+    display: none; }
+
+.tasks-list-mark {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #c4cbd2;
+    border-radius: 12px; }
+    .tasks-list-mark:before, .tasks-list-mark:after {
+        content: '';
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -5px 0 0 -6px;
+        height: 4px;
+        width: 8px;
+        border: solid #39ca74;
+        border-width: 0 0 4px 4px;
+        transform: rotate(-45deg); }
+    .tasks-list-mark:after, .tasks-list-cb:disabled ~ .tasks-list-mark {
+        cursor: default;
+        border-color: #1993fb; }
+    .tasks-list-cb:checked ~ .tasks-list-mark {
+        border-color: #39ca74; }
+    .tasks-list-cb:checked ~ .tasks-list-mark:before, .tasks-list-cb:disabled ~ .tasks-list-mark:after {
+        display: block; }
+
+.fade {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 1003;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.2s, opacity 0.2s linear; }
+    .fade.visible {
+        visibility: visible;
+        opacity: .80;
+        transition: opacity 0.2s linear; }
+
+.light {
+    position: fixed;
+    top: 25%;
+    left: 0;
+    right: 0;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 12px;
+    border: 5px solid gray;
+    border-radius: 10px;
+    background-color: white;
+    z-index: 1004;
+    overflow: auto;
+    visibility: hidden;
+    opacity: 0; }
+    .light.visible {
+        visibility: visible;
+        opacity: 1;
+        transition: visibility 0s 0.2s; }
+
+#progressbar {
+    z-index: 1001;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 34px;
+    border-radius: 4px;
+    transition: 0.4s linear;
+    transition-property: width, background-color;
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1); }
+    #progressbar:before, #progressbar:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0; }
+    #progressbar:before {
+        bottom: 0;
+        background: url('stripes.png') 0 0 repeat;
+        border-radius: 4px 4px 0 0; }
+    #progressbar:after {
+        z-index: 1002;
+        bottom: 45%;
+        border-radius: 4px;
+        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05)); }
+    #progressbar.hidden {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s 2s, opacity 2s linear; }
+
+#options {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 25px;
+    height: 25px;
+    background: url('options.png') no-repeat;
+    background-size: 100% 100%; }

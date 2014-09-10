@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Update Checker</title>
+        <link rel="stylesheet" href="base.css">
+        <link rel="stylesheet" href="uc.css">
+    </head>
+    <body>
+        <div id="progressbar"></div>
+        <div id="widget" hidden>
+            <ul class="widget-tabs">
+                <a id="options" href="options.html" target="_blank"></a>
+                <li id="seriestab" class="widget-tab active-tab"> <sup id="seriessup"></sup>
+                <li id="moviestab" class="widget-tab"> <sup id="moviessup"></sup>
+                <li id="bluraystab" class="widget-tab"> <sup id="blurayssup"></sup>
+                <li id="rsstab" class="widget-tab">
+                <li id="newstab" class="widget-tab">
+            </ul>
+            <ol class="widget-list active-list" id="series">
+                <li class="widget-list-header">
+                    <input id="seriesname" type="text" class="checkout-input"><span id="seriesnamespan" class="inputerror"></span>
+                    <input id="seriessearch" type="button" class="checkout-btn">
+                    <div id="seriesresults" class="checkout" hidden></div>
+                    <div id="seriesbuttons" class="table hidden">
+                        <div class="cell"><input id="seriesvalid" type="button" class="checkout-btn"></div>
+                        <div class="cell"><input id="seriescancel" type="button" class="checkout-btn redlike"></div>
+                    </div>
+                </li>
+            </ol>
+            <ol class="widget-list" id="movies">
+                <li class="widget-list-header">
+                    <input id="moviesname" type="text" class="checkout-input"><span id="moviesnamespan" class="inputerror"></span>
+                    <input id="moviessearch" type="button" class="checkout-btn">
+                    <div id="moviesresults" class="checkout" hidden></div>
+                    <div id="moviesbuttons" class="table hidden">
+                        <div class="cell"><input id="moviesvalid" type="button" class="checkout-btn"></div>
+                        <div class="cell"><input id="moviescancel" type="button" class="checkout-btn redlike"></div>
+                    </div>
+                </li>
+            </ol>
+            <ol class="widget-list" id="blurays">
+                <li class="widget-list-header">
+                    <input id="bluraysname" type="text" class="checkout-input"><span id="bluraysnamespan" class="inputerror"></span>
+                    <input id="blurayssearch" type="button" class="checkout-btn">
+                    <div id="bluraysresults" class="checkout" hidden></div>
+                    <div id="bluraysbuttons" class="table hidden">
+                        <div class="cell"><input id="bluraysvalid" type="button" class="checkout-btn"></div>
+                        <div class="cell"><input id="blurayscancel" type="button" class="checkout-btn redlike"></div>
+                    </div>
+                </li>
+            </ol>
+            <ol class="widget-list" id="rss">
+                <li class="widget-list-header">
+                    <input id="rsslink" type="text" class="checkout-input"><span id="rsslinkspan" class="inputerror"></span>
+                    <input id="rssmaxitems" type="number" class="checkout-input" min="0"><span id="rssmaxitemsspan" class="inputerror"></span>
+                    <input id="rssvalid" type="button" class="checkout-btn">
+                </li>
+            </ol>
+            <ol class="widget-list" id="news">
+                <li class="widget-list-header">
+                    <input id="newsname" type="text" class="checkout-input"><span id="newsnamespan" class="inputerror"></span>
+                    <input id="newslink" type="text" class="checkout-input"><span id="newslinkspan" class="inputerror"></span>
+                    <input id="newsregexp" type="text" class="checkout-input" placeholder="RegExp"><span id="newsregexpspan" class="inputerror"></span>
+                    <input id="newsvalid" type="button" class="checkout-btn">
+                </li>
+            </ol>
+        </div>
+        <div id="confirmlight" class="light">
+            <span id="confirmtext"></span>
+            <div class="table">
+                <div class="cell"><input id="confirmyes" type="button" class="checkout-btn"></div>
+                <div class="cell"><input id="confirmno" type="button" class="checkout-btn redlike"></div>
+            </div>
+        </div>
+        <div id="confirmfade" class="fade"></div>
+        <div id="rsslight" class="light">
+            <input id="rsslinkedit" type="text" class="checkout-input"><span id="rsslinkeditspan" class="inputerror"></span>
+            <input id="rssmaxitemsedit" type="number" class="checkout-input" min="0"><span id="rssmaxitemseditspan" class="inputerror"></span>
+            <div class="table">
+                <div class="cell"><input id="rssvalidedit" type="button" class="checkout-btn"></div>
+                <div class="cell"><input id="rsscanceledit" type="button" class="checkout-btn redlike"></div>
+            </div>
+        </div>
+        <div id="rssfade" class="fade"></div>
+        <div id="newslight" class="light">
+            <input id="newsnameedit" type="text" class="checkout-input"><span id="newsnameeditspan" class="inputerror"></span>
+            <input id="newslinkedit" type="text" class="checkout-input"><span id="newslinkeditspan" class="inputerror"></span>
+            <input id="newsregexpedit" type="text" class="checkout-input" placeholder="RegExp"><span id="newsregexpeditspan" class="inputerror"></span>
+            <div class="table">
+                <div class="cell"><input id="newsvalidedit" type="button" class="checkout-btn"></div>
+                <div class="cell"><input id="newscanceledit" type="button" class="checkout-btn redlike"></div>
+            </div>
+        </div>
+        <div id="newsfade" class="fade"></div>
+        <script src="countries.min.js"></script>
+        <script src="moment-with-locales.min.js"></script>
+        <script src="base.js"></script>
+        <script src="uc.js"></script>
+    </body>
+</html>
