@@ -41,37 +41,61 @@ window.addEventListener('load', function() {
             updateProgress(key);
 }, false);
 
-var regexps = [
-    'itemprop="version" content="([^"]*)',
-    'id="requestsCountValue">([^<]*).*id="mercurymessagesCountValue">([^<]*).*id="notificationsCountValue">([^<]*)',
-    'itemprop="softwareVersion"> v(\S*)',
-    '<span\s+class="count">\s*([^<]*)(?:<[^>]*>[^<]*){17}<span\s+class="count">\s*([^<]*)',
-    'data-topic_id=.* href="([^"]*)',
-    'dir="ltr" title="([^"]*)'
+var dropdownNews = [
+    { 'title': 'Chrome Web Store', 'link': 'https://chrome.google.com/webstore/detail/*', 'regexp': 'itemprop="version" content="([^"]*)' },
+    { 'title': 'Facebook', 'link': 'https://www.facebook.com*', 'regexp': 'id="requestsCountValue">([^<]*).*id="mercurymessagesCountValue">([^<]*).*id="notificationsCountValue">([^<]*)' },
+    { 'title': 'Google Play Store', 'link': 'https://play.google.com/store/apps/details?id=*', 'regexp': 'itemprop="softwareVersion"> v(\S*)' },
+    { 'title': 'Outlook', 'link': 'https://*.mail.live.com*', 'regexp': '<span\s+class="count">\s*([^<]*)(?:<[^>]*>[^<]*){17}<span\s+class="count">\s*([^<]*)' },
+    { 'title': 'RuTracker', 'link': 'http://rutracker.org/forum/tracker.php?nm=*', 'regexp': 'data-topic_id=.* href="([^"]*)' },
+    { 'title': 'Youtube', 'link': 'https://www.youtube.com/user/*/videos', 'regexp': 'dir="ltr" title="([^"]*)' },
 ];
 
-for (var i = 0, j, lists = document.getElementsByClassName('search-ac'), length = lists.length; i != length; i++) {
-    for (j = 0, children = lists[i].children, childrenLength = children.length; j != childrenLength; j++) {
-        children[j].firstElementChild.addEventListener('click', function(e) {
-            var element = e.target, parent = element.parentElement.parentElement;
-            parent.parentElement.children[1].value = regexps[parseInt(element.name)];
-            parent.classList.remove('visible');
+function addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdropdown) {
+    function highlightDropdowns() {
+        var link   = newslink.value.trim();
+        var regexp = newsregexp.value.trim();
+        var i, length;
+        for (i = 0, length = dropdownNews.length; i != length; i++) {
+            if ((regexp != '' || link != '') && (regexp == '' || dropdownNews[i]['regexp'] == regexp) && (link == '' || link.match(new RegExp('^' + dropdownNews[i]['link'].replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&').replace('https://', 'https?://').replace('www\\.', '(www\.)?').replace(/\\\*/g, '.*'))))) {
+                newsregexpdropdown.children[i].firstElementChild.classList.add('redlike');
+                break;
+            }
+            newsregexpdropdown.children[i].firstElementChild.classList.remove('redlike');
+        }
+        if (i != length) {
+            newsregexphelp.classList.add('highlight');
+            for (i++; i != length; i++)
+                newsregexpdropdown.children[i].firstElementChild.classList.remove('redlike');
+        }
+        else newsregexphelp.classList.remove('highlight');
+    }
+
+    newslink.addEventListener('input', highlightDropdowns, false);
+    newsregexp.addEventListener('input', highlightDropdowns, false);
+    newsregexp.addEventListener('click', highlightDropdowns, false);
+
+    newsregexphelp.title = chromeI18n('help');
+    newsregexphelp.addEventListener('click', function() {
+        newsregexpdropdown.classList.add('visible');
+    }, false);
+
+    for (i = 0, children = newsregexpdropdown.children, length = children.length; i != length; i++) {
+        children[i].firstElementChild.innerHTML = dropdownNews[i]['title'] + ' (' + dropdownNews[i]['link'] + ')';
+        children[i].firstElementChild.addEventListener('click', function(e) {
+            newsregexp.value = dropdownNews[parseInt(e.target.name)]['regexp'];
+            newsregexpdropdown.classList.remove('visible');
         }, false);
     }
 }
-
-for (var i = 0, imgs = document.getElementsByClassName('dropdown'), length = imgs.length; i != length; i++) {
-    imgs[i].title = chromeI18n('help');
-    imgs[i].addEventListener('click', function(e) {
-        e.target.parentElement.lastElementChild.classList.add('visible');
-    }, false);
-}
+addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdropdown);
+addEventsToDropdowns(newslinkedit, newsregexphelpedit, newsregexpedit, newsregexpdropdownedit);
 
 document.addEventListener('click', function(e) {
-    var parent = e.target.parentElement.lastElementChild;
-    for (var i = 0, lists = document.getElementsByClassName('search-ac'), length = lists.length; i != length; i++)
-        if (parent != lists[i])
-            lists[i].classList.remove('visible');
+    var potentialNewsRegExp = e.target.parentElement;
+    if (potentialNewsRegExp == null || potentialNewsRegExp.lastElementChild == null || (potentialNewsRegExp.lastElementChild != newsregexpdropdown && potentialNewsRegExp.lastElementChild != newsregexpdropdownedit)) {
+        newsregexpdropdown.classList.remove('visible');
+        newsregexpdropdownedit.classList.remove('visible');
+    }
 }, false);
 
 for (var i = 0, tab, list, lists = widget.getElementsByClassName('widget-list'), length = lists.length; i != length; i++) {
@@ -300,6 +324,7 @@ function parseNews(current, save, newsname, newsnamespan, newslink, newslinkspan
         newsname.value   = '';
         newslink.value   = '';
         newsregexp.value = '';
+        newsregexp.click();
     }
     check['news']('news', aN[aN.push({ 'name': name, 'link': link, 'regexp': regexp, 'current': current }) - 1]);
     backgroundPage.writeArrays();
