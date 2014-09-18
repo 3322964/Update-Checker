@@ -2,8 +2,10 @@ sup {
     color: black;
     line-height: .8em; }
 
-span.inputerror {
+label > div.inputerror {
+    cursor: text;
     position: absolute;
+    font-weight: bold;
     font-style: italic;
     color: #fe4652;
     padding-left: 7px;
@@ -11,9 +13,9 @@ span.inputerror {
     right: 20px;
     background-image: linear-gradient(to bottom, #f6f8fa, white);
     top: 13px; }
-    span.inputerror:nth-child(4) {
+    label:nth-child(2) > div.inputerror {
         top: 50px; }
-    span.inputerror:nth-child(6) {
+    label:nth-child(3) > div.inputerror {
         top: 87px; }
 
 .widget-tabs {
@@ -93,7 +95,7 @@ span.inputerror {
         .widget-list-link > div.rssnews {
             width: 519px; }
         .widget-list-link > div > span {
-            cursor: pointer;
+            cursor: inherit;
             display: block;
             font-size: 11px;
             font-weight: normal;
@@ -112,7 +114,7 @@ span.inputerror {
         height: 62px;
         margin-right: 12px; }
     .widget-list-link > img.button {
-        cursor: pointer;
+        cursor: default;
         float: right;
         width: 30px;
         height: 30px;
@@ -178,7 +180,7 @@ span.inputerror {
     top: 25%;
     left: 0;
     right: 0;
-    max-width: 640px;
+    max-width: 616px;
     margin-left: auto;
     margin-right: auto;
     padding: 12px;
@@ -186,7 +188,7 @@ span.inputerror {
     border-radius: 10px;
     background-color: white;
     z-index: 1004;
-    overflow: auto;
+    overflow-y: visible;
     visibility: hidden;
     opacity: 0; }
     .light.visible {
@@ -212,7 +214,7 @@ span.inputerror {
         right: 0; }
     #progressbar:before {
         bottom: 0;
-        background: url('stripes.png') 0 0 repeat;
+        background: url('images/stripes.png') 0 0 repeat;
         border-radius: 4px 4px 0 0; }
     #progressbar:after {
         z-index: 1002;
@@ -230,5 +232,82 @@ span.inputerror {
     right: 12px;
     width: 25px;
     height: 25px;
-    background: url('options.png') no-repeat;
+    background: url('images/options.png') no-repeat;
     background-size: 100% 100%; }
+
+.search-ac {
+    display: none;
+    position: absolute;
+    top: 123px;
+    left: 12px;
+    right: 12px;
+    z-index: 10;
+    background: #fdfdfd;
+    border: 1px solid;
+    border-color: #cbcfe2 #c8cee7 #c4c7d7;
+    border-radius: 3px;
+    background-image: linear-gradient(to bottom, #fdfdfd, #eceef4);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+    .search-ac.visible {
+        display: block; }
+    .search-ac li {
+        display: block; }
+        .search-ac li:first-child {
+            margin-top: -1px; }
+        .search-ac li:first-child:before, .search-ac li:first-child:after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            position: absolute;
+            left: 50%;
+            margin-left: -5px;
+            border: 5px outset transparent; }
+        .search-ac li:first-child:before {
+            border-bottom: 5px solid #c4c7d7;
+            top: -11px; }
+        .search-ac li:first-child:after {
+            border-bottom: 5px solid #fdfdfd;
+            top: -10px; }
+        .search-ac li:first-child:hover:before, .search-ac li:first-child:hover:after {
+            display: none; }
+        .search-ac li:last-child {
+            margin-bottom: -1px; }
+    .search-ac a {
+        line-height: 20px;
+        cursor: pointer;
+        display: block;
+        position: relative;
+        margin: 0 -1px;
+        padding: 6px 40px 6px 10px;
+        color: #808394;
+        font-weight: 500;
+        text-decoration: none;
+        text-shadow: 0 1px white;
+        border: 1px solid transparent;
+        border-radius: 3px; }
+        .search-ac a:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            margin-top: -9px;
+            width: 18px;
+            height: 18px;
+            background: url('images/arrow.png') 0 0 no-repeat; }
+        .search-ac a:hover {
+            color: white;
+            text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
+            background: #338cdf;
+            border-color: #2380dd #2179d5 #1a60aa;
+            background-image: linear-gradient(to bottom, #59aaf4, #338cdf);
+            box-shadow: inset 0 1px rgba(255, 255, 255, 0.2), 0 1px rgba(0, 0, 0, 0.08); }
+
+.dropdown {
+    position: absolute;
+    right: 20px;
+    top: 87px;
+    height: 30px; }
+    .dropdown + .checkout-input {
+        padding-right: 44px;
+    }

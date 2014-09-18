@@ -8,6 +8,7 @@
     </head>
     <body>
         <div id="progressbar"></div>
+
         <div id="widget" hidden>
             <ul class="widget-tabs">
                 <a id="options" href="options.html" target="_blank"></a>
@@ -19,7 +20,7 @@
             </ul>
             <ol class="widget-list active-list" id="series">
                 <li class="widget-list-header">
-                    <input id="seriesname" type="text" class="checkout-input"><span id="seriesnamespan" class="inputerror"></span>
+                    <label><input id="seriesname" type="text" class="checkout-input"><div id="seriesnamespan" class="inputerror"></div></label>
                     <input id="seriessearch" type="button" class="checkout-btn">
                     <div id="seriesresults" class="checkout" hidden></div>
                     <div id="seriesbuttons" class="table hidden">
@@ -30,7 +31,7 @@
             </ol>
             <ol class="widget-list" id="movies">
                 <li class="widget-list-header">
-                    <input id="moviesname" type="text" class="checkout-input"><span id="moviesnamespan" class="inputerror"></span>
+                    <label><input id="moviesname" type="text" class="checkout-input"><div id="moviesnamespan" class="inputerror"></div></label>
                     <input id="moviessearch" type="button" class="checkout-btn">
                     <div id="moviesresults" class="checkout" hidden></div>
                     <div id="moviesbuttons" class="table hidden">
@@ -41,7 +42,7 @@
             </ol>
             <ol class="widget-list" id="blurays">
                 <li class="widget-list-header">
-                    <input id="bluraysname" type="text" class="checkout-input"><span id="bluraysnamespan" class="inputerror"></span>
+                    <label><input id="bluraysname" type="text" class="checkout-input"><div id="bluraysnamespan" class="inputerror"></div></label>
                     <input id="blurayssearch" type="button" class="checkout-btn">
                     <div id="bluraysresults" class="checkout" hidden></div>
                     <div id="bluraysbuttons" class="table hidden">
@@ -52,20 +53,32 @@
             </ol>
             <ol class="widget-list" id="rss">
                 <li class="widget-list-header">
-                    <input id="rsslink" type="text" class="checkout-input"><span id="rsslinkspan" class="inputerror"></span>
-                    <input id="rssmaxitems" type="number" class="checkout-input" min="0"><span id="rssmaxitemsspan" class="inputerror"></span>
+                    <label><input id="rsslink" type="text" class="checkout-input"><div id="rsslinkspan" class="inputerror"></div></label>
+                    <label><input id="rssmaxitems" type="number" class="checkout-input" min="0"><div id="rssmaxitemsspan" class="inputerror"></div></label>
                     <input id="rssvalid" type="button" class="checkout-btn">
                 </li>
             </ol>
             <ol class="widget-list" id="news">
                 <li class="widget-list-header">
-                    <input id="newsname" type="text" class="checkout-input"><span id="newsnamespan" class="inputerror"></span>
-                    <input id="newslink" type="text" class="checkout-input"><span id="newslinkspan" class="inputerror"></span>
-                    <input id="newsregexp" type="text" class="checkout-input" placeholder="RegExp"><span id="newsregexpspan" class="inputerror"></span>
+                    <label><input id="newsname" type="text" class="checkout-input"><div id="newsnamespan" class="inputerror"></div></label>
+                    <label><input id="newslink" type="text" class="checkout-input"><div id="newslinkspan" class="inputerror"></div></label>
+                    <label>
+                        <img class="dropdown" src="images/help.png">
+                        <input id="newsregexp" type="text" class="checkout-input" placeholder="RegExp"><div id="newsregexpspan" class="inputerror"></div>
+                        <ul class="search-ac">
+                            <li><a name="0">Chrome Web Store (https://chrome.google.com/webstore/detail/[...])</a></li>
+                            <li><a name="1">Facebook (https://www.facebook.com/[...])</a></li>
+                            <li><a name="2">Google Play Store (https://play.google.com/store/apps/details?id=[...])</a></li>
+                            <li><a name="3">Outlook (https://[...].mail.live.com/default.aspx)</a></li>
+                            <li><a name="4">RuTracker (http://rutracker.org/forum/tracker.php?nm=[...])</a></li>
+                            <li><a name="5">Youtube (https://www.youtube.com/user/[...]/videos)</a></li>
+                        </ul>
+                    </label>
                     <input id="newsvalid" type="button" class="checkout-btn">
                 </li>
             </ol>
         </div>
+
         <div id="confirmlight" class="light">
             <span id="confirmtext"></span>
             <div class="table">
@@ -74,25 +87,39 @@
             </div>
         </div>
         <div id="confirmfade" class="fade"></div>
+
         <div id="rsslight" class="light">
-            <input id="rsslinkedit" type="text" class="checkout-input"><span id="rsslinkeditspan" class="inputerror"></span>
-            <input id="rssmaxitemsedit" type="number" class="checkout-input" min="0"><span id="rssmaxitemseditspan" class="inputerror"></span>
+            <label><input id="rsslinkedit" type="text" class="checkout-input"><div id="rsslinkeditspan" class="inputerror"></div></label>
+            <label><input id="rssmaxitemsedit" type="number" class="checkout-input" min="0"><div id="rssmaxitemseditspan" class="inputerror"></div></label>
             <div class="table">
                 <div class="cell"><input id="rssvalidedit" type="button" class="checkout-btn"></div>
                 <div class="cell"><input id="rsscanceledit" type="button" class="checkout-btn redlike"></div>
             </div>
         </div>
         <div id="rssfade" class="fade"></div>
+
         <div id="newslight" class="light">
-            <input id="newsnameedit" type="text" class="checkout-input"><span id="newsnameeditspan" class="inputerror"></span>
-            <input id="newslinkedit" type="text" class="checkout-input"><span id="newslinkeditspan" class="inputerror"></span>
-            <input id="newsregexpedit" type="text" class="checkout-input" placeholder="RegExp"><span id="newsregexpeditspan" class="inputerror"></span>
+            <label><input id="newsnameedit" type="text" class="checkout-input"><div id="newsnameeditspan" class="inputerror"></div></label>
+            <label><input id="newslinkedit" type="text" class="checkout-input"><div id="newslinkeditspan" class="inputerror"></div></label>
+            <label>
+                <img class="dropdown" src="images/help.png">
+                <input id="newsregexpedit" type="text" class="checkout-input" placeholder="RegExp"><div id="newsregexpeditspan" class="inputerror"></div>
+                <ul class="search-ac">
+                    <li><a name="0">Chrome Web Store (https://chrome.google.com/webstore/detail/[...])</a></li>
+                    <li><a name="1">Facebook (https://www.facebook.com/[...])</a></li>
+                    <li><a name="2">Google Play Store (https://play.google.com/store/apps/details?id=[...])</a></li>
+                    <li><a name="3">Outlook (https://[...].mail.live.com/default.aspx)</a></li>
+                    <li><a name="4">RuTracker (http://rutracker.org/forum/tracker.php?nm=[...])</a></li>
+                    <li><a name="5">Youtube (https://www.youtube.com/user/[...]/videos)</a></li>
+                </ul>
+            </label>
             <div class="table">
                 <div class="cell"><input id="newsvalidedit" type="button" class="checkout-btn"></div>
                 <div class="cell"><input id="newscanceledit" type="button" class="checkout-btn redlike"></div>
             </div>
         </div>
         <div id="newsfade" class="fade"></div>
+
         <script src="countries.min.js"></script>
         <script src="moment-with-locales.min.js"></script>
         <script src="base.js"></script>

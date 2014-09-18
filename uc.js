@@ -1,7 +1,7 @@
 var backgroundPage   = chrome.extension.getBackgroundPage();
 var getFavicon       = 'http://www.google.com/s2/favicons?domain_url=';
 var regExBluraysLink = /<link rel="canonical" href="http:\/\/www.blu-ray.com\/movies\/([^"]*)/;
-var files            = ['series', 'movies', 'blurays'];
+var files            = {};
 
 for (var i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
     tmp = elements[i].id;
@@ -41,6 +41,39 @@ window.addEventListener('load', function() {
             updateProgress(key);
 }, false);
 
+var regexps = [
+    'itemprop="version" content="([^"]*)',
+    'id="requestsCountValue">([^<]*).*id="mercurymessagesCountValue">([^<]*).*id="notificationsCountValue">([^<]*)',
+    'itemprop="softwareVersion"> v(\S*)',
+    '<span\s+class="count">\s*([^<]*)(?:<[^>]*>[^<]*){17}<span\s+class="count">\s*([^<]*)',
+    'data-topic_id=.* href="([^"]*)',
+    'dir="ltr" title="([^"]*)'
+];
+
+for (var i = 0, j, lists = document.getElementsByClassName('search-ac'), length = lists.length; i != length; i++) {
+    for (j = 0, children = lists[i].children, childrenLength = children.length; j != childrenLength; j++) {
+        children[j].firstElementChild.addEventListener('click', function(e) {
+            var element = e.target, parent = element.parentElement.parentElement;
+            parent.parentElement.children[1].value = regexps[parseInt(element.name)];
+            parent.classList.remove('visible');
+        }, false);
+    }
+}
+
+for (var i = 0, imgs = document.getElementsByClassName('dropdown'), length = imgs.length; i != length; i++) {
+    imgs[i].title = chromeI18n('help');
+    imgs[i].addEventListener('click', function(e) {
+        e.target.parentElement.lastElementChild.classList.add('visible');
+    }, false);
+}
+
+document.addEventListener('click', function(e) {
+    var parent = e.target.parentElement.lastElementChild;
+    for (var i = 0, lists = document.getElementsByClassName('search-ac'), length = lists.length; i != length; i++)
+        if (parent != lists[i])
+            lists[i].classList.remove('visible');
+}, false);
+
 for (var i = 0, tab, list, lists = widget.getElementsByClassName('widget-list'), length = lists.length; i != length; i++) {
     list                        = lists[i];
     tab                         = document.getElementById(list.id + 'tab');
@@ -64,8 +97,8 @@ function removeError(e) {
         document.getElementById(e.target.id + 'span').innerHTML = '';
     }
 }
-function addEventsToInputs(type, typeValid) {
-    for (var i = 0, inputs = type.getElementsByClassName('checkout-input'), length = inputs.length; i != length; i++) {
+function addEventsToInputs(typeDom, typeValid) {
+    for (var i = 0, inputs = typeDom.getElementsByClassName('checkout-input'), length = inputs.length; i != length; i++) {
         inputs[i].addEventListener('keypress', function(e) {
             if (e.keyCode == 13)
                 typeValid.click();
@@ -283,7 +316,7 @@ newsvalid.addEventListener('click', function() {
 function addDelete(li, typeDom, type, value) {
     var img       = document.createElement('img');
     img.className = 'button';
-    img.src       = 'delete.png';
+    img.src       = 'images/delete.png';
     img.title     = chromeI18n('delete');
     img.addEventListener('click', function(e) {
         e.preventDefault();
@@ -294,20 +327,20 @@ function addDelete(li, typeDom, type, value) {
         confirmlight.classList.add('visible');
         confirmfade.classList.add('visible');
     }, false);
-    li.firstChild.appendChild(img);
+    li.firstElementChild.appendChild(img);
 }
 
 function addEdit(li, typeDom, type, valueObject, value) {
     var img       = document.createElement('img');
     img.className = 'button';
-    img.src       = 'edit.png';
+    img.src       = 'images/edit.png';
     img.title     = chromeI18n('edit');
     img.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
         edit[type](li, typeDom, type, valueObject, value);
     }, false);
-    li.firstChild.appendChild(img);
+    li.firstElementChild.appendChild(img);
 }
 
 var edit = {
@@ -403,9 +436,9 @@ function updateTabRN(type, typeDom, typeTab) {
 
 function updateTabSMB(type, typeDom, typeTab, typeSup) {
     var nb, j = 1, children = typeDom.children, length = children.length;
-    for ( ; j != length && children[j].firstChild.children[1].lastChild.className == 'red'; j++) {}
+    for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red'; j++) {}
     for ( ; j != length; j++) {
-        nb = moment(children[j].firstChild.children[1].lastChild.innerHTML, 'LL').diff(date, 'days');
+        nb = moment(children[j].firstElementChild.children[1].lastElementChild.innerHTML, 'LL').diff(date, 'days');
         if (nb >= 0)
             break;
     }
@@ -439,23 +472,23 @@ function sortRN(type, value, link, name, text, dynamic, typeDom) {
     var j = 1, children = typeDom.children, length = children.length;
     if (text == null) {
         li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) +' <span class="red">' + chromeI18n(text === null ? 'unreachable' : 'error') + '</span></div></a>';
-        li.firstChild.addEventListener('click', (function(_li) {
+        li.firstElementChild.addEventListener('click', (function(_li) {
             return function() {
                 typeDom.removeChild(_li);
                 check[type](type, value);
             };
         })(li), false);
-        for ( ; j != length && children[j].firstChild.firstChild.lastChild.className == 'red' && compareStrings(children[j].firstChild.firstChild.childNodes[1].nodeValue, current) < 0; j++) {}
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) {}
     }
     else if (dynamic == null) {
         li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span>' + escapeHTML(text) + '</span></div></a>';
-        for ( ; j != length && children[j].firstChild.firstChild.lastChild.className == 'red'; j++) {}
-        for ( ; j != length && children[j].firstChild.firstChild.lastChild.className == 'green'; j++) {}
-        for ( ; j != length && compareStrings(children[j].firstChild.firstChild.childNodes[1].nodeValue, current) < 0; j++) {}
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) {}
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green'; j++) {}
+        for ( ; j != length && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) {}
     }
     else {
         li.innerHTML = '<a class="widget-list-link"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span class="green">' + escapeHTML(text) + '</span></div></a>';
-        li.firstChild.addEventListener('click', (function(_li) {
+        li.firstElementChild.addEventListener('click', (function(_li) {
             return function() {
                 dynamic();
                 typeDom.removeChild(_li);
@@ -463,8 +496,8 @@ function sortRN(type, value, link, name, text, dynamic, typeDom) {
                 check[type](type, value);
             };
         })(li), false);
-        for ( ; j != length && children[j].firstChild.firstChild.lastChild.className == 'red'; j++) {}
-        for ( ; j != length && children[j].firstChild.firstChild.lastChild.className == 'green' && compareStrings(children[j].firstChild.firstChild.childNodes[1].nodeValue, current) < 0; j++) {}
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) {}
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) {}
     }
     typeDom.insertBefore(li, j != length ? children[j] : null);
     addDelete(li, typeDom, type, value['link']);
@@ -477,35 +510,35 @@ function sortSMB(type, value, name, icon, tmpDate, dynamic, website, typeDom) {
     var j = 1, children = typeDom.children, length = children.length;
     if (name == null) {
         li.innerHTML = '<a class="widget-list-link" href="' + website + value + '" target="_blank"><img class="full" src=""><div>' + website + value + ' <span class="red">' + chromeI18n(name === null ? 'unreachable' : 'error') + '</span></div></a>';
-        li.firstChild.addEventListener('click', (function(_li) {
+        li.firstElementChild.addEventListener('click', (function(_li) {
             return function() {
                 typeDom.removeChild(_li);
                 check[type](type, value);
             };
         })(li), false);
-        for ( ; j != length && children[j].firstChild.children[1].lastChild.className == 'red' && compareStrings(children[j].firstChild.children[1].childNodes[0].nodeValue, current) < 0; j++) {}
+        for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) < 0; j++) {}
     }
     else if (tmpDate == null) {
         li.innerHTML = '<a class="widget-list-link" href="' + website + value + '" target="_blank"><img class="full" src="' + (icon == null ? '' : icon[1]) + '"><div>' + name + ' <span>-</span></div></a>';
-        for ( ; j != length && children[j].firstChild.children[1].lastChild.innerHTML != '-'; j++) {}
-        for ( ; j != length && compareStrings(children[j].firstChild.children[1].childNodes[0].nodeValue, current) < 0; j++) {}
+        for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.innerHTML != '-'; j++) {}
+        for ( ; j != length && compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) < 0; j++) {}
     }
     else {
         if (dynamic == null)
             li.innerHTML = '<a class="widget-list-link" href="' + website + value + '" target="_blank"><img class="full" src="' + (icon == null ? '' : icon[1]) + '"><div>' + name + ' <span>' + tmpDate.format('LL') + '</span></div></a>';
         else {
             li.innerHTML = '<a class="widget-list-link"><img class="full" src="' + (icon == null ? '' : icon[1]) + '"><div>' + name + ' <span class="green">' + tmpDate.format('LL') + '</span></div></a>';
-            li.firstChild.addEventListener('click', dynamic, false);
+            li.firstElementChild.addEventListener('click', dynamic, false);
         }
         var val;
         for ( ; j != length; j++) {
-            val = children[j].firstChild.children[1].lastChild.innerHTML;
+            val = children[j].firstElementChild.children[1].lastElementChild.innerHTML;
             if (val == '-' || !tmpDate.isAfter(moment(val, 'LL')))
                 break;
         }
         for ( ; j != length; j++) {
-            val = children[j].firstChild.children[1].lastChild.innerHTML;
-            if (val == '-' || !tmpDate.isSame(moment(val, 'LL')) || compareStrings(children[j].firstChild.children[1].childNodes[0].nodeValue, current) > 0)
+            val = children[j].firstElementChild.children[1].lastElementChild.innerHTML;
+            if (val == '-' || !tmpDate.isSame(moment(val, 'LL')) || compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) > 0)
                 break;
         }
     }

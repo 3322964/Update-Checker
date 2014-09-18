@@ -33,6 +33,9 @@
     "maxitems": {
         "message": "Nombre maximum de nouveautés"
     },
+    "help": {
+        "message": "Aide"
+    },
     "yes": {
         "message": "Oui"
     },

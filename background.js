@@ -147,7 +147,7 @@ function refreshNotification(type) {
             'type': 'list',
             'title': chromeI18n(type),
             'message': '',
-            'iconUrl': 'logo.png',
+            'iconUrl': 'images/logo.png',
             'items': items[type].map(function(item) { return { 'title': item['title'], 'message': item['message'] }; })
         }, function() {});
     });
