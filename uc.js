@@ -1,6 +1,6 @@
 var backgroundPage   = chrome.extension.getBackgroundPage();
 var getFavicon       = 'http://www.google.com/s2/favicons?domain_url=';
-var regExBluraysLink = /<link rel="canonical" href="http:\/\/www.blu-ray.com\/movies\/([^"]*)/;
+var regExpBluraysLink = /<link rel="canonical" href="http:\/\/www.blu-ray.com\/movies\/([^"]*)/;
 var files            = {};
 
 for (var i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
@@ -44,11 +44,15 @@ window.addEventListener('load', function() {
 var dropdownNews = [
     { 'title': 'Chrome Web Store', 'link': 'https://chrome.google.com/webstore/detail/*', 'regexp': 'itemprop="version" content="([^"]*)' },
     { 'title': 'Facebook', 'link': 'https://www.facebook.com*', 'regexp': 'id="requestsCountValue">([^<]*).*id="mercurymessagesCountValue">([^<]*).*id="notificationsCountValue">([^<]*)' },
-    { 'title': 'Google Play Store', 'link': 'https://play.google.com/store/apps/details?id=*', 'regexp': 'itemprop="softwareVersion"> v(\S*)' },
-    { 'title': 'Outlook', 'link': 'https://*.mail.live.com*', 'regexp': '<span\s+class="count">\s*([^<]*)(?:<[^>]*>[^<]*){17}<span\s+class="count">\s*([^<]*)' },
+    { 'title': 'Google Play Store', 'link': 'https://play.google.com/store/apps/details?id=*', 'regexp': 'itemprop="softwareVersion"> v(\\S*)' },
+    { 'title': 'Outlook', 'link': 'https://*.mail.live.com*', 'regexp': '<span\\s+class="count">\\s*([^<]*)(?:<[^>]*>[^<]*){17}<span\\s+class="count">\\s*([^<]*)' },
     { 'title': 'RuTracker', 'link': 'http://rutracker.org/forum/tracker.php?nm=*', 'regexp': 'data-topic_id=.* href="([^"]*)' },
     { 'title': 'Youtube', 'link': 'https://www.youtube.com/user/*/videos', 'regexp': 'dir="ltr" title="([^"]*)' },
 ];
+
+function linkToRegExp(link) {
+    return new RegExp('^' + link.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&').replace(/^https?:\/\/(www\\\.)?/, 'https?://(www\\.)?').replace(/\\\*/g, '.*'));
+}
 
 function addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdropdown) {
     function highlightDropdowns() {
@@ -56,16 +60,16 @@ function addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdr
         var regexp = newsregexp.value.trim();
         var i, length;
         for (i = 0, length = dropdownNews.length; i != length; i++) {
-            if ((regexp != '' || link != '') && (regexp == '' || dropdownNews[i]['regexp'] == regexp) && (link == '' || link.match(new RegExp('^' + dropdownNews[i]['link'].replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&').replace('https://', 'https?://').replace('www\\.', '(www\.)?').replace(/\\\*/g, '.*'))))) {
-                newsregexpdropdown.children[i].firstElementChild.classList.add('redlike');
+            if ((regexp != '' || link != '') && (regexp == '' || dropdownNews[i]['regexp'] == regexp) && (link == '' || link.match(linkToRegExp(dropdownNews[i]['link'])))) {
+                newsregexpdropdown.children[i].firstElementChild.classList.add('greenlike');
                 break;
             }
-            newsregexpdropdown.children[i].firstElementChild.classList.remove('redlike');
+            newsregexpdropdown.children[i].firstElementChild.classList.remove('greenlike');
         }
         if (i != length) {
             newsregexphelp.classList.add('highlight');
             for (i++; i != length; i++)
-                newsregexpdropdown.children[i].firstElementChild.classList.remove('redlike');
+                newsregexpdropdown.children[i].firstElementChild.classList.remove('greenlike');
         }
         else newsregexphelp.classList.remove('highlight');
     }
@@ -213,8 +217,8 @@ seriessearch.addEventListener('click', function() {
     getSearch('series', seriesname, seriesnamespan, seriesresults, seriesbuttons,
         'http://www.imdb.com/find?s=tt&q=', encodeURIComponent,
         function(response, array) {
-            var regEx = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
-            while ((tmp = regEx.exec(response)) != null)
+            var regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
+            while ((tmp = regExp.exec(response)) != null)
                 if (tmp[3].match(/Series\)/))
                     output += '<label><input type="checkbox" class="tasks-list-cb" value="' + tmp[1] + (objectInArray(tmp[1], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + imdb + tmp[1] + '" target="_blank">' + tmp[2] + tmp[3] + '</a></br>';
             return output;
@@ -226,8 +230,8 @@ moviessearch.addEventListener('click', function() {
     getSearch('movies', moviesname, moviesnamespan, moviesresults, moviesbuttons,
         'http://www.imdb.com/find?s=tt&q=', encodeURIComponent,
         function(response, array) {
-            var regEx = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
-            while ((tmp = regEx.exec(response)) != null)
+            var regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
+            while ((tmp = regExp.exec(response)) != null)
                 if (!tmp[3].match(/Series\)/) && !tmp[3].match(/\(Video Game\)/) && !tmp[3].match(/\(Video\)/) && !tmp[3].match(/\(TV Episode\)/))
                     output += '<label><input type="checkbox" class="tasks-list-cb" value="' + tmp[1] + (objectInArray(tmp[1], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + imdb + tmp[1] + '" target="_blank">' + tmp[2] + tmp[3] + '</a></br>';
             return output;
@@ -239,13 +243,13 @@ blurayssearch.addEventListener('click', function() {
     getSearch('blurays', bluraysname, bluraysnamespan, bluraysresults, bluraysbuttons,
         'http://www.blu-ray.com/search/?quicksearch=1&quicksearch_country=all&section=bluraymovies&quicksearch_keyword=', escape,
         function(response, array) {
-            var regEx = /<a href="http:\/\/www.blu-ray.com\/movies\/([^"]*).*\n([^<]*) Blu-ray<\/h3><\/a>(?:\n[^<]*<img src="([^\.]*\.static-bluray.com\/flags\/[^"]*))?/g, tmp, output = '';
-            while ((tmp = regEx.exec(response)) != null)
+            var regExp = /<a href="http:\/\/www.blu-ray.com\/movies\/([^"]*).*\n([^<]*) Blu-ray<\/h3><\/a>(?:\n[^<]*<img src="([^\.]*\.static-bluray.com\/flags\/[^"]*))?/g, tmp, output = '';
+            while ((tmp = regExp.exec(response)) != null)
                 output += '<label><input type="checkbox" class="tasks-list-cb" value="' + tmp[1] + (objectInArray(tmp[1], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + bluray + tmp[1] + '" target="_blank">' + tmp[2] + '</a> <img src="' + (tmp[3] == undefined ? 'http://images.static-bluray.com/flags/US.png' : tmp[3]) + '"></br>';
             if (output == '') {
-                tmp = response.match(regExBluraysLink);
+                tmp = response.match(regExpBluraysLink);
                 if (tmp != null) {
-                    var name = response.match(regExBluraysName);
+                    var name = response.match(regExpBluraysName);
                     output   = '<label><input type="checkbox" class="tasks-list-cb" value="' + tmp[1] + (objectInArray(tmp[1], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + bluray + tmp[1] + '" target="_blank">' + name[1] + '</a> <img src="' + name[2] + '"></br>';
                 }
             }
@@ -445,7 +449,7 @@ function updateProgress(type) {
 }
 
 function updateTabRN(type, typeDom, typeTab) {
-    if (typeDom.getElementsByClassName('green').length != 0) {
+    if (typeDom.getElementsByClassName('greenlike').length != 0) {
         typeTab.classList.remove('red');
         typeTab.classList.add('green');
     }

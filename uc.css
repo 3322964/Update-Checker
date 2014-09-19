@@ -286,7 +286,7 @@ label > div.inputerror {
         text-shadow: 0 1px white;
         border: 1px solid transparent;
         border-radius: 3px; }
-        .search-ac a.redlike {
+        .search-ac a.greenlike {
             color: #0C0; }
         .search-ac a:before {
             content: '';

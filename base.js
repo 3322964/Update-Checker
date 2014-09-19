@@ -1,25 +1,25 @@
-var regExSeries, date;
-var regExSeriesName  = /<title>&#x22;(.*)&#x22;/;
-var regExSeriesIcon  = /<a name="poster".* src="([^"]*)/;
-var regExMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See all release dates" > ([^<]*).*\n\(([^\)]*)/;
-var regExMoviesName  = /itemprop="name">([^<]*)/;
-var regExMoviesIcon  = /Poster"\nsrc="([^"]*)/;
-var regExBlurays     = /style="text-decoration: none; color: #666666">([^<]*)/;
-var regExBluraysIcon = /id="frontimage_overlay" src="([^"]*)/;
-var regExBluraysName = /<a class="black[^>]*>([^<]*)<\/a> Blu-ray<\/h1><img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
-var xPathTitle       = '//*[local-name()=\'title\' and (local-name(parent::*)=\'channel\' or local-name(parent::*)=\'feed\')]/text()';
-var xPathLink        = '//*[local-name()=\'link\' and local-name(parent::*)=\'channel\']/text()';
-var xPathLink2       = '//*[local-name()=\'link\' and local-name(parent::*)=\'feed\']/@href';
-var xPathItems       = '//*[local-name()=\'item\']';
-var xPathItems2      = '//*[local-name()=\'entry\']';
-var xPathDate        = '*[local-name()=\'pubDate\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'pubDate\'])]/text()';
-var xPathDate2       = '*[local-name()=\'updated\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'updated\'])]/@href';
-var xPathItemLink    = '*[local-name()=\'link\']/text()';
-var xPathItemLink2   = '*[local-name()=\'link\']/@href';
-var imdb             = 'http://www.imdb.com/title/';
-var bluray           = 'http://www.blu-ray.com/movies/';
-var chromeI18n       = chrome.i18n.getMessage;
-var progress         = {};
+var regExpSeries, date;
+var regExpSeriesName  = /<title>&#x22;(.*)&#x22;/;
+var regExpSeriesIcon  = /<a name="poster".* src="([^"]*)/;
+var regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See all release dates" > ([^<]*).*\n\(([^\)]*)/;
+var regExpMoviesName  = /itemprop="name">([^<]*)/;
+var regExpMoviesIcon  = /Poster"\nsrc="([^"]*)/;
+var regExpBlurays     = /style="text-decoration: none; color: #666666">([^<]*)/;
+var regExpBluraysIcon = /id="frontimage_overlay" src="([^"]*)/;
+var regExpBluraysName = /<a class="black[^>]*>([^<]*)<\/a> Blu-ray<\/h1><img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
+var xPathTitle        = '//*[local-name()=\'title\' and (local-name(parent::*)=\'channel\' or local-name(parent::*)=\'feed\')]/text()';
+var xPathLink         = '//*[local-name()=\'link\' and local-name(parent::*)=\'channel\']/text()';
+var xPathLink2        = '//*[local-name()=\'link\' and local-name(parent::*)=\'feed\']/@href';
+var xPathItems        = '//*[local-name()=\'item\']';
+var xPathItems2       = '//*[local-name()=\'entry\']';
+var xPathDate         = '*[local-name()=\'pubDate\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'pubDate\'])]/text()';
+var xPathDate2        = '*[local-name()=\'updated\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'updated\'])]/@href';
+var xPathItemLink     = '*[local-name()=\'link\']/text()';
+var xPathItemLink2    = '*[local-name()=\'link\']/@href';
+var imdb              = 'http://www.imdb.com/title/';
+var bluray            = 'http://www.blu-ray.com/movies/';
+var chromeI18n        = chrome.i18n.getMessage;
+var progress          = {};
 
 function compareStrings(string1, string2) {
     return string1.localeCompare(string2, window.navigator.language, { 'sensitivity': 'accent' });
@@ -54,7 +54,7 @@ function checkAll(arrays) {
     for (var i = tmpDate.date(); i != lastDay; i++)
         day += i + '|';
     months.splice(0, tmpMonth + 1);
-    regExSeries = new RegExp('<h4>Season (\\d{1,}), Episode (\\d{1,}): <a href="[^"]*">([^<]*)</a></h4><b>(\\d{1,2} [A-S][a-z]+ ' + (year + 1) + '|\\d{1,2} (' + months.join('|') + ') ' + year + '|(' + day + lastDay + ') ' + month + ' ' + year + ')</b>');
+    regExpSeries = new RegExp('<h4>Season (\\d{1,}), Episode (\\d{1,}): <a href="[^"]*">([^<]*)</a></h4><b>(\\d{1,2} [A-S][a-z]+ ' + (year + 1) + '|\\d{1,2} (' + months.join('|') + ') ' + year + '|(' + day + lastDay + ') ' + month + ' ' + year + ')</b>');
     moment.locale(window.navigator.language);
 
     var i, length, tmp;
@@ -195,15 +195,15 @@ var getLink = {
                 toDoError(type, value, null);
             return;
         }
-        var name = response.match(regExSeriesName);
+        var name = response.match(regExpSeriesName);
         if (name != null) {
-            var result = response.match(regExSeries);
+            var result = response.match(regExpSeries);
             if (result != null) {
                 var tmpDate = moment(new Date(result[4]));
                 if (!tmpDate.isAfter(date)) {
                     toDoSuccess1(type, value,
                         name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]),
-                        response.match(regExSeriesIcon),
+                        response.match(regExpSeriesIcon),
                         tmpDate,
                         page.getFunctionDynamic[type](imdb + value, type, value),
                         page.hasChecked(type, value, tmpDate)
@@ -213,14 +213,14 @@ var getLink = {
                     page.hasChecked(type, value);
                     toDoSuccess1(type, value,
                         name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]),
-                        response.match(regExSeriesIcon),
+                        response.match(regExpSeriesIcon),
                         tmpDate
                     );
                 }
             }
             else if (toDoSuccess2 != null) {
                 page.hasChecked(type, value);
-                toDoSuccess2(type, value, name[1], response.match(regExSeriesIcon));
+                toDoSuccess2(type, value, name[1], response.match(regExpSeriesIcon));
             }
         }
         else if (toDoError != null)
@@ -233,25 +233,25 @@ var getLink = {
                 toDoError(type, value, null);
             return;
         }
-        var name = response.match(regExMoviesName);
+        var name = response.match(regExpMoviesName);
         if (name != null) {
-            var result = response.match(regExMovies);
+            var result = response.match(regExpMovies);
             if (result != null && iso.findCountryByName(result[3])['value'] == result[1]) {
                 var tmpDate = moment(new Date(result[2]));
                 if (!tmpDate.isAfter(date)) {
-                    toDoSuccess1(type, value, name[1], response.match(regExMoviesIcon), tmpDate,
+                    toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate,
                         page.getFunctionDynamic[type](imdb + value, type, value),
                         page.hasChecked(type, value, tmpDate)
                     );
                 }
                 else {
                     page.hasChecked(type, value);
-                    toDoSuccess1(type, value, name[1], response.match(regExMoviesIcon), tmpDate);
+                    toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate);
                 }
             }
             else if (toDoSuccess2 != null) {
                 page.hasChecked(type, value);
-                toDoSuccess2(type, value, name[1], response.match(regExMoviesIcon));
+                toDoSuccess2(type, value, name[1], response.match(regExpMoviesIcon));
             }
         }
         else if (toDoError != null)
@@ -264,25 +264,25 @@ var getLink = {
                 toDoError(type, value, null);
             return;
         }
-        var name = response.match(regExBluraysName);
+        var name = response.match(regExpBluraysName);
         if (name != null) {
-            var result = response.match(regExBlurays);
+            var result = response.match(regExpBlurays);
             if (result != null) {
                 var tmpDate = moment(new Date(result[1]));
                 if (!tmpDate.isAfter(date)) {
-                    toDoSuccess1(type, value, name, response.match(regExBluraysIcon), tmpDate,
+                    toDoSuccess1(type, value, name, response.match(regExpBluraysIcon), tmpDate,
                         page.getFunctionDynamic[type](bluray + value, type, value),
                         page.hasChecked(type, value, tmpDate)
                     );
                 }
                 else {
                     page.hasChecked(type, value);
-                    toDoSuccess1(type, value, name, response.match(regExBluraysIcon), tmpDate);
+                    toDoSuccess1(type, value, name, response.match(regExpBluraysIcon), tmpDate);
                 }
             }
             else if (toDoSuccess2 != null) {
                 page.hasChecked(type, value);
-                toDoSuccess2(type, value, name, response.match(regExBluraysIcon));
+                toDoSuccess2(type, value, name, response.match(regExpBluraysIcon));
             }
         }
         else if (toDoError != null)
