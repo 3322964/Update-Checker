@@ -12,6 +12,7 @@ label > div.inputerror {
     line-height: 30px;
     right: 20px;
     background-image: linear-gradient(to bottom, #f6f8fa, white);
+    box-shadow: inset 0 3px 2px -2px rgba(0, 0, 0, 0.1);
     top: 13px; }
     label:nth-child(2) > div.inputerror {
         top: 50px; }
