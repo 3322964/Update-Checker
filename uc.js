@@ -45,6 +45,7 @@ var dropdownNews = [
     { 'title': 'Chrome Web Store', 'link': 'https://chrome.google.com/webstore/detail/*/details', 'regexp': 'itemprop="version" content="([^"]*)' },
     { 'title': 'Facebook', 'link': 'https://www.facebook.com*', 'regexp': 'id="requestsCountValue">([^<]*)</span><i class="accessible_elem"> ([^<]*)<(/).*id="mercurymessagesCountValue">([^<]*)</span><i class="accessible_elem"> ([^<]*)<(/).*id="notificationsCountValue">([^<]*)</span><i class="accessible_elem"> ([^<]*)' },
     { 'title': 'Google Play Store Apps', 'link': 'https://play.google.com/store/apps/details?id=*', 'regexp': 'itemprop="softwareVersion"> v(\\S*)' },
+    { 'title': 'GitHub', 'link': 'https://github.com/*', 'regexp': 'latest commit[^>]*>([^<]*)' },
     { 'title': 'Outlook', 'link': 'https://*.mail.live.com*', 'regexp': '<span\\s+class="count">\\s*([^<]*)(?:<[^>]*>[^<]*){17}<span\\s+class="count">\\s*([^<]*)' },
     { 'title': 'RuTracker', 'link': 'http://rutracker.org/forum/tracker.php?nm=*', 'regexp': 'data-topic_id=.* href="([^"]*)' },
     { 'title': 'Youtube', 'link': 'https://www.youtube.com/user/*/videos', 'regexp': 'dir="ltr" title="([^"]*)' },
@@ -83,12 +84,14 @@ function addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdr
         newsregexpdropdown.classList.add('visible');
     }, false);
 
-    for (i = 0, children = newsregexpdropdown.children, length = children.length; i != length; i++) {
-        children[i].firstElementChild.innerHTML = dropdownNews[i]['title'] + ' (' + dropdownNews[i]['link'] + ')';
-        children[i].firstElementChild.addEventListener('click', function(e) {
+    for (i = 0, length = dropdownNews.length; i != length; i++) {
+        var li       = document.createElement('li');
+        li.innerHTML = '<a name="' + i + '">' + dropdownNews[i]['title'] + ' (' + dropdownNews[i]['link'] + ')</a>';
+        li.firstElementChild.addEventListener('click', function(e) {
             newsregexp.value = dropdownNews[parseInt(e.target.name)]['regexp'];
             newsregexpdropdown.classList.remove('visible');
         }, false);
+        newsregexpdropdown.appendChild(li)
     }
 }
 addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdropdown);
