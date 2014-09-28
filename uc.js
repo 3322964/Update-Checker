@@ -452,7 +452,7 @@ function updateProgress(type) {
 }
 
 function updateTabRN(type, typeDom, typeTab) {
-    if (typeDom.getElementsByClassName('greenlike').length != 0) {
+    if (typeDom.getElementsByClassName('green').length != 0) {
         typeTab.classList.remove('red');
         typeTab.classList.add('green');
     }
