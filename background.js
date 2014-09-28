@@ -1,5 +1,9 @@
 chrome.browserAction.onClicked.addListener(function() {
-    window.open('uc.html');
+    chrome.tabs.query({ 'url': 'chrome-extension://hhfomgjpgjcodkliapbhjfcbbooabini/uc.html*' }, function(tabs) {
+        if (tabs.length == 0)
+            window.open('uc.html');
+        else chrome.tabs.update(tabs[0].id, { 'selected': true }, function() {});
+    });
 });
 
 var settings      = { 'hometab': 'seriestab', 'backgroundcheck': 180000 };

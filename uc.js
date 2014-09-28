@@ -9,6 +9,14 @@ for (var i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
         window[tmp] = document.getElementById(tmp);
 }
 
+options.addEventListener('click', function() {
+    chrome.tabs.query({ 'url': 'chrome-extension://hhfomgjpgjcodkliapbhjfcbbooabini/options.html*' }, function(tabs) {
+        if (tabs.length == 0)
+            window.open('options.html');
+        else chrome.tabs.update(tabs[0].id, { 'selected': true }, function() {});
+    });
+}, false);
+
 window.addEventListener('load', function() {
     rsslink.placeholder         = chromeI18n('link');
     rssmaxitems.placeholder     = chromeI18n('maxitems');
@@ -31,6 +39,8 @@ window.addEventListener('load', function() {
     confirmtext.innerHTML       = chromeI18n('confirm');
     confirmno.value             = chromeI18n('no');
     confirmyes.value            = chromeI18n('yes');
+
+    options.title               = chromeI18n('options');
 
     document.getElementById(backgroundPage.settings['hometab']).click();
     widget.hidden = false;

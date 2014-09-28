@@ -3,7 +3,7 @@
     "name": "Update Checker",
     "description": "__MSG_description__",
     "default_locale": "en",
-    "version": "0.21.2",
+    "version": "0.21.3",
     "background": {
         "page": "background.html"
     },
@@ -14,5 +14,5 @@
         "128": "images/logo.png"
     },
     "options_page": "options.html",
-    "permissions": ["alarms", "background", "storage", "notifications", "*://*/*"]
+    "permissions": ["tabs", "alarms", "background", "storage", "notifications", "*://*/*"]
 }

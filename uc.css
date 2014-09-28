@@ -228,6 +228,7 @@ label > div.inputerror {
         transition: visibility 0s 2s, opacity 2s linear; }
 
 #options {
+    cursor: pointer;
     position: absolute;
     top: 12px;
     right: 12px;
