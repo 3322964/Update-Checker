@@ -1,5 +1,5 @@
 chrome.browserAction.onClicked.addListener(function() {
-    chrome.tabs.query({ 'url': 'chrome-extension://hhfomgjpgjcodkliapbhjfcbbooabini/uc.html*' }, function(tabs) {
+    chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/uc.html*' }, function(tabs) {
         if (tabs.length == 0)
             window.open('uc.html');
         else chrome.tabs.update(tabs[0].id, { 'selected': true }, function() {});
