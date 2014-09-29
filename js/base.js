@@ -29,15 +29,15 @@ function convertIntTo2Int(value) {
     return value < 10 ? '0' + value : value;
 }
 
-function objectInArray(value, array) {
-    var i, length;
-    for (i = 0, length = array.length; i != length && array[i] != value; i++) {}
-    return i == length ? -1 : i;
-}
-
 function propertyInArray(value, property, array) {
     var i, length;
     for (i = 0, length = array.length; i != length && array[i][property] != value; i++) {}
+    return i == length ? -1 : i;
+}
+
+function objectInArray(value, array) {
+    var i, length;
+    for (i = 0, length = array.length; i != length && array[i] != value; i++) {}
     return i == length ? -1 : i;
 }
 

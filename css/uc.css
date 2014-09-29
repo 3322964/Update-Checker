@@ -215,7 +215,7 @@ label > div.inputerror {
         right: 0; }
     #progressbar:before {
         bottom: 0;
-        background: url('images/stripes.png') 0 0 repeat;
+        background: url('/images/stripes.png') 0 0 repeat;
         border-radius: 4px 4px 0 0; }
     #progressbar:after {
         z-index: 1002;
@@ -234,7 +234,7 @@ label > div.inputerror {
     right: 12px;
     width: 25px;
     height: 25px;
-    background: url('images/options.png') no-repeat;
+    background: url('/images/options.png') no-repeat;
     background-size: 100% 100%; }
 
 .search-ac {
@@ -298,7 +298,7 @@ label > div.inputerror {
             margin-top: -9px;
             width: 18px;
             height: 18px;
-            background: url('images/arrow.png') 0 0 no-repeat; }
+            background: url('/images/arrow.png') 0 0 no-repeat; }
         .search-ac a:hover {
             color: white;
             text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
@@ -313,10 +313,10 @@ label > div.inputerror {
     top: 87px;
     width: 30px;
     height: 30px;
-    background: url('images/help.png') no-repeat;
+    background: url('/images/help.png') no-repeat;
     background-size: 100% 100%; }
     .help.highlight {
-        background: url('images/help-highlight.png') no-repeat;
+        background: url('/images/help-highlight.png') no-repeat;
         background-size: 100% 100%; }
     .help + .checkout-input {
         padding-right: 44px; }

@@ -3,16 +3,23 @@
     "name": "Update Checker",
     "description": "__MSG_description__",
     "default_locale": "en",
-    "version": "0.21.3",
+    "version": "0.22.0",
     "background": {
-        "page": "background.html"
+        "page": "/background.html"
     },
     "browser_action": {
-        "default_icon": "images/logo.png"
+        "default_icon": "/images/logo.png"
     },
+    "content_scripts": [
+        {
+            "matches": ["http://www.imdb.com/title/*", "http://www.blu-ray.com/movies/*"],
+            "js": ["/js/content.js"],
+            "run_at": "document_end"
+        }
+    ],
     "icons": {
-        "128": "images/logo.png"
+        "128": "/images/logo.png"
     },
-    "options_page": "options.html",
+    "options_page": "/options.html",
     "permissions": ["tabs", "alarms", "background", "storage", "notifications", "*://*/*"]
 }

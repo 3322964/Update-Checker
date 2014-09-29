@@ -10,7 +10,7 @@ for (var i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
 }
 
 options.addEventListener('click', function() {
-    chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/options.html*' }, function(tabs) {
+    chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/options.html' }, function(tabs) {
         if (tabs.length == 0)
             window.open('options.html');
         else chrome.tabs.update(tabs[0].id, { 'selected': true }, function() {});
@@ -164,7 +164,7 @@ function addSearchValid(type, typeDom, typeName, typeSearch, typeResults, typeBu
     typeValid.addEventListener('click', function() {
         var array = backgroundPage.arrays[type], checked = typeResults.getElementsByTagName('input');
         for (var i = 0, length = checked.length; i != length; i++)
-            if (checked[i].checked)
+            if (checked[i].checked && objectInArray(checked[i].value, array) == -1)
                 check[type](type, array[array.push(checked[i].value) - 1]);
         backgroundPage.writeArrays();
         typeName.value     = '';
@@ -358,7 +358,7 @@ newsvalid.addEventListener('click', function() {
 function addDelete(li, typeDom, type, value) {
     var img       = document.createElement('img');
     img.className = 'button';
-    img.src       = 'images/delete.png';
+    img.src       = '/images/delete.png';
     img.title     = chromeI18n('delete');
     img.addEventListener('click', function(e) {
         e.preventDefault();
@@ -375,7 +375,7 @@ function addDelete(li, typeDom, type, value) {
 function addEdit(li, typeDom, type, valueObject, value) {
     var img       = document.createElement('img');
     img.className = 'button';
-    img.src       = 'images/edit.png';
+    img.src       = '/images/edit.png';
     img.title     = chromeI18n('edit');
     img.addEventListener('click', function(e) {
         e.preventDefault();

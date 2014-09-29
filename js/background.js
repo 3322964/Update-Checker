@@ -1,9 +1,16 @@
 chrome.browserAction.onClicked.addListener(function() {
-    chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/uc.html*' }, function(tabs) {
+    chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/uc.html' }, function(tabs) {
         if (tabs.length == 0)
             window.open('uc.html');
         else chrome.tabs.update(tabs[0].id, { 'selected': true }, function() {});
     });
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender) {
+    if (request['setPopup']) {
+        chrome.browserAction.setPopup({ 'tabId': sender.tab.id, 'popup': 'popup.html' });
+        chrome.browserAction.setBadgeText({ 'tabId': sender.tab.id, 'text': '+' })
+    }
 });
 
 var settings      = { 'hometab': 'seriestab', 'backgroundcheck': 180000 };
