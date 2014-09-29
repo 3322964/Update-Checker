@@ -181,7 +181,6 @@ function notify(type, value, name, text, dynamic, save) {
     else i = items[type].length;
     items[type][i] = {
         'value': value,
-        'save': save,
         'title': unescapeNotifications(name),
         'message': unescapeNotifications(text),
         'clicked': function(id) {
@@ -190,6 +189,7 @@ function notify(type, value, name, text, dynamic, save) {
         }
     };
     if (type == 'rss' || type == 'news') {
+        items[type][i]['save']   = save;
         items[type][i]['closed'] = function(id, user) {
             if (id == type && user == true)
                 writeDynamic(type, value, save);
@@ -231,6 +231,8 @@ function hasChecked(type, value, tmpDate) {
 function checkRN(type, value) {
     get[type](type, value, window, computeNotification, function(type, value, link, name, text, dynamic, current) {
         notify(type, value['link'], name, text, dynamic, current);
+    }, function(type, value) {
+        removeItem(type, value['link']);
     });
 }
 
@@ -239,7 +241,7 @@ function checkSM(type, value) {
         get[type](type, value, window, computeNotification, function(type, value, name, icon, tmpDate, dynamic, changed) {
             if (changed)
                 notify(type, value, name, tmpDate.format('LL'), dynamic);
-        });
+        }, removeItem);
     }
 }
 
@@ -253,7 +255,7 @@ var check = {
             get[type](type, value, window, computeNotification, function(type, value, name, icon, tmpDate, dynamic, changed) {
                 if (changed)
                     notify(type, value, name[1], tmpDate.format('LL'), dynamic);
-            });
+            }, removeItem);
         }
     }
 };
