@@ -201,7 +201,14 @@ function notify(type, value, name, text, dynamic, save) {
     };
     chrome.notifications.onClicked.addListener(items[type][i]['clicked']);
     chrome.notifications.onClosed.addListener(items[type][i]['closed']);
-    items[type].sort(function(a, b) { return compareStrings(a['title'], b['title']); });
+
+    var itemsType = items[type], tmp = itemsType[i]['title'];
+    for (var j = 0; j != i && compareStrings(itemsType[j]['title'], tmp) < 0; j++) {}
+    if (j == i) {
+        var length = itemsType.length;
+        for (j++; j != length && compareStrings(itemsType[j]['title'], tmp) < 0; j++) {}
+    }
+    itemsType.splice(j, 0, itemsType.splice(i, 1)[0]);
 }
 
 function canCheck(type, value) {
