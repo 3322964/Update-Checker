@@ -11,7 +11,7 @@ Update Checker allows you to track regularly (you will get notifications for it)
 * RSS feeds,
 * Any webpage with a RegExp (some predefined website-specific RegExps are available).
 
-N.B.: If you want to try or beta test our GitHub version, follow this [tutorial](https://developer.chrome.com/extensions/getstarted#unpacked).
+N.B.: If you want to try our GitHub version, follow this [tutorial](https://developer.chrome.com/extensions/getstarted#unpacked).
 
 Enjoy!
 
