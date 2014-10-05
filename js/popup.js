@@ -8,7 +8,7 @@ for (var i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
 }
 
 window.addEventListener('load', function() {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.query({ 'active': true, 'currentWindow': true }, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, { 'getPopupInfos': true }, setPopupInfos);
     });
 });
