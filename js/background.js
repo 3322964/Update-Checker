@@ -202,8 +202,8 @@ function notify(type, value, name, text, dynamic, save) {
     chrome.notifications.onClicked.addListener(items[type][i]['clicked']);
     chrome.notifications.onClosed.addListener(items[type][i]['closed']);
 
-    var itemsType = items[type], tmp = itemsType[i]['title'];
-    for (var j = 0; j != i && compareStrings(itemsType[j]['title'], tmp) < 0; j++) {}
+    var itemsType = items[type], tmp = itemsType[i]['title'], j;
+    for (j = 0; j != i && compareStrings(itemsType[j]['title'], tmp) < 0; j++) {}
     if (j == i) {
         var length = itemsType.length;
         for (j++; j != length && compareStrings(itemsType[j]['title'], tmp) < 0; j++) {}
