@@ -187,7 +187,7 @@ function showError(string, element, elementspan) {
     elementspan.innerHTML = string;
 }
 
-function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link, escapeFunction, toDoSuccess, toDoError) {
+function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link, toDoSuccess, toDoError) {
     typeName.click();
     var string = typeName.value.trim();
     if (string == '') {
@@ -203,9 +203,18 @@ function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link,
     catch (err) {}
 
     typeName.classList.add('loading');
-
     files[type] = new XMLHttpRequest();
-    files[type].open('GET', link + escapeFunction(string), true);
+
+    if (type == 'blurays') {
+        files[type].open('POST', link, true);
+        files[type].setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    }
+    else {
+        files[type].open('GET', link + encodeURIComponent(string), true);
+        files[type].setRequestHeader('Pragma', 'no-cache');
+        files[type].setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
+    }
+
     files[type].onreadystatechange = function() {
         if (files[type].readyState == XMLHttpRequest.DONE) {
             typeName.classList.remove('loading');
@@ -223,12 +232,14 @@ function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link,
                 showError(chromeI18n('unreachable'), typeName, typeNameSpan);
         }
     };
-    files[type].send();
+    if (type == 'blurays')
+        files[type].send('userid=-1&country=all&section=bluraymovies&keyword='+ escape(string));
+    else files[type].send();
 }
 
 seriessearch.addEventListener('click', function() {
     getSearch('series', seriesname, seriesnamespan, seriesresults, seriesbuttons,
-        'http://www.imdb.com/find?s=tt&q=', encodeURIComponent,
+        'http://www.imdb.com/find?s=tt&q=',
         function(response, array) {
             var regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
             while ((tmp = regExp.exec(response)) != null)
@@ -241,7 +252,7 @@ seriessearch.addEventListener('click', function() {
 
 moviessearch.addEventListener('click', function() {
     getSearch('movies', moviesname, moviesnamespan, moviesresults, moviesbuttons,
-        'http://www.imdb.com/find?s=tt&q=', encodeURIComponent,
+        'http://www.imdb.com/find?s=tt&q=',
         function(response, array) {
             var regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
             while ((tmp = regExp.exec(response)) != null)
@@ -254,18 +265,12 @@ moviessearch.addEventListener('click', function() {
 
 blurayssearch.addEventListener('click', function() {
     getSearch('blurays', bluraysname, bluraysnamespan, bluraysresults, bluraysbuttons,
-        'http://www.blu-ray.com/search/?quicksearch=1&quicksearch_country=all&section=bluraymovies&quicksearch_keyword=', escape,
+        'http://www.blu-ray.com/search/quicksearch.php',
         function(response, array) {
-            var regExp = /<a href="http:\/\/www.blu-ray.com\/movies\/([^"]*).*\n([^<]*) Blu-ray<\/h3><\/a>(?:\n[^<]*<img src="([^\.]*\.static-bluray.com\/flags\/[^"]*))?/g, tmp, output = '';
-            while ((tmp = regExp.exec(response)) != null)
-                output += '<label><input type="checkbox" class="tasks-list-cb" value="' + tmp[1] + (objectInArray(tmp[1], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + bluray + tmp[1] + '" target="_blank">' + tmp[2] + '</a> <img src="' + (tmp[3] == undefined ? 'http://images.static-bluray.com/flags/US.png' : tmp[3]) + '"></br>';
-            if (output == '') {
-                tmp = response.match(regExpBluraysLink);
-                if (tmp != null) {
-                    var name = response.match(regExpBluraysName);
-                    output   = '<label><input type="checkbox" class="tasks-list-cb" value="' + tmp[1] + (objectInArray(tmp[1], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + bluray + tmp[1] + '" target="_blank">' + name[1] + '</a> <img src="' + name[2] + '"></br>';
-                }
-            }
+            var URLs   = response.match(/var urls = new Array\(([^\)]*)/)[1].replace(/'|http:\/\/www\.blu-ray\.com\/movies\//g, '').split(', ');
+            var regExp = /<img src="([^"]*)" [^>]*>&nbsp;([^<]*)/g, tmp, output = '';
+            for (var i = 0; (tmp = regExp.exec(response)) != null; i++)
+                output += '<label><input type="checkbox" class="tasks-list-cb" value="' + URLs[i] + (objectInArray(URLs[i], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + bluray + URLs[i] + '" target="_blank">' + tmp[2] + '</a> <img src="' + tmp[1] + '"></br>';
             return output;
         }
     );
