@@ -58,7 +58,7 @@ restore.addEventListener('click', function() {
 
 backup.addEventListener('click', function() {
     var a      = document.createElement('a');
-    a.download = 'backup.json';
+    a.download = 'Update Checker.json';
     a.href     = window.URL.createObjectURL(new Blob([JSON.stringify({ 'arrays': backgroundPage.arrays }, null, 4)], { 'type': 'text/plain;charset=UTF-8' }));
     a.click();
     window.URL.revokeObjectURL(a.href);
