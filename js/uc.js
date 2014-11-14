@@ -267,7 +267,7 @@ blurayssearch.addEventListener('click', function() {
         'http://www.blu-ray.com/search/quicksearch.php',
         function(response, array) {
             var URLs   = response.match(/var urls = new Array\(([^\)]*)/)[1].replace(/'|http:\/\/www\.blu-ray\.com\/movies\//g, '').split(', ');
-            var regExp = /<img src="([^"]*)" [^>]*>&nbsp;([^<]*)/g, tmp, output = '';
+            var regExp = /<img src="([^"]*)" [^>]*>&nbsp;([^\n]*)/g, tmp, output = '';
             for (var i = 0; (tmp = regExp.exec(response)) != null; i++)
                 output += '<label><input type="checkbox" class="tasks-list-cb" value="' + URLs[i] + (objectInArray(URLs[i], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + bluray + URLs[i] + '" target="_blank">' + tmp[2] + '</a> <img src="' + tmp[1] + '"></br>';
             return output;
