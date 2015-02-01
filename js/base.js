@@ -91,7 +91,7 @@ var get = {
         getLinkAll(type, imdb + value + '/epcast', value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError);
     },
     'movies': function(type, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
-        getLinkAll(type, imdb + value, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError);
+        getLinkAll(type, imdb + value + '/', value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError);
     },
     'blurays': function(type, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
         getLinkAll(type, bluray + value, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError);
@@ -205,7 +205,7 @@ var getLink = {
                         name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]),
                         response.match(regExpSeriesIcon),
                         tmpDate,
-                        page.getFunctionDynamic[type](imdb + value, type, value),
+                        page.getFunctionDynamic[type](imdb + value + '/', type, value),
                         page.hasChecked(type, value, tmpDate)
                     );
                 }
@@ -240,7 +240,7 @@ var getLink = {
                 var tmpDate = moment(new Date(result[2]));
                 if (!tmpDate.isAfter(date)) {
                     toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate,
-                        page.getFunctionDynamic[type](imdb + value, type, value),
+                        page.getFunctionDynamic[type](imdb + value + '/', type, value),
                         page.hasChecked(type, value, tmpDate)
                     );
                 }
