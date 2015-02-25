@@ -102,6 +102,6 @@
         "message": "JSON restored"
     },
     "jsoncompliant": {
-        "message": "JSON non compliant"
+        "message": "Non-compliant JSON"
     }
 }
