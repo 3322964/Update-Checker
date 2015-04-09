@@ -1,9 +1,11 @@
+'use strict';
+
 var backgroundPage   = chrome.extension.getBackgroundPage();
 var getFavicon       = 'http://www.google.com/s2/favicons?domain_url=';
 var regExpBluraysLink = /<link rel="canonical" href="http:\/\/www.blu-ray.com\/movies\/([^"]*)/;
 var files            = {};
 
-for (var i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
+for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
     tmp = elements[i].id;
     if (tmp != '')
         window[tmp] = document.getElementById(tmp);
@@ -44,9 +46,9 @@ window.addEventListener('load', function() {
 
     document.getElementById(backgroundPage.settings['hometab']).click();
     widget.hidden = false;
-    var arrays    = backgroundPage.arrays;
+    let arrays    = backgroundPage.arrays;
     checkAll(arrays);
-    for (var key in arrays)
+    for (let key in arrays)
         if (arrays[key].length == 0)
             updateProgress(key);
 }, false);
@@ -66,9 +68,9 @@ function linkToRegExp(link) {
 
 function addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdropdown) {
     function highlightDropdowns() {
-        var link   = newslink.value.trim();
-        var regexp = newsregexp.value.trim();
-        var i, length;
+        let link   = newslink.value.trim();
+        let regexp = newsregexp.value.trim();
+        let i, length;
         for (i = 0, length = dropdownNews.length; i != length; i++) {
             if ((regexp != '' || link != '') && (regexp == '' || dropdownNews[i]['regexp'] == regexp) && (link == '' || link.match(linkToRegExp(dropdownNews[i]['link'])))) {
                 newsregexpdropdown.children[i].firstElementChild.classList.add('greenlike');
@@ -93,8 +95,8 @@ function addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdr
         newsregexpdropdown.classList.add('visible');
     }, false);
 
-    for (i = 0, length = dropdownNews.length; i != length; i++) {
-        var li       = document.createElement('li');
+    for (let i = 0, length = dropdownNews.length; i != length; i++) {
+        let li       = document.createElement('li');
         li.innerHTML = '<a name="' + i + '">' + dropdownNews[i]['title'] + ' (' + dropdownNews[i]['link'] + ')</a>';
         li.firstElementChild.addEventListener('click', function(e) {
             newsregexp.value = dropdownNews[parseInt(e.target.name)]['regexp'];
@@ -107,14 +109,14 @@ addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdropdown);
 addEventsToDropdowns(newslinkedit, newsregexphelpedit, newsregexpedit, newsregexpdropdownedit);
 
 document.addEventListener('click', function(e) {
-    var potentialNewsRegExp = e.target.parentElement;
+    let potentialNewsRegExp = e.target.parentElement;
     if (potentialNewsRegExp == null || potentialNewsRegExp.lastElementChild == null || (potentialNewsRegExp.lastElementChild != newsregexpdropdown && potentialNewsRegExp.lastElementChild != newsregexpdropdownedit)) {
         newsregexpdropdown.classList.remove('visible');
         newsregexpdropdownedit.classList.remove('visible');
     }
 }, false);
 
-for (var i = 0, tab, list, lists = widget.getElementsByClassName('widget-list'), length = lists.length; i != length; i++) {
+for (let i = 0, tab, list, lists = widget.getElementsByClassName('widget-list'), length = lists.length; i != length; i++) {
     list                        = lists[i];
     tab                         = document.getElementById(list.id + 'tab');
     tab.childNodes[0].nodeValue = chromeI18n(list.id) + ' ';
@@ -138,7 +140,7 @@ function removeError(e) {
     }
 }
 function addEventsToInputs(typeDom, typeValid) {
-    for (var i = 0, inputs = typeDom.getElementsByClassName('checkout-input'), length = inputs.length; i != length; i++) {
+    for (let i = 0, inputs = typeDom.getElementsByClassName('checkout-input'), length = inputs.length; i != length; i++) {
         inputs[i].addEventListener('keypress', function(e) {
             if (e.keyCode == 13)
                 typeValid.click();
@@ -161,8 +163,8 @@ function addSearchValid(type, typeDom, typeName, typeSearch, typeResults, typeBu
     addEventsToInputs(typeDom, typeSearch);
 
     typeValid.addEventListener('click', function() {
-        var array = backgroundPage.arrays[type], checked = typeResults.getElementsByTagName('input');
-        for (var i = 0, length = checked.length; i != length; i++)
+        let array = backgroundPage.arrays[type], checked = typeResults.getElementsByTagName('input');
+        for (let i = 0, length = checked.length; i != length; i++)
             if (checked[i].checked && objectInArray(checked[i].value, array) == -1)
                 check[type](type, array[array.push(checked[i].value) - 1]);
         backgroundPage.writeArrays();
@@ -188,7 +190,7 @@ function showError(string, element, elementspan) {
 
 function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link, toDoSuccess, toDoError) {
     typeName.click();
-    var string = typeName.value.trim();
+    let string = typeName.value.trim();
     if (string == '') {
         showError(chromeI18n('empty'), typeName, typeNameSpan);
         return;
@@ -218,7 +220,7 @@ function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link,
         if (files[type].readyState == XMLHttpRequest.DONE) {
             typeName.classList.remove('loading');
             if (files[type].status == 200) {
-                var output            = toDoSuccess(files[type].responseText, backgroundPage.arrays[type]);
+                let output            = toDoSuccess(files[type].responseText, backgroundPage.arrays[type]);
                 typeResults.innerHTML = output;
                 if (output != '') {
                     typeResults.hidden    = false;
@@ -240,7 +242,7 @@ seriessearch.addEventListener('click', function() {
     getSearch('series', seriesname, seriesnamespan, seriesresults, seriesbuttons,
         'http://www.imdb.com/find?s=tt&q=',
         function(response, array) {
-            var regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
+            let regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
             while ((tmp = regExp.exec(response)) != null)
                 if (tmp[3].match(/Series\)/))
                     output += '<label><input type="checkbox" class="tasks-list-cb" value="' + tmp[1] + (objectInArray(tmp[1], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + imdb + tmp[1] + '" target="_blank">' + tmp[2] + tmp[3] + '</a></br>';
@@ -253,7 +255,7 @@ moviessearch.addEventListener('click', function() {
     getSearch('movies', moviesname, moviesnamespan, moviesresults, moviesbuttons,
         'http://www.imdb.com/find?s=tt&q=',
         function(response, array) {
-            var regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
+            let regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
             while ((tmp = regExp.exec(response)) != null)
                 if (!tmp[3].match(/Series\)/) && !tmp[3].match(/\(Video Game\)/) && !tmp[3].match(/\(Video\)/) && !tmp[3].match(/\(TV Episode\)/))
                     output += '<label><input type="checkbox" class="tasks-list-cb" value="' + tmp[1] + (objectInArray(tmp[1], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + imdb + tmp[1] + '" target="_blank">' + tmp[2] + tmp[3] + '</a></br>';
@@ -266,12 +268,12 @@ blurayssearch.addEventListener('click', function() {
     getSearch('blurays', bluraysname, bluraysnamespan, bluraysresults, bluraysbuttons,
         'http://www.blu-ray.com/search/quicksearch.php',
         function(response, array) {
-            var tmp = response.match(/var urls = new Array\(([^\)]*)/), output = '';
+            let tmp = response.match(/let urls = new Array\(([^\)]*)/), output = '';
             if (tmp == null)
                 return output;
-            var URLs   = tmp[1].replace(/'|http:\/\/www\.blu-ray\.com\/movies\//g, '').split(', ');
-            var regExp = /<img src="([^"]*)" [^>]*>&nbsp;([^\n<]*)/g;
-            for (var i = 0; (tmp = regExp.exec(response)) != null; i++)
+            let URLs   = tmp[1].replace(/'|http:\/\/www\.blu-ray\.com\/movies\//g, '').split(', ');
+            let regExp = /<img src="([^"]*)" [^>]*>&nbsp;([^\n<]*)/g;
+            for (let i = 0; (tmp = regExp.exec(response)) != null; i++)
                 output += '<label><input type="checkbox" class="tasks-list-cb" value="' + URLs[i] + (objectInArray(URLs[i], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + bluray + URLs[i] + '" target="_blank">' + tmp[2] + '</a> <img src="' + tmp[1] + '"></br>';
             return output;
         }
@@ -288,8 +290,8 @@ function removeElement(typeDom, li, type, value, fade) {
 function parseRss(current, save, rsslink, rsslinkspan, rssmaxitems, rssmaxitemsspan, typeDom, li, type, value, rssfade) {
     rsslink.click();
     rssmaxitems.click();
-    var link         = rsslink.value.trim(), maxitems = parseInt(rssmaxitems.valueAsNumber);
-    var errorOccured = false;
+    let link         = rsslink.value.trim(), maxitems = parseInt(rssmaxitems.valueAsNumber);
+    let errorOccured = false;
     if (link == '') {
         showError(chromeI18n('empty'), rsslink, rsslinkspan);
         errorOccured = true;
@@ -300,7 +302,7 @@ function parseRss(current, save, rsslink, rsslinkspan, rssmaxitems, rssmaxitemss
     }
     if (isNaN(maxitems))
         maxitems = 0;
-    var aR = backgroundPage.arrays['rss'];
+    let aR = backgroundPage.arrays['rss'];
     if (save != link && propertyInArray(link, 'link', aR) != -1) {
         showError(chromeI18n('alreadyexists'), rsslink, rsslinkspan);
         errorOccured = true;
@@ -321,8 +323,8 @@ function parseNews(current, save, newsname, newsnamespan, newslink, newslinkspan
     newsname.click();
     newslink.click();
     newsregexp.click();
-    var name         = newsname.value.trim(), link = newslink.value.trim(), regexp = newsregexp.value.trim();
-    var errorOccured = false;
+    let name         = newsname.value.trim(), link = newslink.value.trim(), regexp = newsregexp.value.trim();
+    let errorOccured = false;
     if (name == '') {
         showError(chromeI18n('empty'), newsname, newsnamespan);
         errorOccured = true;
@@ -335,7 +337,7 @@ function parseNews(current, save, newsname, newsnamespan, newslink, newslinkspan
         showError(chromeI18n('empty'), newsregexp, newsregexpspan);
         errorOccured = true;
     }
-    var aN = backgroundPage.arrays['news'];
+    let aN = backgroundPage.arrays['news'];
     if (save != link && propertyInArray(link, 'link', aN) != -1) {
         showError(chromeI18n('alreadyexists'), newslink, newslinkspan);
         errorOccured = true;
@@ -363,7 +365,7 @@ newsvalid.addEventListener('click', function() {
 }, false);
 
 function addDelete(li, typeDom, type, value) {
-    var img       = document.createElement('img');
+    let img       = document.createElement('img');
     img.className = 'button';
     img.src       = '/images/delete.png';
     img.title     = chromeI18n('delete');
@@ -380,7 +382,7 @@ function addDelete(li, typeDom, type, value) {
 }
 
 function addEdit(li, typeDom, type, valueObject, value) {
-    var img       = document.createElement('img');
+    let img       = document.createElement('img');
     img.className = 'button';
     img.src       = '/images/edit.png';
     img.title     = chromeI18n('edit');
@@ -392,7 +394,7 @@ function addEdit(li, typeDom, type, valueObject, value) {
     li.firstElementChild.appendChild(img);
 }
 
-var edit = {
+let edit = {
     'rss': function(li, typeDom, type, valueObject, value) {
         rsslinkedit.value     = valueObject['link'];
         rssmaxitemsedit.value = valueObject['maxitems'];
@@ -449,8 +451,8 @@ function escapeAttribute(result) {
 function updateProgress(type) {
     updateTab[type](type);
     if (progressbar.style.width != '100%') {
-        var value, total = 0, currentProgress = 0;
-        for (var t in progress) {
+        let value, total = 0, currentProgress = 0;
+        for (let t in progress) {
             total           += arrays[t].length;
             currentProgress += progress[t];
         }
@@ -484,7 +486,7 @@ function updateTabRN(type, typeDom, typeTab) {
 }
 
 function updateTabSMB(type, typeDom, typeTab, typeSup) {
-    var nb, j = 1, children = typeDom.children, length = children.length;
+    let nb, j = 1, children = typeDom.children, length = children.length;
     for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red'; j++) {}
     for ( ; j != length; j++) {
         nb = moment(children[j].firstElementChild.children[1].lastElementChild.innerHTML, 'LL').diff(date, 'days');
@@ -516,9 +518,9 @@ var updateTab = {
 };
 
 function sortRN(type, value, link, name, text, dynamic, typeDom) {
-    var li      = document.createElement('li');
-    var current = ' ' + escapeHTML(name) + ' ';
-    var j = 1, children = typeDom.children, length = children.length;
+    let li      = document.createElement('li');
+    let current = ' ' + escapeHTML(name) + ' ';
+    let j = 1, children = typeDom.children, length = children.length;
     if (text == null) {
         li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) +' <span class="red">' + chromeI18n(text === null ? 'unreachable' : 'error') + '</span></div></a>';
         li.firstElementChild.addEventListener('click', (function(_li) {
@@ -554,9 +556,9 @@ function sortRN(type, value, link, name, text, dynamic, typeDom) {
 }
 
 function sortSMB(type, value, name, icon, tmpDate, dynamic, website, typeDom) {
-    var li      = document.createElement('li');
-    var current = (name == null ? website + value : name) + ' ';
-    var j = 1, children = typeDom.children, length = children.length;
+    let li      = document.createElement('li');
+    let current = (name == null ? website + value : name) + ' ';
+    let j = 1, children = typeDom.children, length = children.length;
     if (name == null) {
         li.innerHTML = '<a class="widget-list-link" href="' + website + value + '" target="_blank"><img class="full" src=""><div>' + website + value + ' <span class="red">' + chromeI18n(name === null ? 'unreachable' : 'error') + '</span></div></a>';
         li.firstElementChild.addEventListener('click', (function(_li) {
@@ -579,7 +581,7 @@ function sortSMB(type, value, name, icon, tmpDate, dynamic, website, typeDom) {
             li.innerHTML = '<a class="widget-list-link"><img class="full" src="' + (icon == null ? '' : icon[1]) + '"><div>' + name + ' <span class="green">' + tmpDate.format('LL') + '</span></div></a>';
             li.firstElementChild.addEventListener('click', dynamic, false);
         }
-        var val;
+        let val;
         for ( ; j != length; j++) {
             val = children[j].firstElementChild.children[1].lastElementChild.innerHTML;
             if (val == '-' || !tmpDate.isAfter(moment(val, 'LL')))
@@ -614,7 +616,7 @@ var sort = {
 };
 
 var check = {}, arrays = backgroundPage.arrays;
-for (var key in arrays) {
+for (let key in arrays) {
     check[key] = function(type, value) {
         get[type](type, value, backgroundPage, updateProgress, sort[type], sort[type], sort[type]);
     };

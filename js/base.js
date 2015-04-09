@@ -1,3 +1,5 @@
+'use strict';
+
 var regExpSeries, date;
 var regExpSeriesName  = /<title>&#x22;(.*)&#x22;/;
 var regExpSeriesIcon  = /<a name="poster".* src="([^"]*)/;
@@ -30,13 +32,13 @@ function convertIntTo2Int(value) {
 }
 
 function propertyInArray(value, property, array) {
-    var i, length;
+    let i, length;
     for (i = 0, length = array.length; i != length && array[i][property] != value; i++) {}
     return i == length ? -1 : i;
 }
 
 function objectInArray(value, array) {
-    var i, length;
+    let i, length;
     for (i = 0, length = array.length; i != length && array[i] != value; i++) {}
     return i == length ? -1 : i;
 }
@@ -44,21 +46,21 @@ function objectInArray(value, array) {
 function checkAll(arrays) {
     moment.locale('en');
     date         = moment().startOf('day');
-    var tmpDate  = moment();
-    var year     = tmpDate.year();
-    var months   = moment.months();
-    var tmpMonth = tmpDate.month();
-    var month    = months[tmpMonth];
-    var lastDay  = tmpDate.daysInMonth();
-    var day      = '';
-    for (var i = tmpDate.date(); i != lastDay; i++)
+    let tmpDate  = moment();
+    let year     = tmpDate.year();
+    let months   = moment.months();
+    let tmpMonth = tmpDate.month();
+    let month    = months[tmpMonth];
+    let lastDay  = tmpDate.daysInMonth();
+    let day      = '';
+    for (let i = tmpDate.date(); i != lastDay; i++)
         day += i + '|';
     months.splice(0, tmpMonth + 1);
     regExpSeries = new RegExp('<h4>Season (\\d{1,}), Episode (\\d{1,}): <a href="[^"]*">([^<]*)</a></h4><b>(\\d{1,2} [A-S][a-z]+ ' + (year + 1) + '|\\d{1,2} (' + months.join('|') + ') ' + year + '|(' + day + lastDay + ') ' + month + ' ' + year + ')</b>');
     moment.locale(window.navigator.language);
 
-    var i, length, tmp;
-    for (var key in arrays) {
+    let i, length, tmp;
+    for (let key in arrays) {
         progress[key] = 0;
         for (i = 0, tmp = arrays[key], length = tmp.length; i != length; i++)
             check[key](key, tmp[i]);
@@ -66,7 +68,7 @@ function checkAll(arrays) {
 }
 
 function getLinkAll(type, link, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
-    var file = new XMLHttpRequest();
+    let file = new XMLHttpRequest();
     file.open('GET', link, true);
     file.setRequestHeader('Pragma', 'no-cache');
     file.setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
@@ -106,9 +108,9 @@ var getLink = {
             return;
         }
         try {
-            var xml = (new DOMParser()).parseFromString(response, 'text/xml');
-            var tmp = xml.evaluate(xPathLink, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            var link, items, rssDate, rssItemLink;
+            let xml = (new DOMParser()).parseFromString(response, 'text/xml');
+            let tmp = xml.evaluate(xPathLink, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            let link, items, rssDate, rssItemLink;
             if (tmp != null) {
                 link        = tmp.textContent;
                 items       = xml.evaluate(xPathItems, xml, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
@@ -122,15 +124,15 @@ var getLink = {
                 rssItemLink = xPathItemLink2;
             }
             tmp       = xml.evaluate(xPathTitle, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            var title = tmp != null ? tmp.textContent : link;
-            var j;
+            let title = tmp != null ? tmp.textContent : link;
+            let j;
             if (value['current'] == '')
                 j = items.snapshotLength;
             else if (!moment(new Date(value['current'])).isValid())
                 for (j = 0; j != items.snapshotLength && xml.evaluate(rssDate, items.snapshotItem(j), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent != value['current']; j++) {}
             else for (j = 0; j != items.snapshotLength && moment(new Date(xml.evaluate(rssDate, items.snapshotItem(j), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent)).isAfter(new Date(value['current'])); j++) {}
             if (j != 0) {
-                var f;
+                let f;
                 if (value['maxitems'] == null || j > value['maxitems']) {
                     f = (function(_link) {
                         return function() {
@@ -141,12 +143,12 @@ var getLink = {
                 else {
                     f = (function(_xml, _rssItemLink, _items, _j) {
                         return function() {
-                            for (var i = 0; i < _j; i++)
+                            for (let i = 0; i < _j; i++)
                                 window.open(_xml.evaluate(_rssItemLink, _items.snapshotItem(i), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent);
                         };
                     })(xml, rssItemLink, items, j);
                 }
-                var current = xml.evaluate(rssDate, items.snapshotItem(0), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
+                let current = xml.evaluate(rssDate, items.snapshotItem(0), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
                 toDoSuccess1(type, value, link, title, chrome.i18n.getMessage('newitems', [j]),
                     page.getFunctionDynamic[type](f, type, value['link'], current),
                     current
@@ -168,7 +170,7 @@ var getLink = {
             return;
         }
         try {
-            var result = response.match(new RegExp(value['regexp']));
+            let result = response.match(new RegExp(value['regexp']));
             if (result.length != 1)
                 result.splice(0, 1);
             result = result.join(' ');
@@ -195,11 +197,11 @@ var getLink = {
                 toDoError(type, value, null);
             return;
         }
-        var name = response.match(regExpSeriesName);
+        let name = response.match(regExpSeriesName);
         if (name != null) {
-            var result = response.match(regExpSeries);
+            let result = response.match(regExpSeries);
             if (result != null) {
-                var tmpDate = moment(new Date(result[4]));
+                let tmpDate = moment(new Date(result[4]));
                 if (!tmpDate.isAfter(date)) {
                     toDoSuccess1(type, value,
                         name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]),
@@ -233,11 +235,11 @@ var getLink = {
                 toDoError(type, value, null);
             return;
         }
-        var name = response.match(regExpMoviesName);
+        let name = response.match(regExpMoviesName);
         if (name != null) {
-            var result = response.match(regExpMovies);
+            let result = response.match(regExpMovies);
             if (result != null && iso.findCountryByName(result[3])['value'] == result[1]) {
-                var tmpDate = moment(new Date(result[2]));
+                let tmpDate = moment(new Date(result[2]));
                 if (!tmpDate.isAfter(date)) {
                     toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate,
                         page.getFunctionDynamic[type](imdb + value + '/', type, value),
@@ -264,11 +266,11 @@ var getLink = {
                 toDoError(type, value, null);
             return;
         }
-        var name = response.match(regExpBluraysName);
+        let name = response.match(regExpBluraysName);
         if (name != null) {
-            var result = response.match(regExpBlurays);
+            let result = response.match(regExpBlurays);
             if (result != null) {
-                var tmpDate = moment(new Date(result[1]));
+                let tmpDate = moment(new Date(result[1]));
                 if (!tmpDate.isAfter(date)) {
                     toDoSuccess1(type, value, name, response.match(regExpBluraysIcon), tmpDate,
                         page.getFunctionDynamic[type](bluray + value, type, value),

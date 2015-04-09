@@ -1,3 +1,5 @@
+'use strict';
+
 chrome.browserAction.onClicked.addListener(function(tab) {
     chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/uc.html', 'windowId': tab.windowId }, function(tabs) {
         if (tabs.length == 0)
@@ -46,12 +48,12 @@ function writeNotifications() {
 }
 
 function parseLocalStorage(tmpSettings, tmpArrays, tmpNotifications) {
-    for (var key in tmpSettings)
+    for (let key in tmpSettings)
         if (key in settings)
             settings[key] = tmpSettings[key];
 
-    var i, length, tmp;
-    for (var key in tmpArrays) {
+    let i, length, tmp;
+    for (let key in tmpArrays) {
         if (key in arrays) {
             arrays[key] = tmpArrays[key];
             if (key != 'rss' && key != 'news') {
@@ -68,14 +70,14 @@ function parseLocalStorage(tmpSettings, tmpArrays, tmpNotifications) {
 
 function parseArrays(tmpArrays) {
     arrays = { 'rss': [], 'news': [], 'series': [], 'movies': [], 'blurays': [] };
-    for (var key in tmpArrays)
+    for (let key in tmpArrays)
         if (key in arrays)
             arrays[key] = tmpArrays[key];
     writeArrays();
 }
 
 function deleteDynamicRN(type, value) {
-    var i = propertyInArray(value, 'link', arrays[type]);
+    let i = propertyInArray(value, 'link', arrays[type]);
     if (i != -1) {
         arrays[type].splice(i, 1);
         writeArrays();
@@ -84,7 +86,7 @@ function deleteDynamicRN(type, value) {
 }
 
 function deleteDynamicSMB(type, value) {
-    var i = objectInArray(value, arrays[type]);
+    let i = objectInArray(value, arrays[type]);
     if (i != -1) {
         arrays[type].splice(i, 1);
         writeArrays();
@@ -101,7 +103,7 @@ var deleteDynamic = {
 };
 
 function writeDynamic(type, value, cur) {
-    var i = propertyInArray(value, 'link', arrays[type]);
+    let i = propertyInArray(value, 'link', arrays[type]);
     if (i != -1) {
         arrays[type][i]['current'] = cur;
         writeArrays();
@@ -135,13 +137,13 @@ var getFunctionDynamic = {
 };
 
 function unescapeNotifications(result) {
-    var div       = document.createElement('div');
+    let div       = document.createElement('div');
     div.innerHTML = result;
     return div.childNodes.length === 0 ? '' : div.childNodes[0].nodeValue;
 }
 
 function removeItem(type, value) {
-    var i = propertyInArray(value, 'value', items[type]);
+    let i = propertyInArray(value, 'value', items[type]);
     if (i != -1) {
         chrome.notifications.onClicked.removeListener(items[type][i]['clicked']);
         chrome.notifications.onClosed.removeListener(items[type][i]['closed']);
@@ -171,7 +173,7 @@ function computeNotification(type) {
 }
 
 function notify(type, value, name, text, dynamic, save) {
-    var i = propertyInArray(value, 'value', items[type]);
+    let i = propertyInArray(value, 'value', items[type]);
     if (i != -1) {
         if ((type == 'rss' || type == 'news') && items[type][i]['save'] == save)
             return;
@@ -202,10 +204,10 @@ function notify(type, value, name, text, dynamic, save) {
     chrome.notifications.onClicked.addListener(items[type][i]['clicked']);
     chrome.notifications.onClosed.addListener(items[type][i]['closed']);
 
-    var itemsType = items[type], tmp = itemsType[i]['title'], j;
+    let itemsType = items[type], tmp = itemsType[i]['title'], j;
     for (j = 0; j != i && compareStrings(itemsType[j]['title'], tmp) < 0; j++) {}
     if (j == i) {
-        var length = itemsType.length;
+        let length = itemsType.length;
         for (j++; j != length && compareStrings(itemsType[j]['title'], tmp) < 0; j++) {}
     }
     itemsType.splice(j, 0, itemsType.splice(i, 1)[0]);
@@ -223,8 +225,8 @@ function canCheck(type, value) {
 
 function hasChecked(type, value, tmpDate) {
     if (tmpDate != null) {
-        var tmp  = notifications[type + value];
-        var text = tmpDate.toISOString();
+        let tmp  = notifications[type + value];
+        let text = tmpDate.toISOString();
         notifications[type + value] = moment().toISOString() + ';' + text;
         writeNotifications();
         return tmp == null || objectInArray(';', tmp) == -1 || tmp.split(';')[1] != text;
