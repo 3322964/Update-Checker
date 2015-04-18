@@ -526,6 +526,7 @@ function sortRN(type, value, link, name, text, dynamic, typeDom) {
         li.firstElementChild.addEventListener('click', (function(_li) {
             return function() {
                 typeDom.removeChild(_li);
+                updateProgress(type);
                 check[type](type, value);
             };
         })(li), false);
@@ -564,6 +565,7 @@ function sortSMB(type, value, name, icon, tmpDate, dynamic, website, typeDom) {
         li.firstElementChild.addEventListener('click', (function(_li) {
             return function() {
                 typeDom.removeChild(_li);
+                updateProgress(type);
                 check[type](type, value);
             };
         })(li), false);
