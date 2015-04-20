@@ -1,9 +1,8 @@
 'use strict';
 
-var backgroundPage   = chrome.extension.getBackgroundPage();
-var getFavicon       = 'http://www.google.com/s2/favicons?domain_url=';
-var regExpBluraysLink = /<link rel="canonical" href="http:\/\/www.blu-ray.com\/movies\/([^"]*)/;
-var files            = {};
+const getFavicon   = 'http://www.google.com/s2/favicons?domain_url=';
+var backgroundPage = chrome.extension.getBackgroundPage();
+var files          = {};
 
 for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
     tmp = elements[i].id;

@@ -1,7 +1,7 @@
 'use strict';
 
-var type  = 'rss';
-var value = document.URL;
+const type  = 'rss';
+const value = document.URL;
 chrome.runtime.sendMessage({ 'setPopup': true });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {

@@ -26,9 +26,8 @@ window.addEventListener('load', function() {
 
         if (settings['backgroundcheck'] != 0) {
             chrome.alarms.onAlarm.addListener(function(alarm) {
-                if (alarm.name == 'Update Checker') {
+                if (alarm.name == 'Update Checker')
                     checkAll(arrays);
-                }
             });
             chrome.alarms.create('Update Checker', { 'when': Date.now(), 'periodInMinutes': settings['backgroundcheck'] / 60000 });
         }

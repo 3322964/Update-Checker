@@ -1,27 +1,27 @@
 'use strict';
 
+const regExpSeriesName  = /<title>&#x22;(.*)&#x22;/;
+const regExpSeriesIcon  = /<a name="poster".* src="([^"]*)/;
+const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See all release dates" > ([^<]*).*\n\(([^\)]*)/;
+const regExpMoviesName  = /itemprop="name">([^<]*)/;
+const regExpMoviesIcon  = /Poster"\nsrc="([^"]*)/;
+const regExpBlurays     = /style="text-decoration: none; color: #666666">([^<]*)/;
+const regExpBluraysIcon = /id="frontimage_overlay" src="([^"]*)/;
+const regExpBluraysName = /<a class="black[^>]*>([^<]*)<\/a> Blu-ray<\/h1><img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
+const xPathTitle        = '//*[local-name()=\'title\' and (local-name(parent::*)=\'channel\' or local-name(parent::*)=\'feed\')]/text()';
+const xPathLink         = '//*[local-name()=\'link\' and local-name(parent::*)=\'channel\']/text()';
+const xPathLink2        = '//*[local-name()=\'link\' and local-name(parent::*)=\'feed\']/@href';
+const xPathItems        = '//*[local-name()=\'item\']';
+const xPathItems2       = '//*[local-name()=\'entry\']';
+const xPathDate         = '*[local-name()=\'pubDate\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'pubDate\'])]/text()';
+const xPathDate2        = '*[local-name()=\'updated\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'updated\'])]/@href';
+const xPathItemLink     = '*[local-name()=\'link\']/text()';
+const xPathItemLink2    = '*[local-name()=\'link\']/@href';
+const imdb              = 'http://www.imdb.com/title/';
+const bluray            = 'http://www.blu-ray.com/movies/';
+const chromeI18n        = chrome.i18n.getMessage;
+var progress            = {};
 var regExpSeries, date;
-var regExpSeriesName  = /<title>&#x22;(.*)&#x22;/;
-var regExpSeriesIcon  = /<a name="poster".* src="([^"]*)/;
-var regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See all release dates" > ([^<]*).*\n\(([^\)]*)/;
-var regExpMoviesName  = /itemprop="name">([^<]*)/;
-var regExpMoviesIcon  = /Poster"\nsrc="([^"]*)/;
-var regExpBlurays     = /style="text-decoration: none; color: #666666">([^<]*)/;
-var regExpBluraysIcon = /id="frontimage_overlay" src="([^"]*)/;
-var regExpBluraysName = /<a class="black[^>]*>([^<]*)<\/a> Blu-ray<\/h1><img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
-var xPathTitle        = '//*[local-name()=\'title\' and (local-name(parent::*)=\'channel\' or local-name(parent::*)=\'feed\')]/text()';
-var xPathLink         = '//*[local-name()=\'link\' and local-name(parent::*)=\'channel\']/text()';
-var xPathLink2        = '//*[local-name()=\'link\' and local-name(parent::*)=\'feed\']/@href';
-var xPathItems        = '//*[local-name()=\'item\']';
-var xPathItems2       = '//*[local-name()=\'entry\']';
-var xPathDate         = '*[local-name()=\'pubDate\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'pubDate\'])]/text()';
-var xPathDate2        = '*[local-name()=\'updated\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'updated\'])]/@href';
-var xPathItemLink     = '*[local-name()=\'link\']/text()';
-var xPathItemLink2    = '*[local-name()=\'link\']/@href';
-var imdb              = 'http://www.imdb.com/title/';
-var bluray            = 'http://www.blu-ray.com/movies/';
-var chromeI18n        = chrome.i18n.getMessage;
-var progress          = {};
 
 function compareStrings(string1, string2) {
     return string1.localeCompare(string2, window.navigator.language, { 'sensitivity': 'accent' });

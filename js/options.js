@@ -1,7 +1,7 @@
 'use strict';
 
+const chromeI18n   = chrome.i18n.getMessage;
 var backgroundPage = chrome.extension.getBackgroundPage();
-var chromeI18n     = chrome.i18n.getMessage;
 var timeout;
 
 for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
