@@ -198,6 +198,7 @@ function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link,
     typeButtons.classList.add('hidden');
 
     try {
+        files[type].onreadystatechange = null;
         files[type].abort();
     }
     catch (err) {}
@@ -228,8 +229,7 @@ function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link,
                 }
                 else showError(chromeI18n('noresults'), typeName, typeNameSpan);
             }
-            else if (files[type].status != 0)
-                showError(chromeI18n('unreachable'), typeName, typeNameSpan);
+            else showError(chromeI18n('unreachable'), typeName, typeNameSpan);
         }
     };
     if (type == 'blurays')
