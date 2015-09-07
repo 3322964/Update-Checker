@@ -62,7 +62,7 @@
         "message": "This already exists"
     },
     "empty": {
-        "message": "This field cannot be empty"
+        "message": "This field must be filled"
     },
     "number": {
         "message": "This field must contain a positive integer or zero (default if empty: 0)"

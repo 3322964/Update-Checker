@@ -62,7 +62,7 @@
         "message": "Ceci existe déjà"
     },
     "empty": {
-        "message": "Ce champ ne peut être vide"
+        "message": "Ce champ doit être rempli"
     },
     "number": {
         "message": "Ce champ doit contenir un entier positif ou nul (par défaut si vide : 0)"
