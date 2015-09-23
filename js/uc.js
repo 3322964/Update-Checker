@@ -521,7 +521,7 @@ function sortRN(type, value, link, name, text, dynamic, typeDom) {
     let current = ' ' + escapeHTML(name) + ' ';
     let j = 1, children = typeDom.children, length = children.length;
     if (text == null) {
-        li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) +' <span class="red">' + chromeI18n(text === null ? 'unreachable' : 'error') + '</span></div></a>';
+        li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name).replace(/:\/\/([^@]*)@/, '://***@') +' <span class="red">' + chromeI18n(text === null ? 'unreachable' : 'error') + '</span></div></a>';
         li.firstElementChild.addEventListener('click', (function(_li) {
             return function() {
                 typeDom.removeChild(_li);
