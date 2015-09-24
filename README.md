@@ -1,11 +1,5 @@
 # Update-Checker
-Update Checker allows you to keep track and be notified of your:
-
-* TV series next episode release dates,
-* Movies release dates,
-* Blu-ray release dates,
-* RSS feeds,
-* Any webpage with a RegExp (some predefined website-specific RegExps are available).
+Update Checker tracks and notifies you of: release dates of TV series' episodes, movies and Blu-ray; RSS feeds; and any website with a RegExp (some predefined RegExps are available).
 
 How to use: follow this [tutorial](https://developer.chrome.com/extensions/getstarted#unpacked).
 

@@ -1,6 +1,6 @@
 {
     "description": {
-        "message": "Update Checker allows you to keep track and be notified of your TV series, movies, Blu-ray, RSS and more (with a RegExp)..."
+        "message": "Update Checker tracks and notifies you of: release dates of TV series' episodes, movies and Blu-ray; RSS feeds; and any website with a RegExp (some predefined RegExps are available)."
     },
     // uc.html
     "series": {
