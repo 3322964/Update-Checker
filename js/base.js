@@ -33,13 +33,13 @@ function convertIntTo2Int(value) {
 
 function propertyInArray(value, property, array) {
     let i, length;
-    for (i = 0, length = array.length; i != length && array[i][property] != value; i++) {}
+    for (i = 0, length = array.length; i != length && array[i][property] != value; i++) ;
     return i == length ? -1 : i;
 }
 
 function objectInArray(value, array) {
     let i, length;
-    for (i = 0, length = array.length; i != length && array[i] != value; i++) {}
+    for (i = 0, length = array.length; i != length && array[i] != value; i++) ;
     return i == length ? -1 : i;
 }
 
@@ -129,8 +129,8 @@ var getLink = {
             if (value['current'] == '')
                 j = items.snapshotLength;
             else if (!moment(new Date(value['current'])).isValid())
-                for (j = 0; j != items.snapshotLength && xml.evaluate(rssDate, items.snapshotItem(j), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent != value['current']; j++) {}
-            else for (j = 0; j != items.snapshotLength && moment(new Date(xml.evaluate(rssDate, items.snapshotItem(j), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent)).isAfter(new Date(value['current'])); j++) {}
+                for (j = 0; j != items.snapshotLength && xml.evaluate(rssDate, items.snapshotItem(j), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent != value['current']; j++) ;
+            else for (j = 0; j != items.snapshotLength && moment(new Date(xml.evaluate(rssDate, items.snapshotItem(j), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent)).isAfter(new Date(value['current'])); j++) ;
             if (j != 0) {
                 let f;
                 if (value['maxitems'] == null || j > value['maxitems']) {

@@ -204,10 +204,10 @@ function notify(type, value, name, text, dynamic, save) {
     chrome.notifications.onClosed.addListener(items[type][i]['closed']);
 
     let itemsType = items[type], tmp = itemsType[i]['title'], j;
-    for (j = 0; j != i && compareStrings(itemsType[j]['title'], tmp) < 0; j++) {}
+    for (j = 0; j != i && compareStrings(itemsType[j]['title'], tmp) < 0; j++) ;
     if (j == i) {
         let length = itemsType.length;
-        for (j++; j != length && compareStrings(itemsType[j]['title'], tmp) < 0; j++) {}
+        for (j++; j != length && compareStrings(itemsType[j]['title'], tmp) < 0; j++) ;
     }
     itemsType.splice(j, 0, itemsType.splice(i, 1)[0]);
 }

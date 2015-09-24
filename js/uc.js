@@ -486,7 +486,7 @@ function updateTabRN(type, typeDom, typeTab) {
 
 function updateTabSMB(type, typeDom, typeTab, typeSup) {
     let nb, j = 1, children = typeDom.children, length = children.length;
-    for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red'; j++) {}
+    for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red'; j++) ;
     for ( ; j != length; j++) {
         nb = moment(children[j].firstElementChild.children[1].lastElementChild.innerHTML, 'LL').diff(date, 'days');
         if (nb >= 0)
@@ -529,13 +529,13 @@ function sortRN(type, value, link, name, text, dynamic, typeDom) {
                 check[type](type, value);
             };
         })(li), false);
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) {}
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) ;
     }
     else if (dynamic == null) {
         li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span>' + escapeHTML(text) + '</span></div></a>';
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) {}
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green'; j++) {}
-        for ( ; j != length && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) {}
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) ;
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green'; j++) ;
+        for ( ; j != length && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) ;
     }
     else {
         li.innerHTML = '<a class="widget-list-link"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span class="green">' + escapeHTML(text) + '</span></div></a>';
@@ -547,8 +547,8 @@ function sortRN(type, value, link, name, text, dynamic, typeDom) {
                 check[type](type, value);
             };
         })(li), false);
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) {}
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) {}
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) ;
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) ;
     }
     typeDom.insertBefore(li, j != length ? children[j] : null);
     addDelete(li, typeDom, type, value['link']);
@@ -568,12 +568,12 @@ function sortSMB(type, value, name, icon, tmpDate, dynamic, website, typeDom) {
                 check[type](type, value);
             };
         })(li), false);
-        for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) < 0; j++) {}
+        for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) < 0; j++) ;
     }
     else if (tmpDate == null) {
         li.innerHTML = '<a class="widget-list-link" href="' + website + value + '" target="_blank"><img class="full" src="' + (icon == null ? '' : icon[1]) + '"><div>' + name + ' <span>-</span></div></a>';
-        for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.innerHTML != '-'; j++) {}
-        for ( ; j != length && compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) < 0; j++) {}
+        for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.innerHTML != '-'; j++) ;
+        for ( ; j != length && compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) < 0; j++) ;
     }
     else {
         if (dynamic == null)
