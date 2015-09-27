@@ -10,15 +10,15 @@ for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
         window[tmp] = document.getElementById(tmp);
 }
 
-options.addEventListener('click', function() {
-    chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/options.html', 'currentWindow': true }, function(tabs) {
+options.addEventListener('click', function () {
+    chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/options.html', 'currentWindow': true }, function (tabs) {
         if (tabs.length == 0)
             window.open('options.html');
-        else chrome.tabs.update(tabs[0].id, { 'selected': true }, function() {});
+        else chrome.tabs.update(tabs[0].id, { 'selected': true }, function () {});
     });
 }, false);
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     rsslink.placeholder         = chromeI18n('link');
     rssmaxitems.placeholder     = chromeI18n('maxitems');
     rssvalid.value              = chromeI18n('add');
@@ -90,14 +90,14 @@ function addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdr
     newsregexp.addEventListener('click', highlightDropdowns, false);
 
     newsregexphelp.title = chromeI18n('help');
-    newsregexphelp.addEventListener('click', function() {
+    newsregexphelp.addEventListener('click', function () {
         newsregexpdropdown.classList.add('visible');
     }, false);
 
     for (let i = 0, length = dropdownNews.length; i != length; i++) {
         let li       = document.createElement('li');
         li.innerHTML = '<a name="' + i + '">' + dropdownNews[i]['title'] + ' (' + dropdownNews[i]['link'] + ')</a>';
-        li.firstElementChild.addEventListener('click', function(e) {
+        li.firstElementChild.addEventListener('click', function (e) {
             newsregexp.value = dropdownNews[parseInt(e.target.name)]['regexp'];
             newsregexpdropdown.classList.remove('visible');
         }, false);
@@ -107,7 +107,7 @@ function addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdr
 addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdropdown);
 addEventsToDropdowns(newslinkedit, newsregexphelpedit, newsregexpedit, newsregexpdropdownedit);
 
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
     let potentialNewsRegExp = e.target.parentElement;
     if (potentialNewsRegExp == null || potentialNewsRegExp.lastElementChild == null || (potentialNewsRegExp.lastElementChild != newsregexpdropdown && potentialNewsRegExp.lastElementChild != newsregexpdropdownedit)) {
         newsregexpdropdown.classList.remove('visible');
@@ -120,8 +120,8 @@ for (let i = 0, tab, list, lists = widget.getElementsByClassName('widget-list'),
     tab                         = document.getElementById(list.id + 'tab');
     tab.childNodes[0].nodeValue = chromeI18n(list.id) + ' ';
 
-    tab.addEventListener('click', (function(currentTab, currentList) {
-        return function() {
+    tab.addEventListener('click', (function (currentTab, currentList) {
+        return function () {
             widget.getElementsByClassName('active-list')[0].classList.remove('active-list');
             widget.getElementsByClassName('active-tab')[0].classList.remove('active-tab');
             currentTab.classList.add('active-tab');
@@ -140,7 +140,7 @@ function removeError(e) {
 }
 function addEventsToInputs(typeDom, typeValid) {
     for (let i = 0, inputs = typeDom.getElementsByClassName('checkout-input'), length = inputs.length; i != length; i++) {
-        inputs[i].addEventListener('keypress', function(e) {
+        inputs[i].addEventListener('keypress', function (e) {
             if (e.keyCode == 13)
                 typeValid.click();
         }, false);
@@ -161,7 +161,7 @@ function addSearchValid(type, typeDom, typeName, typeSearch, typeResults, typeBu
 
     addEventsToInputs(typeDom, typeSearch);
 
-    typeValid.addEventListener('click', function() {
+    typeValid.addEventListener('click', function () {
         let array = backgroundPage.arrays[type], checked = typeResults.getElementsByTagName('input');
         for (let i = 0, length = checked.length; i != length; i++)
             if (checked[i].checked && objectInArray(checked[i].value, array) == -1)
@@ -172,7 +172,7 @@ function addSearchValid(type, typeDom, typeName, typeSearch, typeResults, typeBu
         typeButtons.classList.add('hidden');
     }, false);
 
-    typeCancel.addEventListener('click', function() {
+    typeCancel.addEventListener('click', function () {
         typeName.value     = '';
         typeResults.hidden = true;
         typeButtons.classList.add('hidden');
@@ -216,7 +216,7 @@ function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link,
         files[type].setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
     }
 
-    files[type].onreadystatechange = function() {
+    files[type].onreadystatechange = function () {
         if (files[type].readyState == XMLHttpRequest.DONE) {
             typeName.classList.remove('loading');
             if (files[type].status == 200) {
@@ -237,10 +237,10 @@ function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link,
     else files[type].send();
 }
 
-seriessearch.addEventListener('click', function() {
+seriessearch.addEventListener('click', function () {
     getSearch('series', seriesname, seriesnamespan, seriesresults, seriesbuttons,
         'http://www.imdb.com/find?s=tt&q=',
-        function(response, array) {
+        function (response, array) {
             let regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
             while ((tmp = regExp.exec(response)) != null)
                 if (tmp[3].match(/Series\)/))
@@ -250,10 +250,10 @@ seriessearch.addEventListener('click', function() {
     );
 }, false);
 
-moviessearch.addEventListener('click', function() {
+moviessearch.addEventListener('click', function () {
     getSearch('movies', moviesname, moviesnamespan, moviesresults, moviesbuttons,
         'http://www.imdb.com/find?s=tt&q=',
-        function(response, array) {
+        function (response, array) {
             let regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
             while ((tmp = regExp.exec(response)) != null)
                 if (!tmp[3].match(/Series\)/) && !tmp[3].match(/\(Video Game\)/) && !tmp[3].match(/\(Video\)/) && !tmp[3].match(/\(TV Episode\)/))
@@ -263,10 +263,10 @@ moviessearch.addEventListener('click', function() {
     );
 }, false);
 
-blurayssearch.addEventListener('click', function() {
+blurayssearch.addEventListener('click', function () {
     getSearch('blurays', bluraysname, bluraysnamespan, bluraysresults, bluraysbuttons,
         'http://www.blu-ray.com/search/quicksearch.php',
-        function(response, array) {
+        function (response, array) {
             let tmp = response.match(/let urls = new Array\(([^\)]*)/), output = '';
             if (tmp == null)
                 return output;
@@ -355,11 +355,11 @@ function parseNews(current, save, newsname, newsnamespan, newslink, newslinkspan
     backgroundPage.writeArrays();
 }
 
-rssvalid.addEventListener('click', function() {
+rssvalid.addEventListener('click', function () {
     parseRss('', '', rsslink, rsslinkspan, rssmaxitems, rssmaxitemsspan);
 }, false);
 
-newsvalid.addEventListener('click', function() {
+newsvalid.addEventListener('click', function () {
     parseNews('', '', newsname, newsnamespan, newslink, newslinkspan, newsregexp, newsregexpspan);
 }, false);
 
@@ -368,10 +368,10 @@ function addDelete(li, typeDom, type, value) {
     img.className = 'button';
     img.src       = '/images/delete.png';
     img.title     = chromeI18n('delete');
-    img.addEventListener('click', function(e) {
+    img.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        confirmyes.onclick = function() {
+        confirmyes.onclick = function () {
             removeElement(typeDom, li, type, value, confirmfade);
         };
         confirmlight.classList.add('visible');
@@ -385,7 +385,7 @@ function addEdit(li, typeDom, type, valueObject, value) {
     img.className = 'button';
     img.src       = '/images/edit.png';
     img.title     = chromeI18n('edit');
-    img.addEventListener('click', function(e) {
+    img.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         edit[type](li, typeDom, type, valueObject, value);
@@ -394,25 +394,25 @@ function addEdit(li, typeDom, type, valueObject, value) {
 }
 
 let edit = {
-    'rss': function(li, typeDom, type, valueObject, value) {
+    'rss': function (li, typeDom, type, valueObject, value) {
         rsslinkedit.value     = valueObject['link'];
         rssmaxitemsedit.value = valueObject['maxitems'];
         rsslinkedit.click();
         rssmaxitemsedit.click();
-        rssvalidedit.onclick  = function() {
+        rssvalidedit.onclick  = function () {
             parseRss(valueObject['current'], valueObject['link'], rsslinkedit, rsslinkeditspan, rssmaxitemsedit, rssmaxitemseditspan, typeDom, li, type, value, rssfade)
         };
         rsslight.classList.add('visible');
         rssfade.classList.add('visible');
     },
-    'news': function(li, typeDom, type, valueObject, value) {
+    'news': function (li, typeDom, type, valueObject, value) {
         newsnameedit.value   = valueObject['name'];
         newslinkedit.value   = valueObject['link'];
         newsregexpedit.value = valueObject['regexp'];
         newsnameedit.click();
         newslinkedit.click();
         newsregexpedit.click();
-        newsvalidedit.onclick = function() {
+        newsvalidedit.onclick = function () {
             parseNews(valueObject['current'], valueObject['link'], newsnameedit, newsnameeditspan, newslinkedit, newslinkeditspan, newsregexpedit, newsregexpeditspan, typeDom, li, type, value, newsfade);
         };
         newslight.classList.add('visible');
@@ -462,7 +462,7 @@ function updateProgress(type) {
         progressbar.style.width               = value + '%';
         progressbar.style['background-color'] = value > 80 ? '#86e01e' : value > 60 ? '#f2d31b' : value > 40 ? '#f2b01e' : value > 20 ? '#f27011' : '#f63a0f';
         if (value == 100) {
-            setTimeout(function() {
+            setTimeout(function () {
                 progressbar.classList.add('hidden');
             }, 1000);
         }
@@ -499,19 +499,19 @@ function updateTabSMB(type, typeDom, typeTab, typeSup) {
 }
 
 var updateTab = {
-    'rss': function(type) {
+    'rss': function (type) {
         updateTabRN(type, rss, rsstab);
     },
-    'news': function(type) {
+    'news': function (type) {
         updateTabRN(type, news, newstab);
     },
-    'series': function(type) {
+    'series': function (type) {
         updateTabSMB(type, series, seriestab, seriessup);
     },
-    'movies': function(type) {
+    'movies': function (type) {
         updateTabSMB(type, movies, moviestab, moviessup);
     },
-    'blurays': function(type) {
+    'blurays': function (type) {
         updateTabSMB(type, blurays, bluraystab, blurayssup);
     }
 };
@@ -522,8 +522,8 @@ function sortRN(type, value, link, name, text, dynamic, typeDom) {
     let j = 1, children = typeDom.children, length = children.length;
     if (text == null) {
         li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name).replace(/:\/\/([^@]*)@/, '://***@') +' <span class="red">' + chromeI18n(text === null ? 'unreachable' : 'error') + '</span></div></a>';
-        li.firstElementChild.addEventListener('click', (function(_li) {
-            return function() {
+        li.firstElementChild.addEventListener('click', (function (_li) {
+            return function () {
                 typeDom.removeChild(_li);
                 updateProgress(type);
                 check[type](type, value);
@@ -539,8 +539,8 @@ function sortRN(type, value, link, name, text, dynamic, typeDom) {
     }
     else {
         li.innerHTML = '<a class="widget-list-link"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span class="green">' + escapeHTML(text) + '</span></div></a>';
-        li.firstElementChild.addEventListener('click', (function(_li) {
-            return function() {
+        li.firstElementChild.addEventListener('click', (function (_li) {
+            return function () {
                 dynamic();
                 typeDom.removeChild(_li);
                 updateProgress(type);
@@ -561,8 +561,8 @@ function sortSMB(type, value, name, icon, tmpDate, dynamic, website, typeDom) {
     let j = 1, children = typeDom.children, length = children.length;
     if (name == null) {
         li.innerHTML = '<a class="widget-list-link" href="' + website + value + '" target="_blank"><img class="full" src=""><div>' + website + value + ' <span class="red">' + chromeI18n(name === null ? 'unreachable' : 'error') + '</span></div></a>';
-        li.firstElementChild.addEventListener('click', (function(_li) {
-            return function() {
+        li.firstElementChild.addEventListener('click', (function (_li) {
+            return function () {
                 typeDom.removeChild(_li);
                 updateProgress(type);
                 check[type](type, value);
@@ -599,26 +599,26 @@ function sortSMB(type, value, name, icon, tmpDate, dynamic, website, typeDom) {
 }
 
 var sort = {
-    'rss': function(type, value, link, name, text, dynamic) {
+    'rss': function (type, value, link, name, text, dynamic) {
         sortRN(type, value, link, name, text, dynamic, rss);
     },
-    'news': function(type, value, link, name, text, dynamic) {
+    'news': function (type, value, link, name, text, dynamic) {
         sortRN(type, value, link, name, text, dynamic, news);
     },
-    'series': function(type, value, name, icon, tmpDate, dynamic) {
+    'series': function (type, value, name, icon, tmpDate, dynamic) {
         sortSMB(type, value, name, icon, tmpDate, dynamic, imdb, series);
     },
-    'movies': function(type, value, name, icon, tmpDate, dynamic) {
+    'movies': function (type, value, name, icon, tmpDate, dynamic) {
         sortSMB(type, value, name, icon, tmpDate, dynamic, imdb, movies);
     },
-    'blurays': function(type, value, name, icon, tmpDate, dynamic) {
+    'blurays': function (type, value, name, icon, tmpDate, dynamic) {
         sortSMB(type, value, name == null ? name : name.length == 3 ? name[1] + ' <img src="' + name[2] + '">' : name[1], icon, tmpDate, dynamic, bluray, blurays);
     }
 };
 
 var check = {}, arrays = backgroundPage.arrays;
 for (let key in arrays) {
-    check[key] = function(type, value) {
+    check[key] = function (type, value) {
         get[type](type, value, backgroundPage, updateProgress, sort[type], sort[type], sort[type]);
     };
 }

@@ -1,14 +1,14 @@
 'use strict';
 
-chrome.browserAction.onClicked.addListener(function(tab) {
-    chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/uc.html', 'windowId': tab.windowId }, function(tabs) {
+chrome.browserAction.onClicked.addListener(function (tab) {
+    chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/uc.html', 'windowId': tab.windowId }, function (tabs) {
         if (tabs.length == 0)
             window.open('uc.html');
-        else chrome.tabs.update(tabs[0].id, { 'selected': true }, function() {});
+        else chrome.tabs.update(tabs[0].id, { 'selected': true }, function () {});
     });
 });
 
-chrome.runtime.onMessage.addListener(function(request, sender) {
+chrome.runtime.onMessage.addListener(function (request, sender) {
     if (request['setPopup']) {
         chrome.browserAction.setPopup({ 'tabId': sender.tab.id, 'popup': 'popup.html' });
         chrome.browserAction.setBadgeText({ 'tabId': sender.tab.id, 'text': '+' })
@@ -19,13 +19,13 @@ var settings      = { 'hometab': 'seriestab', 'backgroundcheck': 180000 };
 var arrays        = { 'rss': [], 'news': [], 'series': [], 'movies': [], 'blurays': [] };
 var notifications = {}, items = { 'rss': [], 'news': [], 'series': [], 'movies': [], 'blurays': [] };
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     chrome.alarms.clearAll();
-    chrome.storage.local.get(null, function(items) {
+    chrome.storage.local.get(null, function (items) {
         parseLocalStorage(items['settings'], items['arrays'], items['notifications']);
 
         if (settings['backgroundcheck'] != 0) {
-            chrome.alarms.onAlarm.addListener(function(alarm) {
+            chrome.alarms.onAlarm.addListener(function (alarm) {
                 if (alarm.name == 'Update Checker')
                     checkAll(arrays);
             });
@@ -111,21 +111,21 @@ function writeDynamic(type, value, cur) {
 }
 
 function getFunctionDynamicSMB(link, type, value) {
-    return function() {
+    return function () {
         window.open(link);
         removeItem(type, value);
     };
 }
 
 var getFunctionDynamic = {
-    'rss': function(link, type, value, cur) {
-        return function() {
+    'rss': function (link, type, value, cur) {
+        return function () {
             link();
             writeDynamic(type, value, cur);
         };
     },
-    'news': function(link, type, value, cur) {
-        return function() {
+    'news': function (link, type, value, cur) {
+        return function () {
             window.open(link);
             writeDynamic(type, value, cur);
         };
@@ -152,7 +152,7 @@ function removeItem(type, value) {
 }
 
 function refreshNotification(type) {
-    chrome.notifications.clear(type, function() {
+    chrome.notifications.clear(type, function () {
         if (items[type].length == 0)
             return;
         chrome.notifications.create(type, {
@@ -160,8 +160,8 @@ function refreshNotification(type) {
             'title': chromeI18n(type),
             'message': '',
             'iconUrl': 'images/logo.png',
-            'items': items[type].map(function(item) { return { 'title': item['title'], 'message': item['message'] }; })
-        }, function() {});
+            'items': items[type].map(function (item) { return { 'title': item['title'], 'message': item['message'] }; })
+        }, function () {});
     });
 }
 
@@ -184,19 +184,19 @@ function notify(type, value, name, text, dynamic, save) {
         'value': value,
         'title': unescapeNotifications(name),
         'message': unescapeNotifications(text),
-        'clicked': function(id) {
+        'clicked': function (id) {
             if (id == type)
                 dynamic();
         }
     };
     if (type == 'rss' || type == 'news') {
         items[type][i]['save']   = save;
-        items[type][i]['closed'] = function(id, user) {
+        items[type][i]['closed'] = function (id, user) {
             if (id == type && user == true)
                 writeDynamic(type, value, save);
         };
     }
-    else items[type][i]['closed'] = function(id, user) {
+    else items[type][i]['closed'] = function (id, user) {
         if (id == type && user == true)
             removeItem(type, value);
     };
@@ -237,16 +237,16 @@ function hasChecked(type, value, tmpDate) {
 }
 
 function checkRN(type, value) {
-    get[type](type, value, window, computeNotification, function(type, value, link, name, text, dynamic, current) {
+    get[type](type, value, window, computeNotification, function (type, value, link, name, text, dynamic, current) {
         notify(type, value['link'], name, text, dynamic, current);
-    }, function(type, value) {
+    }, function (type, value) {
         removeItem(type, value['link']);
     });
 }
 
 function checkSM(type, value) {
     if (canCheck(type, value)) {
-        get[type](type, value, window, computeNotification, function(type, value, name, icon, tmpDate, dynamic, changed) {
+        get[type](type, value, window, computeNotification, function (type, value, name, icon, tmpDate, dynamic, changed) {
             if (changed)
                 notify(type, value, name, tmpDate.format('LL'), dynamic);
         }, removeItem);
@@ -258,9 +258,9 @@ var check = {
     'news': checkRN,
     'series': checkSM,
     'movies': checkSM,
-    'blurays': function(type, value) {
+    'blurays': function (type, value) {
         if (canCheck(type, value)) {
-            get[type](type, value, window, computeNotification, function(type, value, name, icon, tmpDate, dynamic, changed) {
+            get[type](type, value, window, computeNotification, function (type, value, name, icon, tmpDate, dynamic, changed) {
                 if (changed)
                     notify(type, value, name[1], tmpDate.format('LL'), dynamic);
             }, removeItem);

@@ -9,8 +9,8 @@ for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
         window[tmp] = document.getElementById(tmp);
 }
 
-window.addEventListener('load', function() {
-    chrome.tabs.query({ 'active': true, 'currentWindow': true }, function(tabs) {
+window.addEventListener('load', function () {
+    chrome.tabs.query({ 'active': true, 'currentWindow': true }, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, { 'getPopupInfos': true }, setPopupInfos);
     });
 });
@@ -27,7 +27,7 @@ function setPopupInfos(obj) {
 
     if (type != 'rss' && objectInArray(value, array) == -1) {
         valid.value = chromeI18n('add');
-        valid.addEventListener('click', function() {
+        valid.addEventListener('click', function () {
             array.push(value);
             backgroundPage.writeArrays();
             window.close();
@@ -44,14 +44,14 @@ function setPopupInfos(obj) {
                 document.getElementById(e.target.id + 'span').innerHTML = '';
             }
         }
-        rssmaxitems.addEventListener('keypress', function(e) {
+        rssmaxitems.addEventListener('keypress', function (e) {
             if (e.keyCode == 13)
                 valid.click();
         }, false);
         rssmaxitems.addEventListener('keydown', removeError, false);
         rssmaxitems.addEventListener('click', removeError, false);
 
-        valid.addEventListener('click', function() {
+        valid.addEventListener('click', function () {
             rssmaxitems.click();
             let maxitems = parseInt(rssmaxitems.valueAsNumber);
             if (rssmaxitems.validity.badInput || maxitems < 0) {
@@ -68,7 +68,7 @@ function setPopupInfos(obj) {
     else {
         valid.value = chromeI18n('delete');
         valid.classList.add('redlike');
-        valid.addEventListener('click', function() {
+        valid.addEventListener('click', function () {
             backgroundPage.deleteDynamic[type](type, value);
             window.close();
         }, false);

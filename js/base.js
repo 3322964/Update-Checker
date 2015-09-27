@@ -72,7 +72,7 @@ function getLinkAll(type, link, value, page, toDoProgress, toDoSuccess1, toDoSuc
     file.open('GET', link, true);
     file.setRequestHeader('Pragma', 'no-cache');
     file.setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
-    file.onreadystatechange = function() {
+    file.onreadystatechange = function () {
         if (file.readyState == XMLHttpRequest.DONE) {
             progress[type]++;
             getLink[type](type, value, page, toDoSuccess1, toDoSuccess2, toDoError, file.status == 200, file.responseText);
@@ -89,19 +89,19 @@ function getRN(type, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDo
 var get = {
     'rss': getRN,
     'news': getRN,
-    'series': function(type, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
+    'series': function (type, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
         getLinkAll(type, imdb + value + '/epcast', value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError);
     },
-    'movies': function(type, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
+    'movies': function (type, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
         getLinkAll(type, imdb + value + '/', value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError);
     },
-    'blurays': function(type, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
+    'blurays': function (type, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
         getLinkAll(type, bluray + value, value, page, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError);
     }
 };
 
 var getLink = {
-    'rss': function(type, value, page, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
+    'rss': function (type, value, page, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
         if (!status) {
             if (toDoError != null)
                 toDoError(type, value, value['link'], value['link'], null);
@@ -134,15 +134,15 @@ var getLink = {
             if (j != 0) {
                 let f;
                 if (value['maxitems'] == null || j > value['maxitems']) {
-                    f = (function(_link) {
-                        return function() {
+                    f = (function (_link) {
+                        return function () {
                             window.open(_link);
                         };
                     })(link);
                 }
                 else {
-                    f = (function(_xml, _rssItemLink, _items, _j) {
-                        return function() {
+                    f = (function (_xml, _rssItemLink, _items, _j) {
+                        return function () {
                             for (let i = 0; i < _j; i++)
                                 window.open(_xml.evaluate(_rssItemLink, _items.snapshotItem(i), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent);
                         };
@@ -163,7 +163,7 @@ var getLink = {
         }
     },
 
-    'news': function(type, value, page, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
+    'news': function (type, value, page, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
         if (!status) {
             if (toDoError != null)
                 toDoError(type, value, value['link'], value['name'], null);
@@ -191,7 +191,7 @@ var getLink = {
         }
     },
 
-    'series': function(type, value, page, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
+    'series': function (type, value, page, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
         if (!status) {
             if (toDoError != null)
                 toDoError(type, value, null);
@@ -229,7 +229,7 @@ var getLink = {
             toDoError(type, value);
     },
 
-    'movies': function(type, value, page, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
+    'movies': function (type, value, page, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
         if (!status) {
             if (toDoError != null)
                 toDoError(type, value, null);
@@ -260,7 +260,7 @@ var getLink = {
             toDoError(type, value);
     },
 
-    'blurays': function(type, value, page, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
+    'blurays': function (type, value, page, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
         if (!status) {
             if (toDoError != null)
                 toDoError(type, value, null);

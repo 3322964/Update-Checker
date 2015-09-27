@@ -10,7 +10,7 @@ for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
         window[tmp] = document.getElementById(tmp);
 }
 
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     document.title          = chromeI18n('options');
     notifications.innerHTML = chromeI18n('notifications');
     restore.value           = chromeI18n('restore');
@@ -25,22 +25,22 @@ function showTextTimeout(string, color) {
     clearTimeout(timeout);
     results.innerHTML = '<span class="' + color + '">' + string + '</span>';
     results.hidden    = false;
-    timeout           = setTimeout(function() {
+    timeout           = setTimeout(function () {
         results.hidden    = true;
         results.innerHTML = '';
     }, 3000);
 }
 
-backgroundcheck.addEventListener('change', function(e) {
+backgroundcheck.addEventListener('change', function (e) {
     let value                                  = e.target.valueAsNumber;
     backgroundPage.settings['backgroundcheck'] = isNaN(value) ? 0 : value;
     backgroundPage.writeSettings();
     backgroundPage.location.reload();
 }, false);
 
-restoreh.addEventListener('change', function(event) {
+restoreh.addEventListener('change', function (event) {
     let file    = new FileReader();
-    file.onload = function(e) {
+    file.onload = function (e) {
         event.target.value = '';
         try {
             backgroundPage.parseArrays(JSON.parse(e.target.result)['arrays']);
@@ -54,11 +54,11 @@ restoreh.addEventListener('change', function(event) {
     file.readAsText(event.target.files[0]);
 }, false);
 
-restore.addEventListener('click', function() {
+restore.addEventListener('click', function () {
     restoreh.click();
 }, false);
 
-backup.addEventListener('click', function() {
+backup.addEventListener('click', function () {
     let a      = document.createElement('a');
     a.download = 'Update Checker.json';
     a.href     = window.URL.createObjectURL(new Blob([JSON.stringify({ 'arrays': backgroundPage.arrays }, null, 4)], { 'type': 'text/plain;charset=UTF-8' }));
