@@ -11,7 +11,7 @@ for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
 }
 
 options.addEventListener('click', function () {
-    chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/options.html', 'currentWindow': true }, function (tabs) {
+    chrome.tabs.query({ 'url': chrome.runtime.getURL('options.html'), 'currentWindow': true }, function (tabs) {
         if (tabs.length == 0)
             window.open('options.html');
         else chrome.tabs.update(tabs[0].id, { 'selected': true }, function () {});

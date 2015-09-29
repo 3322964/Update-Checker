@@ -1,7 +1,7 @@
 'use strict';
 
 chrome.browserAction.onClicked.addListener(function (tab) {
-    chrome.tabs.query({ 'url': 'chrome-extension://' + chrome.runtime.id + '/uc.html', 'windowId': tab.windowId }, function (tabs) {
+    chrome.tabs.query({ 'url': chrome.runtime.getURL('uc.html'), 'windowId': tab.windowId }, function (tabs) {
         if (tabs.length == 0)
             window.open('uc.html');
         else chrome.tabs.update(tabs[0].id, { 'selected': true }, function () {});
