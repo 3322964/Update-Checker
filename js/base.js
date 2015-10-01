@@ -7,7 +7,7 @@ const regExpMoviesName  = /itemprop="name">([^<]*)/;
 const regExpMoviesIcon  = /Poster"\nsrc="([^"]*)/;
 const regExpBlurays     = /style="text-decoration: none; color: #666666">([^<]*)/;
 const regExpBluraysIcon = /id="frontimage_overlay" src="([^"]*)/;
-const regExpBluraysName = /<a class="black[^>]*>([^<]*)<\/a> Blu-ray<\/h1><img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
+const regExpBluraysName = /itemprop="itemReviewed">(?:<a[^>]*>)?([^<]*)(?:<\/a>)? Blu-ray<\/h1><img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
 const xPathTitle        = '//*[local-name()=\'title\' and (local-name(parent::*)=\'channel\' or local-name(parent::*)=\'feed\')]/text()';
 const xPathLink         = '//*[local-name()=\'link\' and local-name(parent::*)=\'channel\']/text()';
 const xPathLink2        = '//*[local-name()=\'link\' and local-name(parent::*)=\'feed\']/@href';
@@ -259,9 +259,9 @@ var getLink = {
                 toDoError(type, value, null);
             return;
         }
-        let name = response.match(regExpBluraysName);
+        let name = response.match(regExpBluraysName);console.log(name);
         if (name != null) {
-            let result = response.match(regExpBlurays);
+            let result = response.match(regExpBlurays);console.log(result);
             if (result != null) {
                 let tmpDate = moment(new Date(result[1]));
                 if (!tmpDate.isAfter(date)) {

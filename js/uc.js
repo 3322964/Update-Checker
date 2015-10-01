@@ -267,7 +267,7 @@ blurayssearch.addEventListener('click', function () {
     getSearch('blurays', bluraysname, bluraysnamespan, bluraysresults, bluraysbuttons,
         'http://www.blu-ray.com/search/quicksearch.php',
         function (response, array) {
-            let tmp = response.match(/let urls = new Array\(([^\)]*)/), output = '';
+            let tmp = response.match(/var urls = new Array\(([^\)]*)/), output = '';
             if (tmp == null)
                 return output;
             let URLs   = tmp[1].replace(/'|http:\/\/www\.blu-ray\.com\/movies\//g, '').split(', ');
