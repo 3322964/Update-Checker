@@ -98,9 +98,6 @@
         "message": "Backup"
     },
     // options.js
-    "jsonrestored": {
-        "message": "JSON restored"
-    },
     "jsoncompliant": {
         "message": "Non-compliant JSON"
     }

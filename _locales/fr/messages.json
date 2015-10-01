@@ -98,9 +98,6 @@
         "message": "Sauvegarder"
     },
     // options.js
-    "jsonrestored": {
-        "message": "JSON restauré"
-    },
     "jsoncompliant": {
         "message": "JSON non conforme"
     }
