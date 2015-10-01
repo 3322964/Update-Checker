@@ -19,10 +19,6 @@ ol, ul {
 span {
     font-weight: bold;
     cursor: default; }
-    span.green {
-        color: #0C0; }
-    span.red {
-        color: red; }
 
 div.table {
     display: table;

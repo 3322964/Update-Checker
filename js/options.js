@@ -21,16 +21,6 @@ window.addEventListener('load', function () {
     widget.hidden = false;
 }, false);
 
-function showTextTimeout(string, color) {
-    clearTimeout(timeout);
-    results.innerHTML = '<span class="' + color + '">' + string + '</span>';
-    results.hidden    = false;
-    timeout           = setTimeout(function () {
-        results.hidden    = true;
-        results.innerHTML = '';
-    }, 3000);
-}
-
 backgroundcheck.addEventListener('change', function (e) {
     let value                                  = e.target.valueAsNumber;
     backgroundPage.settings['backgroundcheck'] = isNaN(value) ? 0 : value;
@@ -44,11 +34,16 @@ restoreh.addEventListener('change', function (event) {
         event.target.value = '';
         try {
             backgroundPage.parseArrays(JSON.parse(e.target.result)['arrays']);
-            showTextTimeout(chromeI18n('jsonrestored'), 'green');
             backgroundPage.location.reload();
         }
         catch (err) {
-            showTextTimeout(chromeI18n('jsoncompliant'), 'red');
+            clearTimeout(timeout);
+            restore.classList.add('redlike');
+            restore.value = chromeI18n('jsoncompliant');
+            timeout       = setTimeout(function () {
+                restore.value = chromeI18n('restore');
+                restore.classList.remove('redlike');
+            }, 3000);
         }
     };
     file.readAsText(event.target.files[0]);
