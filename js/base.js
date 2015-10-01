@@ -259,9 +259,9 @@ var getLink = {
                 toDoError(type, value, null);
             return;
         }
-        let name = response.match(regExpBluraysName);console.log(name);
+        let name = response.match(regExpBluraysName);
         if (name != null) {
-            let result = response.match(regExpBlurays);console.log(result);
+            let result = response.match(regExpBlurays);
             if (result != null) {
                 let tmpDate = moment(new Date(result[1]));
                 if (!tmpDate.isAfter(date)) {
