@@ -289,7 +289,7 @@ function removeElement(typeDom, li, type, value, fade) {
 function parseRss(current, save, rsslink, rsslinkspan, rssmaxitems, rssmaxitemsspan, typeDom, li, type, value, rssfade) {
     rsslink.click();
     rssmaxitems.click();
-    let link         = rsslink.value.trim(), maxitems = parseInt(rssmaxitems.valueAsNumber);
+    let link         = rsslink.value.trim(), maxitems = rssmaxitems.valueAsNumber;
     let errorOccured = false;
     if (link == '') {
         showError(chromeI18n('empty'), rsslink, rsslinkspan);

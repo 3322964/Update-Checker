@@ -53,7 +53,7 @@ function setPopupInfos(obj) {
 
         valid.addEventListener('click', function () {
             rssmaxitems.click();
-            let maxitems = parseInt(rssmaxitems.valueAsNumber);
+            let maxitems = rssmaxitems.valueAsNumber;
             if (rssmaxitems.validity.badInput || maxitems < 0) {
                 showError(chromeI18n('number'), rssmaxitems, rssmaxitemsspan);
                 return;
