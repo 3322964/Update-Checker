@@ -9,7 +9,7 @@ label > div.inputerror {
     font-style: italic;
     color: #fe4652;
     padding-left: 7px;
-    line-height: 30px;
+    line-height: 32px;
     right: 20px;
     background-image: linear-gradient(to bottom, #f6f8fa, white);
     box-shadow: inset 0 3px 2px -2px rgba(0, 0, 0, 0.1);
