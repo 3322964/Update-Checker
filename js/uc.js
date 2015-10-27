@@ -139,6 +139,7 @@ function removeError(e) {
         document.getElementById(e.target.id + 'span').innerHTML = '';
     }
 }
+
 function addEventsToInputs(typeDom, typeValid) {
     for (let i = 0, inputs = typeDom.getElementsByClassName('checkout-input'), length = inputs.length; i != length; i++) {
         inputs[i].addEventListener('keydown', removeError, false);
@@ -429,14 +430,17 @@ function confirmFadeClick() {
     confirmlight.classList.remove('visible');
     confirmfade.classList.remove('visible');
 }
+
 function rssFadeClick() {
     rsslight.classList.remove('visible');
     rssfade.classList.remove('visible');
 }
+
 function newsFadeClick() {
     newslight.classList.remove('visible');
     newsfade.classList.remove('visible');
 }
+
 confirmfade.addEventListener('click', confirmFadeClick, false);
 rssfade.addEventListener('click', rssFadeClick, false);
 newsfade.addEventListener('click', newsFadeClick, false);
