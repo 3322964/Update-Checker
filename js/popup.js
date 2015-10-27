@@ -44,12 +44,15 @@ function setPopupInfos(obj) {
                 document.getElementById(e.target.id + 'span').innerHTML = '';
             }
         }
+
+        rssmaxitems.addEventListener('keydown', removeError, false);
+        rssmaxitems.addEventListener('input', removeError, false);
+        rssmaxitems.addEventListener('click', removeError, false);
+
         rssmaxitems.addEventListener('keypress', function (e) {
             if (e.keyCode == 13)
                 valid.click();
         }, false);
-        rssmaxitems.addEventListener('keydown', removeError, false);
-        rssmaxitems.addEventListener('click', removeError, false);
 
         valid.addEventListener('click', function () {
             rssmaxitems.click();

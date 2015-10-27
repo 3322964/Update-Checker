@@ -104,6 +104,7 @@ function addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdr
         newsregexpdropdown.appendChild(li)
     }
 }
+
 addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdropdown);
 addEventsToDropdowns(newslinkedit, newsregexphelpedit, newsregexpedit, newsregexpdropdownedit);
 
@@ -140,14 +141,17 @@ function removeError(e) {
 }
 function addEventsToInputs(typeDom, typeValid) {
     for (let i = 0, inputs = typeDom.getElementsByClassName('checkout-input'), length = inputs.length; i != length; i++) {
+        inputs[i].addEventListener('keydown', removeError, false);
+        inputs[i].addEventListener('input', removeError, false);
+        inputs[i].addEventListener('click', removeError, false);
+
         inputs[i].addEventListener('keypress', function (e) {
             if (e.keyCode == 13)
                 typeValid.click();
         }, false);
-        inputs[i].addEventListener('keydown', removeError, false);
-        inputs[i].addEventListener('click', removeError, false);
     }
 }
+
 addEventsToInputs(rss, rssvalid);
 addEventsToInputs(rsslight, rssvalidedit);
 addEventsToInputs(news, newsvalid);
@@ -178,6 +182,7 @@ function addSearchValid(type, typeDom, typeName, typeSearch, typeResults, typeBu
         typeButtons.classList.add('hidden');
     }, false);
 }
+
 addSearchValid('series', series, seriesname, seriessearch, seriesresults, seriesbuttons, seriesvalid, seriescancel);
 addSearchValid('movies', movies, moviesname, moviessearch, moviesresults, moviesbuttons, moviesvalid, moviescancel);
 addSearchValid('blurays', blurays, bluraysname, blurayssearch, bluraysresults, bluraysbuttons,bluraysvalid, blurayscancel);
