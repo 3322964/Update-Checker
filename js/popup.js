@@ -6,7 +6,7 @@ var type, value, array;
 for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
     tmp = elements[i].id;
     if (tmp != '')
-        window[tmp] = document.getElementById(tmp);
+        window[tmp] = elements[i];
 }
 
 window.addEventListener('load', function () {
