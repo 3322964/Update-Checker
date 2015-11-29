@@ -159,7 +159,7 @@ function refreshNotification(type) {
             'type': 'list',
             'title': chromeI18n(type),
             'message': '',
-            'iconUrl': 'images/logo.png',
+            'iconUrl': 'img/logo.png',
             'items': items[type].map(function (item) { return { 'title': item['title'], 'message': item['message'] }; })
         }, function () {});
     });

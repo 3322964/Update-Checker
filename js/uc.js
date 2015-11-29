@@ -372,7 +372,7 @@ newsvalid.addEventListener('click', function () {
 function addDelete(li, typeDom, type, value) {
     let img       = document.createElement('img');
     img.className = 'button';
-    img.src       = '/images/delete.png';
+    img.src       = '/img/delete.png';
     img.title     = chromeI18n('delete');
     img.addEventListener('click', function (e) {
         e.preventDefault();
@@ -389,7 +389,7 @@ function addDelete(li, typeDom, type, value) {
 function addEdit(li, typeDom, type, valueObject, value) {
     let img       = document.createElement('img');
     img.className = 'button';
-    img.src       = '/images/edit.png';
+    img.src       = '/img/edit.png';
     img.title     = chromeI18n('edit');
     img.addEventListener('click', function (e) {
         e.preventDefault();

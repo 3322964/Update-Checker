@@ -8,7 +8,7 @@
         "page": "/background.html"
     },
     "browser_action": {
-        "default_icon": "/images/logo.png"
+        "default_icon": "/img/logo.png"
     },
     "content_scripts": [
         {
@@ -24,7 +24,7 @@
         }
     ],
     "icons": {
-        "128": "/images/logo.png"
+        "128": "/img/logo.png"
     },
     "options_page": "/options.html",
     "permissions": ["tabs", "alarms", "background", "storage", "notifications", "*://*/*"]
