@@ -405,7 +405,7 @@ let edit = {
         rssmaxitemsedit.value = valueObject['maxitems'];
         rsslinkedit.click();
         rssmaxitemsedit.click();
-        rssvalidedit.onclick  = function () {
+        rssvalidedit.onclick = function () {
             parseRss(valueObject['current'], valueObject['link'], rsslinkedit, rsslinkeditspan, rssmaxitemsedit, rssmaxitemseditspan, typeDom, li, type, value, rssfade)
         };
         rsslight.classList.add('visible');
