@@ -8,7 +8,6 @@ html, body, div, span, a, img, ol, ul, li, label {
 
 body {
     -webkit-user-select: none;
-    line-height: 1;
     font: 12px/20px 'Lucida Grande', Verdana, sans-serif;
     color: #404040;
     background: #eee; }
