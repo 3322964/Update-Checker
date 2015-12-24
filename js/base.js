@@ -228,7 +228,7 @@ var getLink = {
                 toDoError(type, value, null);
             return;
         }
-        let name = response.match(regExpMoviesName);console.log(name);
+        let name = response.match(regExpMoviesName);
         if (name != null) {
             let result = response.match(regExpMovies);
             if (result != null && iso.findCountryByName(result[3])['value'] == result[1]) {
