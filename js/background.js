@@ -152,6 +152,7 @@ function removeItem(type, value) {
 }
 
 function refreshNotification(type) {
+    // new Notification("Bob: Hi", { tag: 'chat_Bob', requireInteraction: 'true' });
     chrome.notifications.clear(type, function () {
         if (items[type].length == 0)
             return;

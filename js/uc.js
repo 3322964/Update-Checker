@@ -496,6 +496,7 @@ function updateTabRN(type, typeDom, typeTab) {
 function updateTabSMB(type, typeDom, typeTab, typeSup) {
     let nb, j = 1, children = typeDom.children, length = children.length;
     for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red'; j++) ;
+    for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.innerHTML == '-'; j++) ;
     for ( ; j != length; j++) {
         nb = moment(children[j].firstElementChild.children[1].lastElementChild.innerHTML, 'LL').diff(date, 'days');
         if (nb >= 0)
