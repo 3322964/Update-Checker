@@ -2,8 +2,8 @@
 
 const regExpSeriesName  = /<title>&#x22;(.*)&#x22;/;
 const regExpSeriesIcon  = /<a name="poster".* src="([^"]*)/;
-const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See all release dates" > ([^<]*).*\n\(([^\)]*)/;
-const regExpMoviesName  = /itemprop="name">([^<]*)/;
+const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See more release dates" >(.*) \(([^\)]*)/;
+const regExpMoviesName  = /<title>(.*) \(/;
 const regExpMoviesIcon  = /Poster"\nsrc="([^"]*)/;
 const regExpBlurays     = /style="text-decoration: none; color: #666666">([^<]*)/;
 const regExpBluraysIcon = /id="frontimage_overlay" src="([^"]*)/;
@@ -228,7 +228,7 @@ var getLink = {
                 toDoError(type, value, null);
             return;
         }
-        let name = response.match(regExpMoviesName);
+        let name = response.match(regExpMoviesName);console.log(name);
         if (name != null) {
             let result = response.match(regExpMovies);
             if (result != null && iso.findCountryByName(result[3])['value'] == result[1]) {
