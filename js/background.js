@@ -18,6 +18,7 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
 var settings      = { 'hometab': 'seriestab', 'backgroundcheck': 180000 };
 var arrays        = { 'rss': [], 'news': [], 'series': [], 'movies': [], 'blurays': [] };
 var notifications = {}, items = { 'rss': [], 'news': [], 'series': [], 'movies': [], 'blurays': [] };
+// var activeNotifications = { 'rss': null, 'news': null, 'series': null, 'movies': null, 'blurays': null };
 
 window.addEventListener('load', function () {
     chrome.alarms.clearAll();
@@ -146,13 +147,28 @@ function removeItem(type, value) {
     if (i != -1) {
         chrome.notifications.onClicked.removeListener(items[type][i]['clicked']);
         chrome.notifications.onClosed.removeListener(items[type][i]['closed']);
+
+        // if (activeNotifications[type] != null) {
+        //     activeNotifications[type].removeEventListener('click', items[type][i]['onclick'], false);
+        //     activeNotifications[type].removeEventListener('close', items[type][i]['onclose'], false);
+        // }
+
         items[type].splice(i, 1);
         refreshNotification(type);
     }
 }
 
 function refreshNotification(type) {
-    // new Notification("Bob: Hi", { tag: 'chat_Bob', requireInteraction: 'true' });
+    // if (items[type].length == 0)
+    //     activeNotifications[type].close();
+    // else {
+    //     activeNotifications[type] = new Notification(chromeI18n(type), { 'body': items[type].map(function (item) { return item['body']; }).join('\n'), 'icon': '/img/logo.png', 'requireInteraction': true, 'silent': true, 'tag': type });
+    //     for (let i = 0, length = items[type].length; i != length; i++) {
+    //         activeNotifications[type].addEventListener('click', items[type][i]['onclick'], false);
+    //         activeNotifications[type].addEventListener('close', items[type][i]['onclose'], false);
+    //     }
+    // }
+
     chrome.notifications.clear(type, function () {
         if (items[type].length == 0)
             return;
@@ -179,16 +195,23 @@ function notify(type, value, name, text, dynamic, save) {
             return;
         chrome.notifications.onClicked.removeListener(items[type][i]['clicked']);
         chrome.notifications.onClosed.removeListener(items[type][i]['closed']);
+
+        // if (activeNotifications[type] != null) {
+        //     activeNotifications[type].removeEventListener('click', items[type][i]['onclick'], false);
+        //     activeNotifications[type].removeEventListener('close', items[type][i]['onclose'], false);
+        // }
     }
     else i = items[type].length;
     items[type][i] = {
         'value': value,
+        // 'body': unescapeNotifications(name + ' ' + text),
         'title': unescapeNotifications(name),
         'message': unescapeNotifications(text),
         'clicked': function (id) {
             if (id == type)
                 dynamic();
-        }
+        },
+        // 'onclick': dynamic
     };
     if (type == 'rss' || type == 'news') {
         items[type][i]['save']   = save;
@@ -196,11 +219,22 @@ function notify(type, value, name, text, dynamic, save) {
             if (id == type && user == true)
                 writeDynamic(type, value, save);
         };
+
+        // items[type][i]['onclose'] = function () {
+        //     writeDynamic(type, value, save);
+        // };
     }
-    else items[type][i]['closed'] = function (id, user) {
-        if (id == type && user == true)
-            removeItem(type, value);
-    };
+    else {
+        items[type][i]['closed'] = function (id, user) {
+            if (id == type && user == true)
+                removeItem(type, value);
+        };
+
+        // items[type][i]['onclose'] = function () {
+        //     removeItem(type, value);
+        // };
+    }
+
     chrome.notifications.onClicked.addListener(items[type][i]['clicked']);
     chrome.notifications.onClosed.addListener(items[type][i]['closed']);
 

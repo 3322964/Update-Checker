@@ -2,8 +2,8 @@
 
 const regExpSeriesName  = /<title>&#x22;(.*)&#x22;/;
 const regExpSeriesIcon  = /<a name="poster".* src="([^"]*)/;
-// const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See more release dates" >(.*) \(([^\)]*)/;
-const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See all release dates" > ([^<]*).*\n\(([^\)]*)/;
+const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See more release dates" >(.*) \(([^\)]*)/;
+// const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See all release dates" > ([^<]*).*\n\(([^\)]*)/;
 const regExpMoviesName  = /<title>(.*) \(/;
 const regExpMoviesIcon  = /Poster"\nsrc="([^"]*)/;
 const regExpBlurays     = /style="text-decoration: none; color: #666666">([^<]*)/;
