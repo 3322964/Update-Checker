@@ -210,8 +210,8 @@ function notify(type, value, name, text, dynamic, save) {
         'clicked': function (id) {
             if (id == type)
                 dynamic();
-        },
-        // 'onclick': dynamic
+        }
+        // ,'onclick': dynamic
     };
     if (type == 'rss' || type == 'news') {
         items[type][i]['save']   = save;
