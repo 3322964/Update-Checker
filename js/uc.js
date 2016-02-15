@@ -1,5 +1,3 @@
-'use strict';
-
 const getFavicon   = 'http://www.google.com/s2/favicons?domain_url=';
 var backgroundPage = chrome.extension.getBackgroundPage();
 var files          = {};

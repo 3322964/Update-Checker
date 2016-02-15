@@ -1,5 +1,3 @@
-'use strict';
-
 var backgroundPage = chrome.extension.getBackgroundPage();
 var type, value, array;
 

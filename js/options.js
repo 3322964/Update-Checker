@@ -1,5 +1,3 @@
-'use strict';
-
 const chromeI18n   = chrome.i18n.getMessage;
 var backgroundPage = chrome.extension.getBackgroundPage();
 var timeout;

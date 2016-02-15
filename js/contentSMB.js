@@ -1,5 +1,3 @@
-'use strict';
-
 var type;
 var value = document.URL.match(/^http:\/\/www.imdb.com\/title\/(tt[0-9]+)\/(?:\?.*)?$/);
 if (value != null && document.title != '404 Error - IMDb') {

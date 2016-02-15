@@ -1,5 +1,3 @@
-'use strict';
-
 chrome.browserAction.onClicked.addListener(function (tab) {
     chrome.tabs.query({ 'url': chrome.runtime.getURL('uc.html'), 'windowId': tab.windowId }, function (tabs) {
         if (tabs.length == 0)

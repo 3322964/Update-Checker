@@ -1,5 +1,3 @@
-'use strict';
-
 const type  = 'rss';
 const value = document.URL;
 chrome.runtime.sendMessage({ 'setPopup': true });

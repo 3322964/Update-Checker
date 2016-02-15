@@ -1,5 +1,3 @@
-'use strict';
-
 const regExpSeriesName  = /<title>&#x22;(.*)&#x22;/;
 const regExpSeriesIcon  = /<a name="poster".* src="([^"]*)/;
 const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See more release dates" >(.*) \(([^\)]*)/;
