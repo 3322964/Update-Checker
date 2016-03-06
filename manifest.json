@@ -3,7 +3,7 @@
     "name": "Update Checker",
     "description": "__MSG_description__",
     "default_locale": "en",
-    "version": "0.24.4",
+    "version": "0.24.5",
     "background": {
         "page": "/background.html"
     },
