@@ -51,7 +51,7 @@ window.addEventListener('load', function () {
 }, false);
 
 var dropdownNews = [
-    { 'title': 'Chrome Web Store', 'link': 'https://chrome.google.com/webstore/detail/*/details', 'regexp': 'itemprop="version" content="([^"]*)' },
+    { 'title': 'Chrome Web Store', 'link': 'https://chrome.google.com/webstore/detail/*', 'regexp': 'itemprop="version" content="([^"]*)' },
     { 'title': 'Facebook', 'link': 'https://www.facebook.com*', 'regexp': 'id="requestsCountValue">([^<]*)</span> <i class="accessible_elem">([^<]*)<(/).*id="mercurymessagesCountValue">([^<]*)</span> <i class="accessible_elem">([^<]*)<(/).*id="notificationsCountValue">([^<]*)</span> <i class="accessible_elem">([^<]*)' },
     { 'title': 'Google Play Store Apps', 'link': 'https://play.google.com/store/apps/details?id=*', 'regexp': 'itemprop="softwareVersion"> v(\\S*)' },
     { 'title': 'Outlook', 'link': 'https://*.mail.live.com*', 'regexp': '<span\\s+class="count">\\s*([^<]*)(?:<[^>]*>[^<]*){17}<span\\s+class="count">\\s*([^<]*)' },
