@@ -6,13 +6,6 @@ chrome.browserAction.onClicked.addListener(function (tab) {
     });
 });
 
-chrome.runtime.onMessage.addListener(function (request, sender) {
-    if (request['setPopup']) {
-        chrome.browserAction.setPopup({ 'tabId': sender.tab.id, 'popup': 'popup.html' });
-        chrome.browserAction.setBadgeText({ 'tabId': sender.tab.id, 'text': '+' })
-    }
-});
-
 var settings      = { 'hometab': 'seriestab', 'backgroundcheck': 180000 };
 var arrays        = { 'rss': [], 'news': [], 'series': [], 'movies': [], 'blurays': [] };
 var notifications = {}, items = { 'rss': [], 'news': [], 'series': [], 'movies': [], 'blurays': [] };
