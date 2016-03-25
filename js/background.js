@@ -168,7 +168,8 @@ function refreshNotification(type) {
             'title': chromeI18n(type),
             'message': '',
             'iconUrl': 'img/logo.png',
-            'items': items[type].map(function (item) { return { 'title': item['title'], 'message': item['message'] }; })
+            'items': items[type].map(function (item) { return { 'title': item['title'], 'message': item['message'] }; }),
+            'requireInteraction': true
         }, function () {});
     });
 }
