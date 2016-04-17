@@ -199,7 +199,7 @@ var getLink = {
                         name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]),
                         response.match(regExpSeriesIcon),
                         tmpDate,
-                        page.getFunctionDynamic[type](imdb + value + '/', type, value)
+                        page.getFunctionDynamic[type](imdb + value + '/')
                     );
                 }
                 else {
@@ -229,7 +229,7 @@ var getLink = {
             if (result != null && iso.findCountryByName(result[3])['value'] == result[1]) {
                 let tmpDate = moment(new Date(result[2]));
                 if (!tmpDate.isAfter(date)) {
-                    toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate, page.getFunctionDynamic[type](imdb + value + '/', type, value));
+                    toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate, page.getFunctionDynamic[type](imdb + value + '/'));
                 }
                 else toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate);
             }
@@ -252,7 +252,7 @@ var getLink = {
             if (result != null) {
                 let tmpDate = moment(new Date(result[1]));
                 if (!tmpDate.isAfter(date)) {
-                    toDoSuccess1(type, value, name, response.match(regExpBluraysIcon), tmpDate, page.getFunctionDynamic[type](bluray + value, type, value));
+                    toDoSuccess1(type, value, name, response.match(regExpBluraysIcon), tmpDate, page.getFunctionDynamic[type](bluray + value));
                 }
                 else toDoSuccess1(type, value, name, response.match(regExpBluraysIcon), tmpDate);
             }
