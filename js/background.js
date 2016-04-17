@@ -77,6 +77,12 @@ function writeDynamic(type, value, cur) {
     }
 }
 
+function getFunctionDynamicSMB(link) {
+    return function () {
+        window.open(link);
+    };
+}
+
 var getFunctionDynamic = {
     'rss': function (link, type, value, cur) {
         return function () {
@@ -90,7 +96,7 @@ var getFunctionDynamic = {
             writeDynamic(type, value, cur);
         };
     },
-    'series': window.open,
-    'movies': window.open,
-    'blurays': window.open
+    'series': getFunctionDynamicSMB,
+    'movies': getFunctionDynamicSMB,
+    'blurays': getFunctionDynamicSMB
 };
