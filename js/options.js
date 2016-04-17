@@ -10,20 +10,9 @@ for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
 
 window.addEventListener('load', function () {
     document.title          = chromeI18n('options');
-    notifications.innerHTML = chromeI18n('notifications');
     restore.value           = chromeI18n('restore');
     backup.value            = chromeI18n('backup');
-    let seconds             = backgroundPage.settings['backgroundcheck'];
-    if (seconds != 0)
-        backgroundcheck.valueAsNumber = seconds;
     widget.hidden = false;
-}, false);
-
-backgroundcheck.addEventListener('change', function (e) {
-    let value                                  = e.target.valueAsNumber;
-    backgroundPage.settings['backgroundcheck'] = isNaN(value) ? 0 : value;
-    backgroundPage.writeSettings();
-    backgroundPage.location.reload();
 }, false);
 
 restoreh.addEventListener('change', function (event) {
@@ -32,7 +21,6 @@ restoreh.addEventListener('change', function (event) {
         event.target.value = '';
         try {
             backgroundPage.parseArrays(JSON.parse(e.target.result)['arrays']);
-            backgroundPage.location.reload();
         }
         catch (err) {
             clearTimeout(timeout);

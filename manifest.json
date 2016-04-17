@@ -11,9 +11,9 @@
         "default_icon": "/img/logo.png"
     },
     "background": {
-        "page": "/background.html"
+        "scripts": ["/js/background.js"]
     },
     "minimum_chrome_version": "50",
     "options_page": "/options.html",
-    "permissions": ["tabs", "alarms", "background", "storage", "notifications", "*://*/*"]
+    "permissions": ["tabs", "storage", "*://*/*"]
 }

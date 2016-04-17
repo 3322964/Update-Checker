@@ -199,12 +199,10 @@ var getLink = {
                         name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]),
                         response.match(regExpSeriesIcon),
                         tmpDate,
-                        page.getFunctionDynamic[type](imdb + value + '/', type, value),
-                        page.hasChecked(type, value, tmpDate)
+                        page.getFunctionDynamic[type](imdb + value + '/', type, value)
                     );
                 }
                 else {
-                    page.hasChecked(type, value);
                     toDoSuccess1(type, value,
                         name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]),
                         response.match(regExpSeriesIcon),
@@ -212,10 +210,8 @@ var getLink = {
                     );
                 }
             }
-            else if (toDoSuccess2 != null) {
-                page.hasChecked(type, value);
+            else if (toDoSuccess2 != null)
                 toDoSuccess2(type, value, name[1], response.match(regExpSeriesIcon));
-            }
         }
         else if (toDoError != null)
             toDoError(type, value);
@@ -233,20 +229,12 @@ var getLink = {
             if (result != null && iso.findCountryByName(result[3])['value'] == result[1]) {
                 let tmpDate = moment(new Date(result[2]));
                 if (!tmpDate.isAfter(date)) {
-                    toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate,
-                        page.getFunctionDynamic[type](imdb + value + '/', type, value),
-                        page.hasChecked(type, value, tmpDate)
-                    );
+                    toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate, page.getFunctionDynamic[type](imdb + value + '/', type, value));
                 }
-                else {
-                    page.hasChecked(type, value);
-                    toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate);
-                }
+                else toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate);
             }
-            else if (toDoSuccess2 != null) {
-                page.hasChecked(type, value);
+            else if (toDoSuccess2 != null)
                 toDoSuccess2(type, value, name[1], response.match(regExpMoviesIcon));
-            }
         }
         else if (toDoError != null)
             toDoError(type, value);
@@ -264,20 +252,12 @@ var getLink = {
             if (result != null) {
                 let tmpDate = moment(new Date(result[1]));
                 if (!tmpDate.isAfter(date)) {
-                    toDoSuccess1(type, value, name, response.match(regExpBluraysIcon), tmpDate,
-                        page.getFunctionDynamic[type](bluray + value, type, value),
-                        page.hasChecked(type, value, tmpDate)
-                    );
+                    toDoSuccess1(type, value, name, response.match(regExpBluraysIcon), tmpDate, page.getFunctionDynamic[type](bluray + value, type, value));
                 }
-                else {
-                    page.hasChecked(type, value);
-                    toDoSuccess1(type, value, name, response.match(regExpBluraysIcon), tmpDate);
-                }
+                else toDoSuccess1(type, value, name, response.match(regExpBluraysIcon), tmpDate);
             }
-            else if (toDoSuccess2 != null) {
-                page.hasChecked(type, value);
+            else if (toDoSuccess2 != null)
                 toDoSuccess2(type, value, name, response.match(regExpBluraysIcon));
-            }
         }
         else if (toDoError != null)
             toDoError(type, value);
