@@ -1,6 +1,7 @@
 const getFavicon   = 'http://www.google.com/s2/favicons?domain_url=';
 var backgroundPage = chrome.extension.getBackgroundPage();
 var files          = {};
+var arrays         = backgroundPage.arrays;
 
 for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
     tmp = elements[i].id;
@@ -528,10 +529,3 @@ var sort = {
         sortSMB(type, value, name == null ? name : name.length == 3 ? name[1] + ' <img src="' + name[2] + '">' : name[1], icon, tmpDate, green, bluray, blurays);
     }
 };
-
-var check = {}, arrays = backgroundPage.arrays;
-for (let key in arrays) {
-    check[key] = function (type, value) {
-        get[type](type, value, updateProgress, sort[type], sort[type], sort[type]);
-    };
-}

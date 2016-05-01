@@ -56,11 +56,11 @@ function checkAll(arrays) {
     for (let key in arrays) {
         progress[key] = 0;
         for (i = 0, tmp = arrays[key], length = tmp.length; i != length; i++)
-            check[key](key, tmp[i]);
+            get[type](key, tmp[i], updateProgress);
     }
 }
 
-function getLinkAll(type, link, value, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
+function getLinkAll(type, link, value) {
     let file = new XMLHttpRequest();
     file.open('GET', link, true);
     file.setRequestHeader('Pragma', 'no-cache');
@@ -68,33 +68,33 @@ function getLinkAll(type, link, value, toDoProgress, toDoSuccess1, toDoSuccess2,
     file.onreadystatechange = function () {
         if (file.readyState == XMLHttpRequest.DONE) {
             progress[type]++;
-            getLink[type](type, value, toDoSuccess1, toDoSuccess2, toDoError, file.status == 200, file.responseText);
-            toDoProgress(type);
+            getLink[type](type, value, file.status == 200, file.responseText);
+            updateProgress(type);
         }
     };
     file.send();
 }
 
 var get = {
-    'news': function (type, value, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
-        getLinkAll(type, value['link'], value, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError);
+    'news': function (type, value) {
+        getLinkAll(type, value['link'], value);
     },
-    'series': function (type, value, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
-        getLinkAll(type, imdb + value + '/epcast', value, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError);
+    'series': function (type, value) {
+        getLinkAll(type, imdb + value + '/epcast', value);
     },
-    'movies': function (type, value, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
-        getLinkAll(type, imdb + value + '/', value, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError);
+    'movies': function (type, value) {
+        getLinkAll(type, imdb + value + '/', value);
     },
-    'blurays': function (type, value, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError) {
-        getLinkAll(type, bluray + value, value, toDoProgress, toDoSuccess1, toDoSuccess2, toDoError);
+    'blurays': function (type, value) {
+        getLinkAll(type, bluray + value, value);
     }
 };
 
 var getLink = {
-    'news': function (type, value, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
+    'news': function (type, value, status, response) {
         let name = value['name'] != '' ? value['name'] : value['link'];
         if (!status)
-            toDoError(type, value, value['link'], name, null);
+            sortNews(type, value, value['link'], name, null);
         else if (value['regexp'] == '') {
             try {
                 let xml = (new DOMParser()).parseFromString(response, 'text/xml');
@@ -138,11 +138,11 @@ var getLink = {
                             };
                         })(xml, rssItemLink, items, j);
                     }*/
-                    toDoSuccess1(type, value, link, name, chrome.i18n.getMessage('newitems', [j]), xml.evaluate(rssDate, items.snapshotItem(0), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent);
-                else toDoSuccess2(type, value, link, name, chrome.i18n.getMessage('newitems', [j]));
+                    sortNews(type, value, link, name, chrome.i18n.getMessage('newitems', [j]), xml.evaluate(rssDate, items.snapshotItem(0), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent);
+                else sortNews(type, value, link, name, chrome.i18n.getMessage('newitems', [j]));
             }
             catch (err) {
-                toDoError(type, value, value['link'], name);
+                sortNews(type, value, value['link'], name);
             }
         }
         else {
@@ -159,64 +159,64 @@ var getLink = {
                 if (result.trim() == '')
                     result = '-';
                 if (result != value['current'])
-                    toDoSuccess1(type, value, value['link'], name, result, result);
-                else toDoSuccess2(type, value, value['link'], name, result);
+                    sortNews(type, value, value['link'], name, result, result);
+                else sortNews(type, value, value['link'], name, result);
             }
             catch (err) {
-                toDoError(type, value, value['link'], name);
+                sortNews(type, value, value['link'], name);
             }
         }
     },
 
-    'series': function (type, value, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
+    'series': function (type, value, status, response) {
         if (!status)
-            toDoError(type, value, null);
+            sortSMB(type, value, null);
         else {
             let name = response.match(regExpSeriesName);
             if (name != null) {
                 let result = response.match(regExpSeries);
                 if (result != null) {
                     let tmpDate = moment(new Date(result[4]));
-                    toDoSuccess1(type, value,
+                    sortSMB(type, value,
                         name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]), response.match(regExpSeriesIcon), tmpDate, !tmpDate.isAfter(date));
                 }
-                else toDoSuccess2(type, value, name[1], response.match(regExpSeriesIcon));
+                else sortSMB(type, value, name[1], response.match(regExpSeriesIcon));
             }
-            else toDoError(type, value);
+            else sortSMB(type, value);
         }
     },
 
-    'movies': function (type, value, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
+    'movies': function (type, value, status, response) {
         if (!status)
-            toDoError(type, value, null);
+            sortSMB(type, value, null);
         else {
             let name = response.match(regExpMoviesName);
             if (name != null) {
                 let result = response.match(regExpMovies);
                 if (result != null && iso.findCountryByName(result[3])['value'] == result[1]) {
                     let tmpDate = moment(new Date(result[2]));
-                    toDoSuccess1(type, value, name[1], response.match(regExpMoviesIcon), tmpDate, !tmpDate.isAfter(date));
+                    sortSMB(type, value, name[1], response.match(regExpMoviesIcon), tmpDate, !tmpDate.isAfter(date));
                 }
-                else toDoSuccess2(type, value, name[1], response.match(regExpMoviesIcon));
+                else sortSMB(type, value, name[1], response.match(regExpMoviesIcon));
             }
-            else toDoError(type, value);
+            else sortSMB(type, value);
         }
     },
 
-    'blurays': function (type, value, toDoSuccess1, toDoSuccess2, toDoError, status, response) {
+    'blurays': function (type, value, status, response) {
         if (!status)
-            toDoError(type, value, null);
+            sortSMB(type, value, null);
         else {
             let name = response.match(regExpBluraysName);
             if (name != null) {
                 let result = response.match(regExpBlurays);
                 if (result != null) {
                     let tmpDate = moment(new Date(result[1]));
-                    toDoSuccess1(type, value, name, response.match(regExpBluraysIcon), tmpDate, !tmpDate.isAfter(date));
+                    sortSMB(type, value, name, response.match(regExpBluraysIcon), tmpDate, !tmpDate.isAfter(date));
                 }
-                else toDoSuccess2(type, value, name, response.match(regExpBluraysIcon));
+                else sortSMB(type, value, name, response.match(regExpBluraysIcon));
             }
-            else toDoError(type, value);
+            else sortSMB(type, value);
         }
     }
 };
