@@ -8,38 +8,21 @@ for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
         window[tmp] = elements[i];
 }
 
-options.addEventListener('click', function () {
-    chrome.tabs.query({ 'url': chrome.runtime.getURL('options.html'), 'currentWindow': true }, function (tabs) {
-        if (tabs.length == 0)
-            window.open('options.html');
-        else chrome.tabs.update(tabs[0].id, { 'selected': true }, function () {});
-    });
-}, false);
-
 window.addEventListener('load', function () {
-    rsslink.placeholder         = chromeI18n('link');
-    rssmaxitems.placeholder     = chromeI18n('maxitems');
-    rssvalid.value              = chromeI18n('add');
-
     newsname.placeholder        = chromeI18n('name');
     newslink.placeholder        = chromeI18n('link');
+    newsregexp.placeholder      = chromeI18n('regexp');
     newsvalid.value             = chromeI18n('add');
-
-    rsslinkedit.placeholder     = chromeI18n('link');
-    rssmaxitemsedit.placeholder = chromeI18n('maxitems');
-    rsscanceledit.value         = chromeI18n('cancel');
-    rssvalidedit.value          = chromeI18n('ok');
 
     newsnameedit.placeholder    = chromeI18n('name');
     newslinkedit.placeholder    = chromeI18n('link');
+    newsregexpedit.placeholder  = chromeI18n('regexp');
     newscanceledit.value        = chromeI18n('cancel');
     newsvalidedit.value         = chromeI18n('ok');
 
     confirmtext.innerHTML       = chromeI18n('confirm');
     confirmno.value             = chromeI18n('no');
     confirmyes.value            = chromeI18n('yes');
-
-    options.title               = chromeI18n('options');
 
     document.getElementById(backgroundPage.settings['hometab']).click();
     widget.hidden = false;
@@ -151,8 +134,6 @@ function addEventsToInputs(typeDom, typeValid) {
     }
 }
 
-addEventsToInputs(rss, rssvalid);
-addEventsToInputs(rsslight, rssvalidedit);
 addEventsToInputs(news, newsvalid);
 addEventsToInputs(newslight, newsvalidedit);
 
@@ -290,54 +271,14 @@ function removeElement(typeDom, li, type, value, fade) {
     fade.click();
 }
 
-function parseRss(current, save, rsslink, rsslinkspan, rssmaxitems, rssmaxitemsspan, typeDom, li, type, value, rssfade) {
-    rsslink.click();
-    rssmaxitems.click();
-    let link         = rsslink.value.trim(), maxitems = rssmaxitems.valueAsNumber;
-    let errorOccured = false;
-    if (link == '') {
-        showError(chromeI18n('empty'), rsslink, rsslinkspan);
-        errorOccured = true;
-    }
-    if (rssmaxitems.validity.badInput || maxitems < 0) {
-        showError(chromeI18n('number'), rssmaxitems, rssmaxitemsspan);
-        errorOccured = true;
-    }
-    if (isNaN(maxitems))
-        maxitems = 0;
-    let aR = backgroundPage.arrays['rss'];
-    if (save != link && propertyInArray(link, 'link', aR) != -1) {
-        showError(chromeI18n('alreadyexists'), rsslink, rsslinkspan);
-        errorOccured = true;
-    }
-    if (errorOccured)
-        return;
-    if (typeDom)
-        removeElement(typeDom, li, type, value, rssfade);
-    else {
-        rsslink.value     = '';
-        rssmaxitems.value = '';
-    }
-    check['rss']('rss', aR[aR.push({ 'link': link, 'maxitems': maxitems, 'current': current }) - 1]);
-    backgroundPage.writeArrays();
-}
-
 function parseNews(current, save, newsname, newsnamespan, newslink, newslinkspan, newsregexp, newsregexpspan, typeDom, li, type, value, newsfade) {
     newsname.click();
     newslink.click();
     newsregexp.click();
     let name         = newsname.value.trim(), link = newslink.value.trim(), regexp = newsregexp.value.trim();
     let errorOccured = false;
-    if (name == '') {
-        showError(chromeI18n('empty'), newsname, newsnamespan);
-        errorOccured = true;
-    }
     if (link == '') {
         showError(chromeI18n('empty'), newslink, newslinkspan);
-        errorOccured = true;
-    }
-    if (regexp == '') {
-        showError(chromeI18n('empty'), newsregexp, newsregexpspan);
         errorOccured = true;
     }
     let aN = backgroundPage.arrays['news'];
@@ -358,10 +299,6 @@ function parseNews(current, save, newsname, newsnamespan, newslink, newslinkspan
     check['news']('news', aN[aN.push({ 'name': name, 'link': link, 'regexp': regexp, 'current': current }) - 1]);
     backgroundPage.writeArrays();
 }
-
-rssvalid.addEventListener('click', function () {
-    parseRss('', '', rsslink, rsslinkspan, rssmaxitems, rssmaxitemsspan);
-}, false);
 
 newsvalid.addEventListener('click', function () {
     parseNews('', '', newsname, newsnamespan, newslink, newslinkspan, newsregexp, newsregexpspan);
@@ -392,27 +329,9 @@ function addEdit(li, typeDom, type, valueObject, value) {
     img.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        edit[type](li, typeDom, type, valueObject, value);
-    }, false);
-    li.firstElementChild.appendChild(img);
-}
-
-let edit = {
-    'rss': function (li, typeDom, type, valueObject, value) {
-        rsslinkedit.value     = valueObject['link'];
-        rssmaxitemsedit.value = valueObject['maxitems'];
-        rsslinkedit.click();
-        rssmaxitemsedit.click();
-        rssvalidedit.onclick = function () {
-            parseRss(valueObject['current'], valueObject['link'], rsslinkedit, rsslinkeditspan, rssmaxitemsedit, rssmaxitemseditspan, typeDom, li, type, value, rssfade)
-        };
-        rsslight.classList.add('visible');
-        rssfade.classList.add('visible');
-    },
-    'news': function (li, typeDom, type, valueObject, value) {
-        newsnameedit.value   = valueObject['name'];
-        newslinkedit.value   = valueObject['link'];
-        newsregexpedit.value = valueObject['regexp'];
+        newsnameedit.value    = valueObject['name'];
+        newslinkedit.value    = valueObject['link'];
+        newsregexpedit.value  = valueObject['regexp'];
         newsnameedit.click();
         newslinkedit.click();
         newsregexpedit.click();
@@ -421,17 +340,13 @@ let edit = {
         };
         newslight.classList.add('visible');
         newsfade.classList.add('visible');
-    }
-};
+    }, false);
+    li.firstElementChild.appendChild(img);
+}
 
 function confirmFadeClick() {
     confirmlight.classList.remove('visible');
     confirmfade.classList.remove('visible');
-}
-
-function rssFadeClick() {
-    rsslight.classList.remove('visible');
-    rssfade.classList.remove('visible');
 }
 
 function newsFadeClick() {
@@ -440,10 +355,8 @@ function newsFadeClick() {
 }
 
 confirmfade.addEventListener('click', confirmFadeClick, false);
-rssfade.addEventListener('click', rssFadeClick, false);
 newsfade.addEventListener('click', newsFadeClick, false);
 confirmno.addEventListener('click', confirmFadeClick, false);
-rsscanceledit.addEventListener('click', rssFadeClick, false);
 newscanceledit.addEventListener('click', newsFadeClick, false);
 
 function escapeHTML(result) {
@@ -476,7 +389,7 @@ function updateProgress(type) {
     }
 }
 
-function updateTabRN(type, typeDom, typeTab) {
+function updateTabNews(type, typeDom, typeTab) {
     if (typeDom.getElementsByClassName('green').length != 0) {
         typeTab.classList.remove('red');
         typeTab.classList.add('green');
@@ -506,15 +419,12 @@ function updateTabSMB(type, typeDom, typeTab, typeSup) {
     if (j != length)
         typeSup.innerHTML = nb;
     else typeSup.innerHTML = '';
-    updateTabRN(type, typeDom, typeTab);
+    updateTabNews(type, typeDom, typeTab);
 }
 
 var updateTab = {
-    'rss': function (type) {
-        updateTabRN(type, rss, rsstab);
-    },
     'news': function (type) {
-        updateTabRN(type, news, newstab);
+        updateTabNews(type, news, newstab);
     },
     'series': function (type) {
         updateTabSMB(type, series, seriestab, seriessup);
@@ -527,12 +437,12 @@ var updateTab = {
     }
 };
 
-function sortRN(type, value, link, name, text, dynamic, typeDom) {
+function sortNews(type, value, link, name, text, current, typeDom) {
     let li      = document.createElement('li');
-    let current = ' ' + escapeHTML(name) + ' ';
+    let tmpName = ' ' + escapeHTML(name) + ' ';
     let j = 1, children = typeDom.children, length = children.length;
     if (text == null) {
-        li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name).replace(/:\/\/([^@]*)@/, '://***@') +' <span class="red">' + chromeI18n(text === null ? 'unreachable' : 'error') + '</span></div></a>';
+        li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="news"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name).replace(/:\/\/([^@]*)@/, '://***@') +' <span class="red">' + chromeI18n(text === null ? 'unreachable' : 'error') + '</span></div></a>';
         li.firstElementChild.addEventListener('click', (function (_li) {
             return function () {
                 typeDom.removeChild(_li);
@@ -540,33 +450,33 @@ function sortRN(type, value, link, name, text, dynamic, typeDom) {
                 check[type](type, value);
             };
         })(li), false);
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) ;
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, tmpName) < 0; j++) ;
     }
-    else if (dynamic == null) {
-        li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span>' + escapeHTML(text) + '</span></div></a>';
+    else if (current == null) {
+        li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="news"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span>' + escapeHTML(text) + '</span></div></a>';
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) ;
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green'; j++) ;
-        for ( ; j != length && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) ;
+        for ( ; j != length && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, tmpName) < 0; j++) ;
     }
     else {
-        li.innerHTML = '<a class="widget-list-link"><div class="rssnews"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span class="green">' + escapeHTML(text) + '</span></div></a>';
+        li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="news"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span class="green">' + escapeHTML(text) + '</span></div></a>';
         li.firstElementChild.addEventListener('click', (function (_li) {
             return function () {
-                dynamic();
+                backgroundPage.writeDynamic(type, value['link'], current);
                 typeDom.removeChild(_li);
                 updateProgress(type);
                 check[type](type, value);
             };
         })(li), false);
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) ;
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, current) < 0; j++) ;
+        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, tmpName) < 0; j++) ;
     }
     typeDom.insertBefore(li, j != length ? children[j] : null);
     addDelete(li, typeDom, type, value['link']);
     addEdit(li, typeDom, type, value, value['link']);
 }
 
-function sortSMB(type, value, name, icon, tmpDate, dynamic, website, typeDom) {
+function sortSMB(type, value, name, icon, tmpDate, green, website, typeDom) {
     let li      = document.createElement('li');
     let current = (name == null ? website + value : name) + ' ';
     let j = 1, children = typeDom.children, length = children.length;
@@ -587,12 +497,7 @@ function sortSMB(type, value, name, icon, tmpDate, dynamic, website, typeDom) {
         for ( ; j != length && compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) < 0; j++) ;
     }
     else {
-        if (dynamic == null)
-            li.innerHTML = '<a class="widget-list-link" href="' + website + value + '" target="_blank"><img class="full" src="' + (icon == null ? '' : icon[1]) + '"><div>' + name + ' <span>' + tmpDate.format('LL') + '</span></div></a>';
-        else {
-            li.innerHTML = '<a class="widget-list-link"><img class="full" src="' + (icon == null ? '' : icon[1]) + '"><div>' + name + ' <span class="green">' + tmpDate.format('LL') + '</span></div></a>';
-            li.firstElementChild.addEventListener('click', dynamic, false);
-        }
+        li.innerHTML = '<a class="widget-list-link" href="' + website + value + '" target="_blank"><img class="full" src="' + (icon == null ? '' : icon[1]) + '"><div>' + name + ' <span' + (green ? ' class="green"' : '') + '>' + tmpDate.format('LL') + '</span></div></a>';
         let val;
         for ( ; j != length; j++) {
             val = children[j].firstElementChild.children[1].lastElementChild.innerHTML;
@@ -610,26 +515,23 @@ function sortSMB(type, value, name, icon, tmpDate, dynamic, website, typeDom) {
 }
 
 var sort = {
-    'rss': function (type, value, link, name, text, dynamic) {
-        sortRN(type, value, link, name, text, dynamic, rss);
+    'news': function (type, value, link, name, text, current) {
+        sortNews(type, value, link, name, text, current, news);
     },
-    'news': function (type, value, link, name, text, dynamic) {
-        sortRN(type, value, link, name, text, dynamic, news);
+    'series': function (type, value, name, icon, tmpDate, green) {
+        sortSMB(type, value, name, icon, tmpDate, green, imdb, series);
     },
-    'series': function (type, value, name, icon, tmpDate, dynamic) {
-        sortSMB(type, value, name, icon, tmpDate, dynamic, imdb, series);
+    'movies': function (type, value, name, icon, tmpDate, green) {
+        sortSMB(type, value, name, icon, tmpDate, green, imdb, movies);
     },
-    'movies': function (type, value, name, icon, tmpDate, dynamic) {
-        sortSMB(type, value, name, icon, tmpDate, dynamic, imdb, movies);
-    },
-    'blurays': function (type, value, name, icon, tmpDate, dynamic) {
-        sortSMB(type, value, name == null ? name : name.length == 3 ? name[1] + ' <img src="' + name[2] + '">' : name[1], icon, tmpDate, dynamic, bluray, blurays);
+    'blurays': function (type, value, name, icon, tmpDate, green) {
+        sortSMB(type, value, name == null ? name : name.length == 3 ? name[1] + ' <img src="' + name[2] + '">' : name[1], icon, tmpDate, green, bluray, blurays);
     }
 };
 
 var check = {}, arrays = backgroundPage.arrays;
 for (let key in arrays) {
     check[key] = function (type, value) {
-        get[type](type, value, backgroundPage, updateProgress, sort[type], sort[type], sort[type]);
+        get[type](type, value, updateProgress, sort[type], sort[type], sort[type]);
     };
 }

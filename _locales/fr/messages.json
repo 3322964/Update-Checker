@@ -12,9 +12,6 @@
     "blurays": {
         "message": "Blu-ray"
     },
-    "rss": {
-        "message": "RSS"
-    },
     "news": {
         "message": "Actualités"
     },
@@ -30,8 +27,8 @@
     "link": {
         "message": "Lien"
     },
-    "maxitems": {
-        "message": "Nombre maximum de nouveautés"
+    "regexp": {
+        "message": "RegExp (Laissez vide pour les RSS)"
     },
     "help": {
         "message": "Aide"
@@ -63,9 +60,6 @@
     },
     "empty": {
         "message": "Ce champ doit être rempli"
-    },
-    "number": {
-        "message": "Ce champ doit contenir un entier positif ou nul (par défaut si vide : 0)"
     },
     "confirm": {
         "message": "Êtes-vous sûr(e) ?"

@@ -7,7 +7,7 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 });
 
 var settings = { 'hometab': 'seriestab' };
-var arrays   = { 'rss': [], 'news': [], 'series': [], 'movies': [], 'blurays': [] };
+var arrays;
 
 window.addEventListener('load', function () {
     chrome.storage.local.get(null, function (items) {
@@ -25,27 +25,45 @@ function writeArrays() {
 
 function parseLocalStorage(tmpSettings, tmpArrays) {
     let key;
-    for (key in tmpSettings)
-        if (key in settings)
+    for (key in tmpSettings) {
+        if (key in settings) {
             settings[key] = tmpSettings[key];
-
-    for (key in tmpArrays) {
-        if (key in arrays)
-            arrays[key] = tmpArrays[key];
+            if (settings[key] == 'rsstab')
+                settings[key] = 'newstab';
+        }
     }
     writeSettings();
-    writeArrays();
+
+    parseArrays(tmpArrays);
 }
 
 function parseArrays(tmpArrays) {
-    arrays = { 'rss': [], 'news': [], 'series': [], 'movies': [], 'blurays': [] };
-    for (let key in tmpArrays)
+    arrays = { 'news': [], 'series': [], 'movies': [], 'blurays': [] };
+    for (let key in tmpArrays) {
         if (key in arrays)
             arrays[key] = tmpArrays[key];
+    }
+    if (tmpArrays['rss'] != null) {
+        for (let i = 0, length = tmpArrays['rss'].length; i != length; i++)
+            arrays['news'].push({ 'name': '', 'link': tmpArrays['rss'][i]['link'], 'regexp': '', 'current': tmpArrays['rss'][i]['current'] });
+        console.log(arrays['news']);
+    }
     writeArrays();
 }
 
-function deleteDynamicRN(type, value) {
+function propertyInArray(value, property, array) {
+    let i, length;
+    for (i = 0, length = array.length; i != length && array[i][property] != value; i++) ;
+    return i == length ? -1 : i;
+}
+
+function objectInArray(value, array) {
+    let i, length;
+    for (i = 0, length = array.length; i != length && array[i] != value; i++) ;
+    return i == length ? -1 : i;
+}
+
+function deleteDynamicNews(type, value) {
     let i = propertyInArray(value, 'link', arrays[type]);
     if (i != -1) {
         arrays[type].splice(i, 1);
@@ -62,8 +80,7 @@ function deleteDynamicSMB(type, value) {
 }
 
 var deleteDynamic = {
-    'rss': deleteDynamicRN,
-    'news': deleteDynamicRN,
+    'news': deleteDynamicNews,
     'series': deleteDynamicSMB,
     'movies': deleteDynamicSMB,
     'blurays': deleteDynamicSMB
@@ -76,27 +93,3 @@ function writeDynamic(type, value, cur) {
         writeArrays();
     }
 }
-
-function getFunctionDynamicSMB(link) {
-    return function () {
-        window.open(link);
-    };
-}
-
-var getFunctionDynamic = {
-    'rss': function (link, type, value, cur) {
-        return function () {
-            link();
-            writeDynamic(type, value, cur);
-        };
-    },
-    'news': function (link, type, value, cur) {
-        return function () {
-            window.open(link);
-            writeDynamic(type, value, cur);
-        };
-    },
-    'series': getFunctionDynamicSMB,
-    'movies': getFunctionDynamicSMB,
-    'blurays': getFunctionDynamicSMB
-};

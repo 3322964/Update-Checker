@@ -12,9 +12,6 @@
     "blurays": {
         "message": "Blu-ray"
     },
-    "rss": {
-        "message": "RSS"
-    },
     "news": {
         "message": "News"
     },
@@ -30,8 +27,8 @@
     "link": {
         "message": "Link"
     },
-    "maxitems": {
-        "message": "Maximum new item count"
+    "regexp": {
+        "message": "RegExp (Leave it empty for RSS)"
     },
     "help": {
         "message": "Help"
@@ -63,9 +60,6 @@
     },
     "empty": {
         "message": "This field must be filled"
-    },
-    "number": {
-        "message": "This field must contain a positive integer or zero (default if empty: 0)"
     },
     "confirm": {
         "message": "Are you sure?"
