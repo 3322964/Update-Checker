@@ -28,7 +28,7 @@
         "message": "Link"
     },
     "regexp": {
-        "message": "RegExp (Leave it empty for RSS)"
+        "message": "RegExp (Leave empty for RSS)"
     },
     "help": {
         "message": "Help"
