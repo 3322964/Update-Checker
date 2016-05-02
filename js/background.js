@@ -43,10 +43,9 @@ function parseArrays(tmpArrays) {
         if (key in arrays)
             arrays[key] = tmpArrays[key];
     }
-    if (tmpArrays['rss'] != null) {
+    if (tmpArrays != null && tmpArrays['rss'] != null) {
         for (let i = 0, length = tmpArrays['rss'].length; i != length; i++)
             arrays['news'].push({ 'name': '', 'link': tmpArrays['rss'][i]['link'], 'regexp': '', 'current': tmpArrays['rss'][i]['current'] });
-        console.log(arrays['news']);
     }
     writeArrays();
 }

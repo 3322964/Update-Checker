@@ -148,9 +148,12 @@ function addSearchValid(type, typeDom, typeName, typeSearch, typeResults, typeBu
 
     typeValid.addEventListener('click', function () {
         let array = backgroundPage.arrays[type], checked = typeResults.getElementsByTagName('input');
-        for (let i = 0, length = checked.length; i != length; i++)
-            if (checked[i].checked && objectInArray(checked[i].value, array) == -1)
-                check[type](type, array[array.push(checked[i].value) - 1]);
+        for (let i = 0, tmp, length = checked.length; i != length; i++) {
+            if (checked[i].checked && objectInArray(checked[i].value, array) == -1) {
+                tmp = array[array.push(checked[i].value) - 1];
+                getLinkAll(type, createLink[type](tmp), tmp);
+            }
+        }
         backgroundPage.writeArrays();
         typeName.value     = '';
         typeResults.hidden = true;
@@ -297,7 +300,8 @@ function parseNews(current, save, newsname, newsnamespan, newslink, newslinkspan
         newsregexp.value = '';
         newsregexp.click();
     }
-    check['news']('news', aN[aN.push({ 'name': name, 'link': link, 'regexp': regexp, 'current': current }) - 1]);
+    let tmp = aN[aN.push({ 'name': name, 'link': link, 'regexp': regexp, 'current': current }) - 1];
+    getLinkAll('news', link, tmp);
     backgroundPage.writeArrays();
 }
 
@@ -438,7 +442,7 @@ var updateTab = {
     }
 };
 
-function sortNews(type, value, link, name, text, current, typeDom) {
+function sortNews(typeDom, type, value, link, name, text, current) {
     let li      = document.createElement('li');
     let tmpName = ' ' + escapeHTML(name) + ' ';
     let j = 1, children = typeDom.children, length = children.length;
@@ -448,7 +452,7 @@ function sortNews(type, value, link, name, text, current, typeDom) {
             return function () {
                 typeDom.removeChild(_li);
                 updateProgress(type);
-                check[type](type, value);
+                getLinkAll(type, value['link'], value);
             };
         })(li), false);
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, tmpName) < 0; j++) ;
@@ -466,7 +470,7 @@ function sortNews(type, value, link, name, text, current, typeDom) {
                 backgroundPage.writeDynamic(type, value['link'], current);
                 typeDom.removeChild(_li);
                 updateProgress(type);
-                check[type](type, value);
+                getLinkAll(type, value['link'], value);
             };
         })(li), false);
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) ;
@@ -477,7 +481,7 @@ function sortNews(type, value, link, name, text, current, typeDom) {
     addEdit(li, typeDom, type, value, value['link']);
 }
 
-function sortSMB(type, value, name, icon, tmpDate, green, website, typeDom) {
+function sortSMB(typeDom, website, type, value, name, icon, tmpDate, green) {
     let li      = document.createElement('li');
     let current = (name == null ? website + value : name) + ' ';
     let j = 1, children = typeDom.children, length = children.length;
@@ -487,7 +491,7 @@ function sortSMB(type, value, name, icon, tmpDate, green, website, typeDom) {
             return function () {
                 typeDom.removeChild(_li);
                 updateProgress(type);
-                check[type](type, value);
+                getLinkAll(type, createLink(type, value), value);
             };
         })(li), false);
         for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) < 0; j++) ;
@@ -514,18 +518,3 @@ function sortSMB(type, value, name, icon, tmpDate, green, website, typeDom) {
     typeDom.insertBefore(li, j != length ? children[j] : null);
     addDelete(li, typeDom, type, value);
 }
-
-var sort = {
-    'news': function (type, value, link, name, text, current) {
-        sortNews(type, value, link, name, text, current, news);
-    },
-    'series': function (type, value, name, icon, tmpDate, green) {
-        sortSMB(type, value, name, icon, tmpDate, green, imdb, series);
-    },
-    'movies': function (type, value, name, icon, tmpDate, green) {
-        sortSMB(type, value, name, icon, tmpDate, green, imdb, movies);
-    },
-    'blurays': function (type, value, name, icon, tmpDate, green) {
-        sortSMB(type, value, name == null ? name : name.length == 3 ? name[1] + ' <img src="' + name[2] + '">' : name[1], icon, tmpDate, green, bluray, blurays);
-    }
-};

@@ -8,15 +8,6 @@ const regExpMoviesIcon  = /Poster"\nsrc="([^"]*)/;
 const regExpBlurays     = /style="text-decoration: none; color: #666666">([^<]*)/;
 const regExpBluraysIcon = /id="frontimage_overlay" src="([^"]*)/;
 const regExpBluraysName = /itemprop="itemReviewed">(?:<a[^>]*>)?([^<]*)(?:<\/a>)? Blu-ray<\/h1><\/a><img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
-const xPathTitle        = '//*[local-name()=\'title\' and (local-name(parent::*)=\'channel\' or local-name(parent::*)=\'feed\')]/text()';
-const xPathLink         = '//*[local-name()=\'link\' and local-name(parent::*)=\'channel\']/text()';
-const xPathLink2        = '//*[local-name()=\'link\' and local-name(parent::*)=\'feed\']/@href';
-const xPathItems        = '//*[local-name()=\'item\']';
-const xPathItems2       = '//*[local-name()=\'entry\']';
-const xPathDate         = '*[local-name()=\'pubDate\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'pubDate\'])]/text()';
-const xPathDate2        = '*[local-name()=\'updated\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'updated\'])]/@href';
-const xPathItemLink     = '*[local-name()=\'link\']/text()';
-const xPathItemLink2    = '*[local-name()=\'link\']/@href';
 const imdb              = 'http://www.imdb.com/title/';
 const bluray            = 'http://www.blu-ray.com/movies/';
 const chromeI18n        = chrome.i18n.getMessage;
@@ -56,7 +47,7 @@ function checkAll(arrays) {
     for (let key in arrays) {
         progress[key] = 0;
         for (i = 0, tmp = arrays[key], length = tmp.length; i != length; i++)
-            get[type](key, tmp[i], updateProgress);
+            getLinkAll(key, createLink[key](tmp[i]), tmp[i]);
     }
 }
 
@@ -75,18 +66,18 @@ function getLinkAll(type, link, value) {
     file.send();
 }
 
-var get = {
-    'news': function (type, value) {
-        getLinkAll(type, value['link'], value);
+var createLink = {
+    'news': function (value) {
+        return value['link'];
     },
-    'series': function (type, value) {
-        getLinkAll(type, imdb + value + '/epcast', value);
+    'series': function (value) {
+        return imdb + value + '/epcast';
     },
-    'movies': function (type, value) {
-        getLinkAll(type, imdb + value + '/', value);
+    'movies': function (value) {
+        return imdb + value + '/';
     },
-    'blurays': function (type, value) {
-        getLinkAll(type, bluray + value, value);
+    'blurays': function (value) {
+        return bluray + value;
     }
 };
 
@@ -94,55 +85,16 @@ var getLink = {
     'news': function (type, value, status, response) {
         let name = value['name'] != '' ? value['name'] : value['link'];
         if (!status)
-            sortNews(type, value, value['link'], name, null);
+            sortNews(news, type, value, value['link'], name, null);
         else if (value['regexp'] == '') {
-            try {
-                let xml = (new DOMParser()).parseFromString(response, 'text/xml');
-                let tmp = xml.evaluate(xPathLink, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-                let link, items, rssDate, rssItemLink;
-                if (tmp != null) {
-                    link        = tmp.textContent;
-                    items       = xml.evaluate(xPathItems, xml, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                    rssDate     = xPathDate;
-                    rssItemLink = xPathItemLink;
-                }
-                else {
-                    link        = xml.evaluate(xPathLink2, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
-                    items       = xml.evaluate(xPathItems2, xml, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                    rssDate     = xPathDate2;
-                    rssItemLink = xPathItemLink2;
-                }
-                tmp  = xml.evaluate(xPathTitle, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            let rssParser = new RssParser(response, value['current']);
+            if (rssParser.getErrorFlag())
+                sortNews(news, type, value, value['link'], name);
+            else {
                 if (value['name'] == '')
-                    name = tmp != null ? tmp.textContent : link;
-                let j;
-                if (value['current'] == '')
-                    j = items.snapshotLength;
-                else if (!moment(new Date(value['current'])).isValid())
-                    for (j = 0; j != items.snapshotLength && xml.evaluate(rssDate, items.snapshotItem(j), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent != value['current']; j++) ;
-                else for (j = 0; j != items.snapshotLength && moment(new Date(xml.evaluate(rssDate, items.snapshotItem(j), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent)).isAfter(new Date(value['current'])); j++) ;
-                if (j != 0)
-                    /*let f;
-                    if (value['maxitems'] == null || j > value['maxitems']) {
-                        f = (function (_link) {
-                            return function () {
-                                window.open(_link);
-                            };
-                        })(link);
-                    }
-                    else {
-                        f = (function (_xml, _rssItemLink, _items, _j) {
-                            return function () {
-                                for (let i = 0; i < _j; i++)
-                                    window.open(_xml.evaluate(_rssItemLink, _items.snapshotItem(i), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent);
-                            };
-                        })(xml, rssItemLink, items, j);
-                    }*/
-                    sortNews(type, value, link, name, chrome.i18n.getMessage('newitems', [j]), xml.evaluate(rssDate, items.snapshotItem(0), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent);
-                else sortNews(type, value, link, name, chrome.i18n.getMessage('newitems', [j]));
-            }
-            catch (err) {
-                sortNews(type, value, value['link'], name);
+                    name = rssParser.getName();
+                let newItemCount = rssParser.getNewItemCount();
+                sortNews(news, type, value, rssParser.getLink(), name, chrome.i18n.getMessage('newitems', [newItemCount]), newItemCount != 0 ? rssParser.getNewDate() : null);
             }
         }
         else {
@@ -158,65 +110,64 @@ var getLink = {
                 result = result.join(' ');
                 if (result.trim() == '')
                     result = '-';
-                if (result != value['current'])
-                    sortNews(type, value, value['link'], name, result, result);
-                else sortNews(type, value, value['link'], name, result);
+                sortNews(news, type, value, value['link'], name, result, result != value['current'] ? result : null);
             }
             catch (err) {
-                sortNews(type, value, value['link'], name);
+                sortNews(news, type, value, value['link'], name);
             }
         }
     },
 
     'series': function (type, value, status, response) {
         if (!status)
-            sortSMB(type, value, null);
+            sortSMB(series, imdb, type, value, null);
         else {
             let name = response.match(regExpSeriesName);
             if (name != null) {
                 let result = response.match(regExpSeries);
                 if (result != null) {
                     let tmpDate = moment(new Date(result[4]));
-                    sortSMB(type, value,
+                    sortSMB(series, imdb, type, value,
                         name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]), response.match(regExpSeriesIcon), tmpDate, !tmpDate.isAfter(date));
                 }
-                else sortSMB(type, value, name[1], response.match(regExpSeriesIcon));
+                else sortSMB(series, imdb, type, value, name[1], response.match(regExpSeriesIcon));
             }
-            else sortSMB(type, value);
+            else sortSMB(series, imdb, type, value);
         }
     },
 
     'movies': function (type, value, status, response) {
         if (!status)
-            sortSMB(type, value, null);
+            sortSMB(movies, imdb, type, value, null);
         else {
             let name = response.match(regExpMoviesName);
             if (name != null) {
                 let result = response.match(regExpMovies);
                 if (result != null && iso.findCountryByName(result[3])['value'] == result[1]) {
                     let tmpDate = moment(new Date(result[2]));
-                    sortSMB(type, value, name[1], response.match(regExpMoviesIcon), tmpDate, !tmpDate.isAfter(date));
+                    sortSMB(movies, imdb, type, value, name[1], response.match(regExpMoviesIcon), tmpDate, !tmpDate.isAfter(date));
                 }
-                else sortSMB(type, value, name[1], response.match(regExpMoviesIcon));
+                else sortSMB(movies, imdb, type, value, name[1], response.match(regExpMoviesIcon));
             }
-            else sortSMB(type, value);
+            else sortSMB(movies, imdb, type, value);
         }
     },
 
     'blurays': function (type, value, status, response) {
         if (!status)
-            sortSMB(type, value, null);
+            sortSMB(blurays, bluray, type, value, null);
         else {
             let name = response.match(regExpBluraysName);
             if (name != null) {
+                name       = name.length == 3 ? name[1] + ' <img src="' + name[2] + '">' : name[1];
                 let result = response.match(regExpBlurays);
                 if (result != null) {
                     let tmpDate = moment(new Date(result[1]));
-                    sortSMB(type, value, name, response.match(regExpBluraysIcon), tmpDate, !tmpDate.isAfter(date));
+                    sortSMB(blurays, bluray, type, value, name, response.match(regExpBluraysIcon), tmpDate, !tmpDate.isAfter(date));
                 }
-                else sortSMB(type, value, name, response.match(regExpBluraysIcon));
+                else sortSMB(blurays, bluray, type, value, name, response.match(regExpBluraysIcon));
             }
-            else sortSMB(type, value);
+            else sortSMB(blurays, bluray, type, value);
         }
     }
 };
