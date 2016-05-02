@@ -53,7 +53,7 @@ function checkAll(arrays) {
 
 function getLinkAll(type, link, value) {
     let file = new XMLHttpRequest();
-    file.open('GET', link, true);
+    file.open('GET', createLink[type](link), true);
     file.setRequestHeader('Pragma', 'no-cache');
     file.setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
     file.onreadystatechange = function () {

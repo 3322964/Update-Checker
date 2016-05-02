@@ -10,20 +10,20 @@ for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
 }
 
 window.addEventListener('load', function () {
-    newsname.placeholder        = chromeI18n('name');
-    newslink.placeholder        = chromeI18n('link');
-    newsregexp.placeholder      = chromeI18n('regexp');
-    newsvalid.value             = chromeI18n('add');
+    newsname.placeholder       = chromeI18n('name');
+    newslink.placeholder       = chromeI18n('link');
+    newsregexp.placeholder     = chromeI18n('regexp');
+    newsvalid.value            = chromeI18n('add');
 
-    newsnameedit.placeholder    = chromeI18n('name');
-    newslinkedit.placeholder    = chromeI18n('link');
-    newsregexpedit.placeholder  = chromeI18n('regexp');
-    newscanceledit.value        = chromeI18n('cancel');
-    newsvalidedit.value         = chromeI18n('ok');
+    newsnameedit.placeholder   = chromeI18n('name');
+    newslinkedit.placeholder   = chromeI18n('link');
+    newsregexpedit.placeholder = chromeI18n('regexp');
+    newscanceledit.value       = chromeI18n('cancel');
+    newsvalidedit.value        = chromeI18n('ok');
 
-    confirmtext.innerHTML       = chromeI18n('confirm');
-    confirmno.value             = chromeI18n('no');
-    confirmyes.value            = chromeI18n('yes');
+    confirmtext.innerHTML      = chromeI18n('confirm');
+    confirmno.value            = chromeI18n('no');
+    confirmyes.value           = chromeI18n('yes');
 
     document.getElementById(backgroundPage.settings['hometab']).click();
     widget.hidden = false;
@@ -148,11 +148,9 @@ function addSearchValid(type, typeDom, typeName, typeSearch, typeResults, typeBu
 
     typeValid.addEventListener('click', function () {
         let array = backgroundPage.arrays[type], checked = typeResults.getElementsByTagName('input');
-        for (let i = 0, tmp, length = checked.length; i != length; i++) {
-            if (checked[i].checked && objectInArray(checked[i].value, array) == -1) {
-                tmp = array[array.push(checked[i].value) - 1];
-                getLinkAll(type, createLink[type](tmp), tmp);
-            }
+        for (let i = 0, length = checked.length; i != length; i++) {
+            if (checked[i].checked && objectInArray(checked[i].value, array) == -1)
+                getLinkAll(type, array[array.push(checked[i].value) - 1]);
         }
         backgroundPage.writeArrays();
         typeName.value     = '';
@@ -300,8 +298,7 @@ function parseNews(current, save, newsname, newsnamespan, newslink, newslinkspan
         newsregexp.value = '';
         newsregexp.click();
     }
-    let tmp = aN[aN.push({ 'name': name, 'link': link, 'regexp': regexp, 'current': current }) - 1];
-    getLinkAll('news', link, tmp);
+    getLinkAll('news', aN[aN.push({ 'name': name, 'link': link, 'regexp': regexp, 'current': current }) - 1]);
     backgroundPage.writeArrays();
 }
 
@@ -452,7 +449,7 @@ function sortNews(typeDom, type, value, link, name, text, current) {
             return function () {
                 typeDom.removeChild(_li);
                 updateProgress(type);
-                getLinkAll(type, value['link'], value);
+                getLinkAll(type, value);
             };
         })(li), false);
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, tmpName) < 0; j++) ;
@@ -470,7 +467,7 @@ function sortNews(typeDom, type, value, link, name, text, current) {
                 backgroundPage.writeDynamic(type, value['link'], current);
                 typeDom.removeChild(_li);
                 updateProgress(type);
-                getLinkAll(type, value['link'], value);
+                getLinkAll(type, value);
             };
         })(li), false);
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) ;
@@ -491,7 +488,7 @@ function sortSMB(typeDom, website, type, value, name, icon, tmpDate, green) {
             return function () {
                 typeDom.removeChild(_li);
                 updateProgress(type);
-                getLinkAll(type, createLink(type, value), value);
+                getLinkAll(type, value);
             };
         })(li), false);
         for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) < 0; j++) ;
