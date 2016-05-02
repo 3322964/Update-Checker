@@ -82,7 +82,7 @@ var getLink = {
         if (!status)
             sortNews(news, type, value, value['link'], name, null);
         else if (value['regexp'] == '') {
-            let rssParser = new RssParser(response, value['current']);
+            let rssParser = new RSSParser(response, value['current']);
             if (rssParser.getErrorFlag())
                 sortNews(news, type, value, value['link'], name);
             else {

@@ -1,21 +1,21 @@
-class RssParser {
+class RSSParser {
     constructor(stringToParse, previousDate) {
         this.errorFlag = false;
         try {
             let xml = (new DOMParser()).parseFromString(stringToParse, 'text/xml');
-            let tmp = xml.evaluate(RssParser.xPathLink, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            let tmp = xml.evaluate(RSSParser.xPathLink, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             let rssDate;
             if (tmp != null) {
                 this.link  = tmp.textContent;
-                this.items = xml.evaluate(RssParser.xPathItems, xml, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                rssDate    = RssParser.xPathDate;
+                this.items = xml.evaluate(RSSParser.xPathItems, xml, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                rssDate    = RSSParser.xPathDate;
             }
             else {
-                this.link  = xml.evaluate(RssParser.xPathLink2, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
-                this.items = xml.evaluate(RssParser.xPathItems2, xml, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                rssDate    = RssParser.xPathDate2;
+                this.link  = xml.evaluate(RSSParser.xPathLink2, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
+                this.items = xml.evaluate(RSSParser.xPathItems2, xml, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                rssDate    = RSSParser.xPathDate2;
             }
-            this.name = xml.evaluate(RssParser.xPathTitle, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
+            this.name = xml.evaluate(RSSParser.xPathTitle, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
             if (previousDate == '')
                 this.newItemCount = this.items.snapshotLength;
             else {
@@ -52,10 +52,10 @@ class RssParser {
     }
 }
 
-RssParser.xPathTitle  = '//*[local-name()=\'title\' and (local-name(parent::*)=\'channel\' or local-name(parent::*)=\'feed\')]/text()';
-RssParser.xPathLink   = '//*[local-name()=\'link\' and local-name(parent::*)=\'channel\']/text()';
-RssParser.xPathLink2  = '//*[local-name()=\'link\' and local-name(parent::*)=\'feed\']/@href';
-RssParser.xPathItems  = '//*[local-name()=\'item\']';
-RssParser.xPathItems2 = '//*[local-name()=\'entry\']';
-RssParser.xPathDate   = '*[local-name()=\'pubDate\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'pubDate\'])]/text()';
-RssParser.xPathDate2  = '*[local-name()=\'updated\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'updated\'])]/@href';
+RSSParser.xPathTitle  = '//*[local-name()=\'title\' and (local-name(parent::*)=\'channel\' or local-name(parent::*)=\'feed\')]/text()';
+RSSParser.xPathLink   = '//*[local-name()=\'link\' and local-name(parent::*)=\'channel\']/text()';
+RSSParser.xPathLink2  = '//*[local-name()=\'link\' and local-name(parent::*)=\'feed\']/@href';
+RSSParser.xPathItems  = '//*[local-name()=\'item\']';
+RSSParser.xPathItems2 = '//*[local-name()=\'entry\']';
+RSSParser.xPathDate   = '*[local-name()=\'pubDate\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'pubDate\'])]/text()';
+RSSParser.xPathDate2  = '*[local-name()=\'updated\']/text() | *[local-name()=\'link\' and not(../*[local-name()=\'updated\'])]/@href';
