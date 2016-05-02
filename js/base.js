@@ -11,7 +11,6 @@ const regExpBluraysName = /itemprop="itemReviewed">(?:<a[^>]*>)?([^<]*)(?:<\/a>)
 const imdb              = 'http://www.imdb.com/title/';
 const bluray            = 'http://www.blu-ray.com/movies/';
 const chromeI18n        = chrome.i18n.getMessage;
-var progress            = {};
 var regExpSeries, date;
 
 function compareStrings(string1, string2) {
@@ -45,23 +44,19 @@ function checkAll(arrays) {
 
     let i, tmp, length;
     for (let key in arrays) {
-        progress[key] = 0;
         for (i = 0, tmp = arrays[key], length = tmp.length; i != length; i++)
-            getLinkAll(key, createLink[key](tmp[i]), tmp[i]);
+            getLinkAll(key, tmp[i]);
     }
 }
 
-function getLinkAll(type, link, value) {
+function getLinkAll(type, value) {
     let file = new XMLHttpRequest();
-    file.open('GET', createLink[type](link), true);
+    file.open('GET', createLink[type](value), true);
     file.setRequestHeader('Pragma', 'no-cache');
     file.setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
     file.onreadystatechange = function () {
-        if (file.readyState == XMLHttpRequest.DONE) {
-            progress[type]++;
+        if (file.readyState == XMLHttpRequest.DONE)
             getLink[type](type, value, file.status == 200, file.responseText);
-            updateProgress(type);
-        }
     };
     file.send();
 }

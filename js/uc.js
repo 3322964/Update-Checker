@@ -27,11 +27,7 @@ window.addEventListener('load', function () {
 
     document.getElementById(backgroundPage.settings['hometab']).click();
     widget.hidden = false;
-    let arrays    = backgroundPage.arrays;
     checkAll(arrays);
-    for (let key in arrays)
-        if (arrays[key].length == 0)
-            updateProgress(key);
 }, false);
 
 var dropdownNews = [
@@ -101,7 +97,7 @@ document.addEventListener('click', function (e) {
 for (let i = 0, tab, list, lists = widget.getElementsByClassName('widget-list'), length = lists.length; i != length; i++) {
     list                        = lists[i];
     tab                         = document.getElementById(list.id + 'tab');
-    tab.childNodes[0].nodeValue = chromeI18n(list.id) + ' ';
+    tab.childNodes[0].nodeValue = chromeI18n(list.id);
 
     tab.addEventListener('click', (function (currentTab, currentList) {
         return function () {
@@ -269,7 +265,6 @@ blurayssearch.addEventListener('click', function () {
 function removeElement(typeDom, li, type, value, fade) {
     typeDom.removeChild(li);
     backgroundPage.deleteDynamic[type](type, value);
-    updateProgress(type);
     fade.click();
 }
 
@@ -369,76 +364,6 @@ function escapeAttribute(result) {
     return escapeHTML(result).replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
 }
 
-function updateProgress(type) {
-    updateTab[type](type);
-    if (progressbar.style.width != '100%') {
-        let value, total = 0, currentProgress = 0;
-        for (let t in progress) {
-            total           += arrays[t].length;
-            currentProgress += progress[t];
-        }
-
-        if (total == 0)
-            value = 100;
-        else value = parseInt(currentProgress * 100 / total);
-        progressbar.style.width               = value + '%';
-        progressbar.style['background-color'] = value > 80 ? '#86e01e' : value > 60 ? '#f2d31b' : value > 40 ? '#f2b01e' : value > 20 ? '#f27011' : '#f63a0f';
-        if (value == 100) {
-            setTimeout(function () {
-                progressbar.classList.add('hidden');
-            }, 1000);
-        }
-    }
-}
-
-function updateTabNews(type, typeDom, typeTab) {
-    if (typeDom.getElementsByClassName('green').length != 0) {
-        typeTab.classList.remove('red');
-        typeTab.classList.add('green');
-    }
-    else if (typeDom.getElementsByClassName('red').length != 0){
-        typeTab.classList.remove('green');
-        typeTab.classList.add('red');
-    }
-    else {
-        typeTab.classList.remove('green');
-        typeTab.classList.remove('red');
-    }
-}
-
-function updateTabSMB(type, typeDom, typeTab, typeSup) {
-    let nb, j = 1, children = typeDom.children, length = children.length;
-    for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red'; j++) ;
-    for ( ; j != length; j++) {
-        if (children[j].firstElementChild.children[1].lastElementChild.innerHTML == '-') {
-            j = length;
-            break;
-        }
-        nb = moment(children[j].firstElementChild.children[1].lastElementChild.innerHTML, 'LL').diff(date, 'days');
-        if (nb >= 0)
-            break;
-    }
-    if (j != length)
-        typeSup.innerHTML = nb;
-    else typeSup.innerHTML = '';
-    updateTabNews(type, typeDom, typeTab);
-}
-
-var updateTab = {
-    'news': function (type) {
-        updateTabNews(type, news, newstab);
-    },
-    'series': function (type) {
-        updateTabSMB(type, series, seriestab, seriessup);
-    },
-    'movies': function (type) {
-        updateTabSMB(type, movies, moviestab, moviessup);
-    },
-    'blurays': function (type) {
-        updateTabSMB(type, blurays, bluraystab, blurayssup);
-    }
-};
-
 function sortNews(typeDom, type, value, link, name, text, current) {
     let li      = document.createElement('li');
     let tmpName = ' ' + escapeHTML(name) + ' ';
@@ -448,7 +373,6 @@ function sortNews(typeDom, type, value, link, name, text, current) {
         li.firstElementChild.addEventListener('click', (function (_li) {
             return function () {
                 typeDom.removeChild(_li);
-                updateProgress(type);
                 getLinkAll(type, value);
             };
         })(li), false);
@@ -466,7 +390,6 @@ function sortNews(typeDom, type, value, link, name, text, current) {
             return function () {
                 backgroundPage.writeDynamic(type, value['link'], current);
                 typeDom.removeChild(_li);
-                updateProgress(type);
                 getLinkAll(type, value);
             };
         })(li), false);
@@ -487,7 +410,6 @@ function sortSMB(typeDom, website, type, value, name, icon, tmpDate, green) {
         li.firstElementChild.addEventListener('click', (function (_li) {
             return function () {
                 typeDom.removeChild(_li);
-                updateProgress(type);
                 getLinkAll(type, value);
             };
         })(li), false);

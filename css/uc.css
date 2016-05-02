@@ -1,7 +1,3 @@
-sup {
-    color: black;
-    line-height: .8em; }
-
 label > div.inputerror {
     cursor: text;
     position: absolute;
@@ -59,10 +55,6 @@ label > div.inputerror {
         border-top: 0;
         margin: 0 -1px;
         border-top: 4px solid #4cc8f1; }
-    .widget-tab.green {
-        color: #0C0; }
-    .widget-tab.red {
-        color: red; }
 
 .widget-list {
     display: none;
@@ -196,36 +188,6 @@ label > div.inputerror {
         visibility: visible;
         opacity: 1;
         transition: visibility 0s 0.2s; }
-
-#progressbar {
-    z-index: 1001;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 34px;
-    border-radius: 4px;
-    transition: 0.4s linear;
-    transition-property: width, background-color;
-    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1); }
-    #progressbar:before, #progressbar:after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0; }
-    #progressbar:before {
-        bottom: 0;
-        background: url(/img/stripes.png) 0 0 repeat;
-        border-radius: 4px 4px 0 0; }
-    #progressbar:after {
-        z-index: 1002;
-        bottom: 45%;
-        border-radius: 4px;
-        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05)); }
-    #progressbar.hidden {
-        visibility: hidden;
-        opacity: 0;
-        transition: visibility 0s 2s, opacity 2s linear; }
 
 .search-ac {
     display: none;
