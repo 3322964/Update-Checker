@@ -6,6 +6,74 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
+        <header><nav><div class="header">
+            <ul id="header">
+                <li id="viewseries" class="yellow"></li>
+                <li id="viewmovies" class="green"></li>
+                <li id="viewblurays" class="blue"></li>
+                <li id="viewnews" class="red"></li>
+            </ul>
+        </div></nav></header>
+
+        <div id="viewseriescontent" class="container" hidden>
+            <table class="table">
+                <thead class="table-head">
+                    <tr>
+                        <th id="viewseriesheadername"></th>
+                        <th id="viewseriesheaderseason"></th>
+                        <th id="viewseriesheaderepisode"></th>
+                        <th id="viewseriesheaderepisodename"></th>
+                        <th id="viewseriesheaderepisodebroadcastingdate"></th>
+                        <th id="viewseriesheaderactions"></th>
+                    </tr>
+                </thead>
+                <tbody id="viewseriesbody" class="table-body">
+                </tbody>
+            </table>
+        </div>
+        <div id="viewmoviescontent" class="container" hidden>
+            <table class="table">
+                <thead class="table-head">
+                    <tr>
+                        <th id="viewmoviesheadername"></th>
+                        <th id="viewmoviesheaderreleasedate"></th>
+                        <th id="viewmoviesheaderactions"></th>
+                    </tr>
+                </thead>
+                <tbody class="table-body">
+                </tbody>
+            </table>
+        </div>
+        <div id="viewblurayscontent" class="container" hidden>
+            <table class="table">
+                <thead class="table-head">
+                    <tr>
+                        <th id="viewbluraysheadername"></th>
+                        <th id="viewbluraysheadercountry"></th>
+                        <th id="viewbluraysheaderreleasedate"></th>
+                        <th id="viewbluraysheaderactions"></th>
+                    </tr>
+                </thead>
+                <tbody class="table-body">
+                </tbody>
+            </table>
+        </div>
+        <div id="viewnewscontent" class="container" hidden>
+            <table class="table">
+                <thead class="table-head">
+                    <tr>
+                        <th id="viewnewsheadername"></th>
+                        <th id="viewnewsheaderlink"></th>
+                        <th id="viewnewsheaderregexp"></th>
+                        <th id="viewnewsheaderregexpresult"></th>
+                        <th id="viewnewsheaderactions"></th>
+                    </tr>
+                </thead>
+                <tbody class="table-body">
+                </tbody>
+            </table>
+        </div>
+
         <li class="widget-list-header">
             <div class="table">
                 <div class="cell">
@@ -14,61 +82,36 @@
                 </div>
                 <div class="cell"><input id="backup" type="button" class="checkout-btn"></div>
             </div>
+            <label><input id="seriesname" type="text" class="checkout-input"><div id="seriesnamespan" class="inputerror"></div></label>
+            <input id="seriessearch" type="button" class="checkout-btn">
+            <div id="seriesresults" class="checkout" hidden></div>
+            <div id="seriesbuttons" class="table hidden">
+                <div class="cell"><input id="seriesvalid" type="button" class="checkout-btn"></div>
+                <div class="cell"><input id="seriescancel" type="button" class="checkout-btn redlike"></div>
+            </div>
+            <label><input id="moviesname" type="text" class="checkout-input"><div id="moviesnamespan" class="inputerror"></div></label>
+            <input id="moviessearch" type="button" class="checkout-btn">
+            <div id="moviesresults" class="checkout" hidden></div>
+            <div id="moviesbuttons" class="table hidden">
+                <div class="cell"><input id="moviesvalid" type="button" class="checkout-btn"></div>
+                <div class="cell"><input id="moviescancel" type="button" class="checkout-btn redlike"></div>
+            </div>
+            <label><input id="bluraysname" type="text" class="checkout-input"><div id="bluraysnamespan" class="inputerror"></div></label>
+            <input id="blurayssearch" type="button" class="checkout-btn">
+            <div id="bluraysresults" class="checkout" hidden></div>
+            <div id="bluraysbuttons" class="table hidden">
+                <div class="cell"><input id="bluraysvalid" type="button" class="checkout-btn"></div>
+                <div class="cell"><input id="blurayscancel" type="button" class="checkout-btn redlike"></div>
+            </div>
+            <label><input id="newsname" type="text" class="checkout-input"><div id="newsnamespan" class="inputerror"></div></label>
+            <label><input id="newslink" type="text" class="checkout-input"><div id="newslinkspan" class="inputerror"></div></label>
+            <label>
+                <a id="newsregexphelp" class="help"></a>
+                <input id="newsregexp" type="text" class="checkout-input" placeholder="RegExp"><div id="newsregexpspan" class="inputerror"></div>
+                <ul id="newsregexpdropdown" class="search-ac"></ul>
+            </label>
+            <input id="newsvalid" type="button" class="checkout-btn">
         </li>
-
-        <div id="widget" hidden>
-            <ul class="widget-tabs">
-                <li id="seriestab" class="widget-tab active-tab">
-                <li id="moviestab" class="widget-tab">
-                <li id="bluraystab" class="widget-tab">
-                <li id="newstab" class="widget-tab">
-            </ul>
-            <ol class="widget-list active-list" id="series">
-                <li class="widget-list-header">
-                    <label><input id="seriesname" type="text" class="checkout-input"><div id="seriesnamespan" class="inputerror"></div></label>
-                    <input id="seriessearch" type="button" class="checkout-btn">
-                    <div id="seriesresults" class="checkout" hidden></div>
-                    <div id="seriesbuttons" class="table hidden">
-                        <div class="cell"><input id="seriesvalid" type="button" class="checkout-btn"></div>
-                        <div class="cell"><input id="seriescancel" type="button" class="checkout-btn redlike"></div>
-                    </div>
-                </li>
-            </ol>
-            <ol class="widget-list" id="movies">
-                <li class="widget-list-header">
-                    <label><input id="moviesname" type="text" class="checkout-input"><div id="moviesnamespan" class="inputerror"></div></label>
-                    <input id="moviessearch" type="button" class="checkout-btn">
-                    <div id="moviesresults" class="checkout" hidden></div>
-                    <div id="moviesbuttons" class="table hidden">
-                        <div class="cell"><input id="moviesvalid" type="button" class="checkout-btn"></div>
-                        <div class="cell"><input id="moviescancel" type="button" class="checkout-btn redlike"></div>
-                    </div>
-                </li>
-            </ol>
-            <ol class="widget-list" id="blurays">
-                <li class="widget-list-header">
-                    <label><input id="bluraysname" type="text" class="checkout-input"><div id="bluraysnamespan" class="inputerror"></div></label>
-                    <input id="blurayssearch" type="button" class="checkout-btn">
-                    <div id="bluraysresults" class="checkout" hidden></div>
-                    <div id="bluraysbuttons" class="table hidden">
-                        <div class="cell"><input id="bluraysvalid" type="button" class="checkout-btn"></div>
-                        <div class="cell"><input id="blurayscancel" type="button" class="checkout-btn redlike"></div>
-                    </div>
-                </li>
-            </ol>
-            <ol class="widget-list" id="news">
-                <li class="widget-list-header">
-                    <label><input id="newsname" type="text" class="checkout-input"><div id="newsnamespan" class="inputerror"></div></label>
-                    <label><input id="newslink" type="text" class="checkout-input"><div id="newslinkspan" class="inputerror"></div></label>
-                    <label>
-                        <a id="newsregexphelp" class="help"></a>
-                        <input id="newsregexp" type="text" class="checkout-input" placeholder="RegExp"><div id="newsregexpspan" class="inputerror"></div>
-                        <ul id="newsregexpdropdown" class="search-ac"></ul>
-                    </label>
-                    <input id="newsvalid" type="button" class="checkout-btn">
-                </li>
-            </ol>
-        </div>
 
         <div id="confirmlight" class="light">
             <span id="confirmtext"></span>
@@ -96,6 +139,7 @@
 
         <script src="/js/lib/countries.min.js"></script>
         <script src="/js/lib/moment-with-locales.min.js"></script>
+        <script src="/js/serie.js"></script>
         <script src="/js/rssparser.js"></script>
         <script src="/js/uc.js"></script>
     </body>

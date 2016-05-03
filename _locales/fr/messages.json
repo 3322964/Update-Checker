@@ -2,17 +2,71 @@
     "description": {
         "message": "Update Checker surveille les : dates de sortie des séries TV, films & Blu-ray ; nouveautés des flux RSS ; & changements dans n'importe quel site Web avec une RegExp."
     },
-    "series": {
-        "message": "Séries"
+    "viewseries": {
+        "message": "Séries TV"
     },
-    "movies": {
+    "viewmovies": {
         "message": "Films"
     },
-    "blurays": {
+    "viewblurays": {
         "message": "Blu-ray"
     },
-    "news": {
+    "viewnews": {
         "message": "Actualités"
+    },
+    "viewseriesheadername": {
+        "message": "Nom"
+    },
+    "viewseriesheaderseason": {
+        "message": "Saison"
+    },
+    "viewseriesheaderepisode": {
+        "message": "Épisode"
+    },
+    "viewseriesheaderepisodename": {
+        "message": "Nom de l'épisode"
+    },
+    "viewseriesheaderepisodebroadcastingdate": {
+        "message": "Date de diffusion de l'épisode"
+    },
+    "viewseriesheaderactions": {
+        "message": "Actions"
+    },
+    "viewmoviesheadername": {
+        "message": "Nom"
+    },
+    "viewmoviesheaderreleasedate": {
+        "message": "Date de sortie"
+    },
+    "viewmoviesheaderactions": {
+        "message": "Actions"
+    },
+    "viewbluraysheadername": {
+        "message": "Nom"
+    },
+    "viewbluraysheadercountry": {
+        "message": "Pays"
+    },
+    "viewbluraysheaderreleasedate": {
+        "message": "Date de sortie"
+    },
+    "viewbluraysheaderactions": {
+        "message": "Actions"
+    },
+    "viewnewsheadername": {
+        "message": "Name"
+    },
+    "viewnewsheaderlink": {
+        "message": "Lien"
+    },
+    "viewnewsheaderregexp": {
+        "message": "RegExp"
+    },
+    "viewnewsheaderregexpresult": {
+        "message": "Résultat de la RegExp"
+    },
+    "viewnewsheaderactions": {
+        "message": "Actions"
     },
     "name": {
         "message": "Nom"

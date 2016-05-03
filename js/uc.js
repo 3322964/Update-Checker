@@ -12,7 +12,7 @@ const imdb              = 'http://www.imdb.com/title/';
 const bluray            = 'http://www.blu-ray.com/movies/';
 const chromeI18n        = chrome.i18n.getMessage;
 const getFavicon        = 'http://www.google.com/s2/favicons?domain_url=';
-var settings            = { 'hometab': 'seriestab' };
+var settings            = { 'homeview': 'viewseries' };
 var files               = {};
 var arrays, regExpSeries, date, timeout;
 
@@ -26,22 +26,27 @@ function writeSettings() {
     chrome.storage.local.set({ 'settings': settings });
 }
 
+function toggleHeaderActive(e) {
+    var element                                                 = e.target;
+    var activeHeader                                            = element.parentElement.getElementsByClassName('active')[0];
+    document.getElementById(activeHeader.id + 'content').hidden = true;
+    activeHeader.classList.remove('active');
+    element.classList.add('active');
+    document.getElementById(element.id + 'content').hidden = false;
+    settings['homeview']                                   = element.id;
+    writeSettings();
+}
+
 function writeArrays() {
     chrome.storage.local.set({ 'arrays': arrays });
 }
 
-function parseLocalStorage(tmpSettings, tmpArrays) {
-    let key;
-    for (key in tmpSettings) {
-        if (key in settings) {
+function parseSettings(tmpSettings) {
+    for (let key in tmpSettings) {
+        if (key in settings)
             settings[key] = tmpSettings[key];
-            if (settings[key] == 'rsstab')
-                settings[key] = 'newstab';
-        }
     }
     writeSettings();
-
-    parseArrays(tmpArrays);
 }
 
 function parseArrays(tmpArrays) {
@@ -87,6 +92,25 @@ function writeDynamic(type, value, cur) {
 }
 
 window.addEventListener('load', function () {
+    for (let i = 0, headers = header.children, length = headers.length; i != length; i++) {
+        headers[i].innerHTML = chromeI18n(headers[i].id);
+        headers[i].addEventListener('click', toggleHeaderActive, false);
+
+        let ths = document.getElementById(headers[i].id + 'content').firstElementChild.firstElementChild.firstElementChild.children;
+        for (let i = 0, length = ths.length; i != length; i++)
+            ths[i].innerHTML = chromeI18n(ths[i].id);
+    }
+
+    chrome.storage.local.get(null, function (items) {
+        parseSettings(items['settings']);
+        document.getElementById(settings['homeview']).classList.add('active');
+        document.getElementById(settings['homeview'] + 'content').hidden = false;
+
+        parseArrays(items['arrays']);
+        displayAll(arrays);
+        // checkAll(arrays);
+    });
+
     restore.value              = chromeI18n('restore');
     backup.value               = chromeI18n('backup');
 
@@ -104,16 +128,33 @@ window.addEventListener('load', function () {
     confirmtext.innerHTML      = chromeI18n('confirm');
     confirmno.value            = chromeI18n('no');
     confirmyes.value           = chromeI18n('yes');
-
-    document.getElementById(settings['hometab']).click();
-
-    widget.hidden = false;
-
-    chrome.storage.local.get(null, function (items) {
-        parseLocalStorage(items['settings'], items['arrays']);
-        checkAll(arrays);
-    });
 }, false);
+
+function displayAll() {
+    let arrayType, i, length, tr;
+    for (let type in arrays) {
+        arrayType = arrays[type];
+
+        switch (type) {
+            case 'series':
+                for (i = 0, length = arrayType.length; i != length; i++)
+                    (new Serie(arrayType[i]));
+                break;
+            /*case 'movies':
+                for (i = 0, length = arrayType.length; i != length; i++)
+                    (new Movie(arrayType[i]));
+                break;
+            case 'blurays':
+                for (i = 0, length = arrayType.length; i != length; i++)
+                    (new Bluray(arrayType[i]));
+                break;
+            case 'news':
+                for (i = 0, length = arrayType.length; i != length; i++)
+                    (new New(arrayType[i]));
+                break;*/
+        }
+    }
+}
 
 var dropdownNews = [
     { 'title': 'Chrome Web Store', 'link': 'https://chrome.google.com/webstore/detail/*', 'regexp': 'itemprop="version" content="([^"]*)' },
@@ -179,23 +220,6 @@ document.addEventListener('click', function (e) {
     }
 }, false);
 
-for (let i = 0, tab, list, lists = widget.getElementsByClassName('widget-list'), length = lists.length; i != length; i++) {
-    list                        = lists[i];
-    tab                         = document.getElementById(list.id + 'tab');
-    tab.childNodes[0].nodeValue = chromeI18n(list.id);
-
-    tab.addEventListener('click', (function (currentTab, currentList) {
-        return function () {
-            widget.getElementsByClassName('active-list')[0].classList.remove('active-list');
-            widget.getElementsByClassName('active-tab')[0].classList.remove('active-tab');
-            currentTab.classList.add('active-tab');
-            currentList.classList.add('active-list');
-            settings['hometab'] = currentTab.id;
-            writeSettings();
-        };
-    })(tab, list), false);
-}
-
 function removeError(e) {
     if (e.target.classList.contains('error')) {
         e.target.classList.remove('error');
@@ -203,8 +227,8 @@ function removeError(e) {
     }
 }
 
-function addEventsToInputs(typeDom, typeValid) {
-    for (let i = 0, inputs = typeDom.getElementsByClassName('checkout-input'), length = inputs.length; i != length; i++) {
+function addEventsToInputs(typeValid) {
+    for (let i = 0, inputs = document.body.getElementsByClassName('checkout-input'), length = inputs.length; i != length; i++) {
         inputs[i].addEventListener('keydown', removeError, false);
         inputs[i].addEventListener('input', removeError, false);
         inputs[i].addEventListener('click', removeError, false);
@@ -216,16 +240,16 @@ function addEventsToInputs(typeDom, typeValid) {
     }
 }
 
-addEventsToInputs(news, newsvalid);
-addEventsToInputs(newslight, newsvalidedit);
+addEventsToInputs(newsvalid);
+addEventsToInputs(newsvalidedit);
 
-function addSearchValid(type, typeDom, typeName, typeSearch, typeResults, typeButtons, typeValid, typeCancel) {
+function addSearchValid(type, typeName, typeSearch, typeResults, typeButtons, typeValid, typeCancel) {
     typeName.placeholder = chromeI18n('name');
     typeSearch.value     = chromeI18n('search');
     typeValid.value      = chromeI18n('add');
     typeCancel.value     = chromeI18n('cancel');
 
-    addEventsToInputs(typeDom, typeSearch);
+    addEventsToInputs(typeSearch);
 
     typeValid.addEventListener('click', function () {
         let array = arrays[type], checked = typeResults.getElementsByTagName('input');
@@ -246,9 +270,9 @@ function addSearchValid(type, typeDom, typeName, typeSearch, typeResults, typeBu
     }, false);
 }
 
-addSearchValid('series', series, seriesname, seriessearch, seriesresults, seriesbuttons, seriesvalid, seriescancel);
-addSearchValid('movies', movies, moviesname, moviessearch, moviesresults, moviesbuttons, moviesvalid, moviescancel);
-addSearchValid('blurays', blurays, bluraysname, blurayssearch, bluraysresults, bluraysbuttons,bluraysvalid, blurayscancel);
+addSearchValid('series', seriesname, seriessearch, seriesresults, seriesbuttons, seriesvalid, seriescancel);
+addSearchValid('movies', moviesname, moviessearch, moviesresults, moviesbuttons, moviesvalid, moviescancel);
+addSearchValid('blurays', bluraysname, blurayssearch, bluraysresults, bluraysbuttons,bluraysvalid, blurayscancel);
 
 function showError(string, element, elementspan) {
     element.classList.add('error');
@@ -411,9 +435,9 @@ function addEdit(li, typeDom, type, valueObject, value) {
     img.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        newsnameedit.value    = valueObject['name'];
-        newslinkedit.value    = valueObject['link'];
-        newsregexpedit.value  = valueObject['regexp'];
+        newsnameedit.value   = valueObject['name'];
+        newslinkedit.value   = valueObject['link'];
+        newsregexpedit.value = valueObject['regexp'];
         newsnameedit.click();
         newslinkedit.click();
         newsregexpedit.click();
@@ -450,34 +474,34 @@ function escapeAttribute(result) {
 }
 
 function sortNews(typeDom, type, value, link, name, text, current) {
-    let li      = document.createElement('li');
+    let tr      = document.createElement('tr');
     let tmpName = ' ' + escapeHTML(name) + ' ';
     let j = 1, children = typeDom.children, length = children.length;
     if (text == null) {
-        li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="news"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name).replace(/:\/\/([^@]*)@/, '://***@') +' <span class="red">' + chromeI18n(text === null ? 'unreachable' : 'error') + '</span></div></a>';
-        li.firstElementChild.addEventListener('click', (function (_li) {
+        tr.innerHTML = '<td><a href="' + escapeAttribute(link) + '" target="_blank"></a></td><td><img src="' + getFavicon + escape(link) + '">' + escapeHTML(name).replace(/:\/\/([^@]*)@/, '://***@') + '</td><td>' + chromeI18n(text === null ? 'unreachable' : 'error') + '</td>';
+        tr.firstElementChild.addEventListener('click', (function (_tr) {
             return function () {
-                typeDom.removeChild(_li);
+                typeDom.removeChild(_tr);
                 getLinkAll(type, value);
             };
-        })(li), false);
+        })(tr), false);
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, tmpName) < 0; j++) ;
     }
     else if (current == null) {
-        li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="news"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span>' + escapeHTML(text) + '</span></div></a>';
+        tr.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="news"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span>' + escapeHTML(text) + '</span></div></a>';
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) ;
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green'; j++) ;
         for ( ; j != length && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, tmpName) < 0; j++) ;
     }
     else {
-        li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="news"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span class="green">' + escapeHTML(text) + '</span></div></a>';
-        li.firstElementChild.addEventListener('click', (function (_li) {
+        tr.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="news"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span class="green">' + escapeHTML(text) + '</span></div></a>';
+        tr.firstElementChild.addEventListener('click', (function (_tr) {
             return function () {
                 writeDynamic(type, value['link'], current);
-                typeDom.removeChild(_li);
+                typeDom.removeChild(_tr);
                 getLinkAll(type, value);
             };
-        })(li), false);
+        })(tr), false);
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) ;
         for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, tmpName) < 0; j++) ;
     }
@@ -590,16 +614,16 @@ var getLink = {
     'news': function (type, value, status, response) {
         let name = value['name'] != '' ? value['name'] : value['link'];
         if (!status)
-            sortNews(news, type, value, value['link'], name, null);
+            sortNews(viewnews, type, value, value['link'], name, null);
         else if (value['regexp'] == '') {
             let rssParser = new RSSParser(response, value['current']);
             if (rssParser.getErrorFlag())
-                sortNews(news, type, value, value['link'], name);
+                sortNews(viewnews, type, value, value['link'], name);
             else {
                 if (value['name'] == '')
                     name = rssParser.getName();
                 let newItemCount = rssParser.getNewItemCount();
-                sortNews(news, type, value, rssParser.getLink(), name, chrome.i18n.getMessage('newitems', [newItemCount]), newItemCount != 0 ? rssParser.getNewDate() : null);
+                sortNews(viewnews, type, value, rssParser.getLink(), name, chrome.i18n.getMessage('newitems', [newItemCount]), newItemCount != 0 ? rssParser.getNewDate() : null);
             }
         }
         else {
@@ -615,52 +639,52 @@ var getLink = {
                 result = result.join(' ');
                 if (result.trim() == '')
                     result = '-';
-                sortNews(news, type, value, value['link'], name, result, result != value['current'] ? result : null);
+                sortNews(viewnews, type, value, value['link'], name, result, result != value['current'] ? result : null);
             }
             catch (err) {
-                sortNews(news, type, value, value['link'], name);
+                sortNews(viewnews, type, value, value['link'], name);
             }
         }
     },
 
     'series': function (type, value, status, response) {
         if (!status)
-            sortSMB(series, imdb, type, value, null);
+            sortSMB(viewseries, imdb, type, value, null);
         else {
             let name = response.match(regExpSeriesName);
             if (name != null) {
                 let result = response.match(regExpSeries);
                 if (result != null) {
                     let tmpDate = moment(new Date(result[4]));
-                    sortSMB(series, imdb, type, value,
+                    sortSMB(viewseries, imdb, type, value,
                         name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]), response.match(regExpSeriesIcon), tmpDate, !tmpDate.isAfter(date));
                 }
-                else sortSMB(series, imdb, type, value, name[1], response.match(regExpSeriesIcon));
+                else sortSMB(viewseries, imdb, type, value, name[1], response.match(regExpSeriesIcon));
             }
-            else sortSMB(series, imdb, type, value);
+            else sortSMB(viewseries, imdb, type, value);
         }
     },
 
     'movies': function (type, value, status, response) {
         if (!status)
-            sortSMB(movies, imdb, type, value, null);
+            sortSMB(viewmovies, imdb, type, value, null);
         else {
             let name = response.match(regExpMoviesName);
             if (name != null) {
                 let result = response.match(regExpMovies);
                 if (result != null && iso.findCountryByName(result[3])['value'] == result[1]) {
                     let tmpDate = moment(new Date(result[2]));
-                    sortSMB(movies, imdb, type, value, name[1], response.match(regExpMoviesIcon), tmpDate, !tmpDate.isAfter(date));
+                    sortSMB(viewmovies, imdb, type, value, name[1], response.match(regExpMoviesIcon), tmpDate, !tmpDate.isAfter(date));
                 }
-                else sortSMB(movies, imdb, type, value, name[1], response.match(regExpMoviesIcon));
+                else sortSMB(viewmovies, imdb, type, value, name[1], response.match(regExpMoviesIcon));
             }
-            else sortSMB(movies, imdb, type, value);
+            else sortSMB(viewmovies, imdb, type, value);
         }
     },
 
     'blurays': function (type, value, status, response) {
         if (!status)
-            sortSMB(blurays, bluray, type, value, null);
+            sortSMB(viewblurays, bluray, type, value, null);
         else {
             let name = response.match(regExpBluraysName);
             if (name != null) {
@@ -668,11 +692,11 @@ var getLink = {
                 let result = response.match(regExpBlurays);
                 if (result != null) {
                     let tmpDate = moment(new Date(result[1]));
-                    sortSMB(blurays, bluray, type, value, name, response.match(regExpBluraysIcon), tmpDate, !tmpDate.isAfter(date));
+                    sortSMB(viewblurays, bluray, type, value, name, response.match(regExpBluraysIcon), tmpDate, !tmpDate.isAfter(date));
                 }
-                else sortSMB(blurays, bluray, type, value, name, response.match(regExpBluraysIcon));
+                else sortSMB(viewblurays, bluray, type, value, name, response.match(regExpBluraysIcon));
             }
-            else sortSMB(blurays, bluray, type, value);
+            else sortSMB(viewblurays, bluray, type, value);
         }
     }
 };
