@@ -1,7 +1,20 @@
-const getFavicon   = 'http://www.google.com/s2/favicons?domain_url=';
-var backgroundPage = chrome.extension.getBackgroundPage();
-var files          = {};
-var arrays         = backgroundPage.arrays;
+const regExpNewsName    = /<title>([^<]*)/;
+const regExpSeriesName  = /<title>&#x22;(.*)&#x22;/;
+const regExpSeriesIcon  = /<a name="poster".* src="([^"]*)/;
+const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See more release dates" >(.*) \(([^\)]*)/;
+// const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See all release dates" > ([^<]*).*\n\(([^\)]*)/;
+const regExpMoviesName  = /<title>(.*) \(/;
+const regExpMoviesIcon  = /Poster"\nsrc="([^"]*)/;
+const regExpBlurays     = /style="text-decoration: none; color: #666666">([^<]*)/;
+const regExpBluraysIcon = /id="frontimage_overlay" src="([^"]*)/;
+const regExpBluraysName = /itemprop="itemReviewed">(?:<a[^>]*>)?([^<]*)(?:<\/a>)? Blu-ray<\/h1><\/a><img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
+const imdb              = 'http://www.imdb.com/title/';
+const bluray            = 'http://www.blu-ray.com/movies/';
+const chromeI18n        = chrome.i18n.getMessage;
+const getFavicon        = 'http://www.google.com/s2/favicons?domain_url=';
+var settings            = { 'hometab': 'seriestab' };
+var files               = {};
+var arrays, regExpSeries, date, timeout;
 
 for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
     tmp = elements[i].id;
@@ -9,7 +22,74 @@ for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
         window[tmp] = elements[i];
 }
 
+function writeSettings() {
+    chrome.storage.local.set({ 'settings': settings });
+}
+
+function writeArrays() {
+    chrome.storage.local.set({ 'arrays': arrays });
+}
+
+function parseLocalStorage(tmpSettings, tmpArrays) {
+    let key;
+    for (key in tmpSettings) {
+        if (key in settings) {
+            settings[key] = tmpSettings[key];
+            if (settings[key] == 'rsstab')
+                settings[key] = 'newstab';
+        }
+    }
+    writeSettings();
+
+    parseArrays(tmpArrays);
+}
+
+function parseArrays(tmpArrays) {
+    arrays = { 'news': [], 'series': [], 'movies': [], 'blurays': [] };
+    for (let key in tmpArrays) {
+        if (key in arrays)
+            arrays[key] = tmpArrays[key];
+    }
+    if (tmpArrays != null && tmpArrays['rss'] != null) {
+        for (let i = 0, length = tmpArrays['rss'].length; i != length; i++)
+            arrays['news'].push({ 'name': '', 'link': tmpArrays['rss'][i]['link'], 'regexp': '', 'current': tmpArrays['rss'][i]['current'] });
+    }
+    writeArrays();
+}
+
+function deleteDynamicSMB(type, value) {
+    let i = objectInArray(value, arrays[type]);
+    if (i != -1) {
+        arrays[type].splice(i, 1);
+        writeArrays();
+    }
+}
+
+var deleteDynamic = {
+    'news': function (type, value) {
+        let i = propertyInArray(value, 'link', arrays[type]);
+        if (i != -1) {
+            arrays[type].splice(i, 1);
+            writeArrays();
+        }
+    },
+    'series': deleteDynamicSMB,
+    'movies': deleteDynamicSMB,
+    'blurays': deleteDynamicSMB
+};
+
+function writeDynamic(type, value, cur) {
+    let i = propertyInArray(value, 'link', arrays[type]);
+    if (i != -1) {
+        arrays[type][i]['current'] = cur;
+        writeArrays();
+    }
+}
+
 window.addEventListener('load', function () {
+    restore.value              = chromeI18n('restore');
+    backup.value               = chromeI18n('backup');
+
     newsname.placeholder       = chromeI18n('name');
     newslink.placeholder       = chromeI18n('link');
     newsregexp.placeholder     = chromeI18n('regexp');
@@ -25,9 +105,14 @@ window.addEventListener('load', function () {
     confirmno.value            = chromeI18n('no');
     confirmyes.value           = chromeI18n('yes');
 
-    document.getElementById(backgroundPage.settings['hometab']).click();
+    document.getElementById(settings['hometab']).click();
+
     widget.hidden = false;
-    checkAll(arrays);
+
+    chrome.storage.local.get(null, function (items) {
+        parseLocalStorage(items['settings'], items['arrays']);
+        checkAll(arrays);
+    });
 }, false);
 
 var dropdownNews = [
@@ -105,8 +190,8 @@ for (let i = 0, tab, list, lists = widget.getElementsByClassName('widget-list'),
             widget.getElementsByClassName('active-tab')[0].classList.remove('active-tab');
             currentTab.classList.add('active-tab');
             currentList.classList.add('active-list');
-            backgroundPage.settings['hometab'] = currentTab.id;
-            backgroundPage.writeSettings();
+            settings['hometab'] = currentTab.id;
+            writeSettings();
         };
     })(tab, list), false);
 }
@@ -143,12 +228,12 @@ function addSearchValid(type, typeDom, typeName, typeSearch, typeResults, typeBu
     addEventsToInputs(typeDom, typeSearch);
 
     typeValid.addEventListener('click', function () {
-        let array = backgroundPage.arrays[type], checked = typeResults.getElementsByTagName('input');
+        let array = arrays[type], checked = typeResults.getElementsByTagName('input');
         for (let i = 0, length = checked.length; i != length; i++) {
             if (checked[i].checked && objectInArray(checked[i].value, array) == -1)
                 getLinkAll(type, array[array.push(checked[i].value) - 1]);
         }
-        backgroundPage.writeArrays();
+        writeArrays();
         typeName.value     = '';
         typeResults.hidden = true;
         typeButtons.classList.add('hidden');
@@ -203,7 +288,7 @@ function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link,
         if (files[type].readyState == XMLHttpRequest.DONE) {
             typeName.classList.remove('loading');
             if (files[type].status == 200) {
-                let output            = toDoSuccess(files[type].responseText, backgroundPage.arrays[type]);
+                let output            = toDoSuccess(files[type].responseText, arrays[type]);
                 typeResults.innerHTML = output;
                 if (output != '') {
                     typeResults.hidden    = false;
@@ -264,7 +349,7 @@ blurayssearch.addEventListener('click', function () {
 
 function removeElement(typeDom, li, type, value, fade) {
     typeDom.removeChild(li);
-    backgroundPage.deleteDynamic[type](type, value);
+    deleteDynamic[type](type, value);
     fade.click();
 }
 
@@ -278,7 +363,7 @@ function parseNews(current, save, newsname, newsnamespan, newslink, newslinkspan
         showError(chromeI18n('empty'), newslink, newslinkspan);
         errorOccured = true;
     }
-    let aN = backgroundPage.arrays['news'];
+    let aN = arrays['news'];
     if (save != link && propertyInArray(link, 'link', aN) != -1) {
         showError(chromeI18n('alreadyexists'), newslink, newslinkspan);
         errorOccured = true;
@@ -294,7 +379,7 @@ function parseNews(current, save, newsname, newsnamespan, newslink, newslinkspan
         newsregexp.click();
     }
     getLinkAll('news', aN[aN.push({ 'name': name, 'link': link, 'regexp': regexp, 'current': current }) - 1]);
-    backgroundPage.writeArrays();
+    writeArrays();
 }
 
 newsvalid.addEventListener('click', function () {
@@ -388,7 +473,7 @@ function sortNews(typeDom, type, value, link, name, text, current) {
         li.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="news"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span class="green">' + escapeHTML(text) + '</span></div></a>';
         li.firstElementChild.addEventListener('click', (function (_li) {
             return function () {
-                backgroundPage.writeDynamic(type, value['link'], current);
+                writeDynamic(type, value['link'], current);
                 typeDom.removeChild(_li);
                 getLinkAll(type, value);
             };
@@ -437,3 +522,190 @@ function sortSMB(typeDom, website, type, value, name, icon, tmpDate, green) {
     typeDom.insertBefore(li, j != length ? children[j] : null);
     addDelete(li, typeDom, type, value);
 }
+
+function compareStrings(string1, string2) {
+    return string1.localeCompare(string2, window.navigator.language, { 'sensitivity': 'accent' });
+}
+
+function convertIntTo2Int(value) {
+    return value < 10 ? '0' + value : value;
+}
+
+function propertyInArray(value, property, array) {
+    let i, length;
+    for (i = 0, length = array.length; i != length && array[i][property] != value; i++) ;
+    return i == length ? -1 : i;
+}
+
+function objectInArray(value, array) {
+    let i, length;
+    for (i = 0, length = array.length; i != length && array[i] != value; i++) ;
+    return i == length ? -1 : i;
+}
+
+function checkAll(arrays) {
+    date         = moment().startOf('day');
+    let year     = date.year();
+    let months   = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    let month    = date.month();
+    let days     = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+    regExpSeries = new RegExp('<h4>Season (\\d{1,}), Episode (\\d{1,}): <a href="[^"]*">([^<]*)</a></h4><b>(\\d{1,2} [A-S][a-z]+ ' + (year + 1) + '|\\d{1,2} (' + months.splice(month + 1, 12).join('|') + ') ' + year + '|(' + days.splice(date.date() - 1, 31).join('|') + ') ' + months[month] + ' ' + year + ')</b>');
+    moment.locale(window.navigator.language);
+
+    let i, tmp, length;
+    for (let key in arrays) {
+        for (i = 0, tmp = arrays[key], length = tmp.length; i != length; i++)
+            getLinkAll(key, tmp[i]);
+    }
+}
+
+function getLinkAll(type, value) {
+    let file = new XMLHttpRequest();
+    file.open('GET', createLink[type](value), true);
+    file.setRequestHeader('Pragma', 'no-cache');
+    file.setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
+    file.onreadystatechange = function () {
+        if (file.readyState == XMLHttpRequest.DONE)
+            getLink[type](type, value, file.status == 200, file.responseText);
+    };
+    file.send();
+}
+
+var createLink = {
+    'news': function (value) {
+        return value['link'];
+    },
+    'series': function (value) {
+        return imdb + value + '/epcast';
+    },
+    'movies': function (value) {
+        return imdb + value + '/';
+    },
+    'blurays': function (value) {
+        return bluray + value;
+    }
+};
+
+var getLink = {
+    'news': function (type, value, status, response) {
+        let name = value['name'] != '' ? value['name'] : value['link'];
+        if (!status)
+            sortNews(news, type, value, value['link'], name, null);
+        else if (value['regexp'] == '') {
+            let rssParser = new RSSParser(response, value['current']);
+            if (rssParser.getErrorFlag())
+                sortNews(news, type, value, value['link'], name);
+            else {
+                if (value['name'] == '')
+                    name = rssParser.getName();
+                let newItemCount = rssParser.getNewItemCount();
+                sortNews(news, type, value, rssParser.getLink(), name, chrome.i18n.getMessage('newitems', [newItemCount]), newItemCount != 0 ? rssParser.getNewDate() : null);
+            }
+        }
+        else {
+            if (value['name'] == '') {
+                let tmp = response.match(regExpNewsName);
+                if (tmp != null && tmp.length == 2)
+                    name = tmp[1];
+            }
+            try {
+                let result = response.match(new RegExp(value['regexp']));
+                if (result.length != 1)
+                    result.splice(0, 1);
+                result = result.join(' ');
+                if (result.trim() == '')
+                    result = '-';
+                sortNews(news, type, value, value['link'], name, result, result != value['current'] ? result : null);
+            }
+            catch (err) {
+                sortNews(news, type, value, value['link'], name);
+            }
+        }
+    },
+
+    'series': function (type, value, status, response) {
+        if (!status)
+            sortSMB(series, imdb, type, value, null);
+        else {
+            let name = response.match(regExpSeriesName);
+            if (name != null) {
+                let result = response.match(regExpSeries);
+                if (result != null) {
+                    let tmpDate = moment(new Date(result[4]));
+                    sortSMB(series, imdb, type, value,
+                        name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]), response.match(regExpSeriesIcon), tmpDate, !tmpDate.isAfter(date));
+                }
+                else sortSMB(series, imdb, type, value, name[1], response.match(regExpSeriesIcon));
+            }
+            else sortSMB(series, imdb, type, value);
+        }
+    },
+
+    'movies': function (type, value, status, response) {
+        if (!status)
+            sortSMB(movies, imdb, type, value, null);
+        else {
+            let name = response.match(regExpMoviesName);
+            if (name != null) {
+                let result = response.match(regExpMovies);
+                if (result != null && iso.findCountryByName(result[3])['value'] == result[1]) {
+                    let tmpDate = moment(new Date(result[2]));
+                    sortSMB(movies, imdb, type, value, name[1], response.match(regExpMoviesIcon), tmpDate, !tmpDate.isAfter(date));
+                }
+                else sortSMB(movies, imdb, type, value, name[1], response.match(regExpMoviesIcon));
+            }
+            else sortSMB(movies, imdb, type, value);
+        }
+    },
+
+    'blurays': function (type, value, status, response) {
+        if (!status)
+            sortSMB(blurays, bluray, type, value, null);
+        else {
+            let name = response.match(regExpBluraysName);
+            if (name != null) {
+                name       = name.length == 3 ? name[1] + ' <img src="' + name[2] + '">' : name[1];
+                let result = response.match(regExpBlurays);
+                if (result != null) {
+                    let tmpDate = moment(new Date(result[1]));
+                    sortSMB(blurays, bluray, type, value, name, response.match(regExpBluraysIcon), tmpDate, !tmpDate.isAfter(date));
+                }
+                else sortSMB(blurays, bluray, type, value, name, response.match(regExpBluraysIcon));
+            }
+            else sortSMB(blurays, bluray, type, value);
+        }
+    }
+};
+
+restoreh.addEventListener('change', function (event) {
+    let file    = new FileReader();
+    file.onload = function (e) {
+        event.target.value = '';
+        try {
+            parseArrays(JSON.parse(e.target.result)['arrays']);
+            checkAll(arrays);
+        }
+        catch (err) {
+            clearTimeout(timeout);
+            restore.classList.add('redlike');
+            restore.value = chromeI18n('jsoncompliant');
+            timeout       = setTimeout(function () {
+                restore.value = chromeI18n('restore');
+                restore.classList.remove('redlike');
+            }, 3000);
+        }
+    };
+    file.readAsText(event.target.files[0]);
+}, false);
+
+restore.addEventListener('click', function () {
+    restoreh.click();
+}, false);
+
+backup.addEventListener('click', function () {
+    let a      = document.createElement('a');
+    a.download = 'Update Checker.json';
+    a.href     = window.URL.createObjectURL(new Blob([JSON.stringify({ 'arrays': arrays }, null, 4)], { 'type': 'text/plain;charset=UTF-8' }));
+    a.click();
+    window.URL.revokeObjectURL(a.href);
+}, false);

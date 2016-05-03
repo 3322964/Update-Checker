@@ -2,7 +2,6 @@
     "description": {
         "message": "Update Checker monitors: TV series, movies & Blu-ray release dates; RSS feeds new items; & changes in any website with a RegExp."
     },
-    // uc.html
     "series": {
         "message": "Series"
     },
@@ -28,7 +27,7 @@
         "message": "Link"
     },
     "regexp": {
-        "message": "RegExp (Leave empty for RSS)"
+        "message": "RegExp (Leave this field empty for a RSS feed)"
     },
     "help": {
         "message": "Help"
@@ -45,7 +44,6 @@
     "cancel": {
         "message": "Cancel"
     },
-    // uc.js
     "unreachable": {
         "message": "Unreachable link"
     },
@@ -78,17 +76,12 @@
             }
         }
     },
-    // options.html
-    "options": {
-        "message": "Options"
-    },
     "restore": {
         "message": "Restore..."
     },
     "backup": {
         "message": "Backup"
     },
-    // options.js
     "jsoncompliant": {
         "message": "Non-compliant JSON"
     }

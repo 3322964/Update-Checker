@@ -2,7 +2,6 @@
     "description": {
         "message": "Update Checker surveille les : dates de sortie des séries TV, films & Blu-ray ; nouveautés des flux RSS ; & changements dans n'importe quel site Web avec une RegExp."
     },
-    // uc.html
     "series": {
         "message": "Séries"
     },
@@ -28,7 +27,7 @@
         "message": "Lien"
     },
     "regexp": {
-        "message": "RegExp (Laissez vide pour les RSS)"
+        "message": "RegExp (Laissez ce champ vide pour un flux RSS)"
     },
     "help": {
         "message": "Aide"
@@ -45,7 +44,6 @@
     "cancel": {
         "message": "Annuler"
     },
-    // uc.js
     "unreachable": {
         "message": "Lien inaccessible"
     },
@@ -78,17 +76,12 @@
             }
         }
     },
-    // options.html
-    "options": {
-        "message": "Options"
-    },
     "restore": {
         "message": "Restaurer..."
     },
     "backup": {
         "message": "Sauvegarder"
     },
-    // options.js
     "jsoncompliant": {
         "message": "JSON non conforme"
     }

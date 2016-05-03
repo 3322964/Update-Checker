@@ -3,10 +3,19 @@
     <head>
         <meta charset="utf-8">
         <title>Update Checker</title>
-        <link rel="stylesheet" href="/css/base.css">
-        <link rel="stylesheet" href="/css/uc.css">
+        <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
+        <li class="widget-list-header">
+            <div class="table">
+                <div class="cell">
+                    <input id="restoreh" type="file" accept=".json" hidden>
+                    <input id="restore" type="button" class="checkout-btn">
+                </div>
+                <div class="cell"><input id="backup" type="button" class="checkout-btn"></div>
+            </div>
+        </li>
+
         <div id="widget" hidden>
             <ul class="widget-tabs">
                 <li id="seriestab" class="widget-tab active-tab">
@@ -88,7 +97,6 @@
         <script src="/js/lib/countries.min.js"></script>
         <script src="/js/lib/moment-with-locales.min.js"></script>
         <script src="/js/rssparser.js"></script>
-        <script src="/js/base.js"></script>
         <script src="/js/uc.js"></script>
     </body>
 </html>
