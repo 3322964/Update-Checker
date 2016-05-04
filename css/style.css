@@ -431,6 +431,7 @@ ul {
     list-style: none; }
 
 a {
+    cursor: pointer;
     color: #007fcc;
     text-decoration: none; }
     a:hover {
@@ -444,8 +445,6 @@ header {
 
 .header {
     margin: 0 auto;
-    width: -webkit-fit-content;
-    width: -moz-fit-content;
     width: fit-content; }
 
 nav {
@@ -601,3 +600,9 @@ nav {
     .table-body > tr > td.orange {
         color: #9c6500;
         background: #ffeb9c; }
+    .table-body > tr > td.green {
+        color: #069c00;
+        background: #ceffc7; }
+    .table-body > tr > td.checking {
+        background: url(/img/ajax-loader.gif) no-repeat;
+        background-position: 5px center; }

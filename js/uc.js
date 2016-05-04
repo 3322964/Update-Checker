@@ -1,20 +1,9 @@
 const regExpNewsName    = /<title>([^<]*)/;
-const regExpSeriesName  = /<title>&#x22;(.*)&#x22;/;
-const regExpSeriesIcon  = /<a name="poster".* src="([^"]*)/;
-const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See more release dates" >(.*) \(([^\)]*)/;
-// const regExpMovies      = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See all release dates" > ([^<]*).*\n\(([^\)]*)/;
-const regExpMoviesName  = /<title>(.*) \(/;
-const regExpMoviesIcon  = /Poster"\nsrc="([^"]*)/;
-const regExpBlurays     = /style="text-decoration: none; color: #666666">([^<]*)/;
-const regExpBluraysIcon = /id="frontimage_overlay" src="([^"]*)/;
-const regExpBluraysName = /itemprop="itemReviewed">(?:<a[^>]*>)?([^<]*)(?:<\/a>)? Blu-ray<\/h1><\/a><img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
-const imdb              = 'http://www.imdb.com/title/';
-const bluray            = 'http://www.blu-ray.com/movies/';
 const chromeI18n        = chrome.i18n.getMessage;
 const getFavicon        = 'http://www.google.com/s2/favicons?domain_url=';
 var settings            = { 'homeview': 'viewseries' };
 var files               = {};
-var arrays, regExpSeries, date, timeout;
+var arrays, date, timeout;
 
 for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
     tmp = elements[i].id;
@@ -62,12 +51,16 @@ function parseArrays(tmpArrays) {
     writeArrays();
 }
 
-function deleteDynamicSMB(type, value) {
-    let i = objectInArray(value, arrays[type]);
-    if (i != -1) {
-        arrays[type].splice(i, 1);
-        writeArrays();
-    }
+function getLink(link, onDone) {
+    let file = new XMLHttpRequest();
+    file.open('GET', link, true);
+    file.setRequestHeader('Pragma', 'no-cache');
+    file.setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
+    file.onreadystatechange = function () {
+        if (file.readyState == XMLHttpRequest.DONE)
+            onDone(file.status == 200, file.responseText);
+    };
+    file.send();
 }
 
 var deleteDynamic = {
@@ -77,10 +70,7 @@ var deleteDynamic = {
             arrays[type].splice(i, 1);
             writeArrays();
         }
-    },
-    'series': deleteDynamicSMB,
-    'movies': deleteDynamicSMB,
-    'blurays': deleteDynamicSMB
+    }
 };
 
 function writeDynamic(type, value, cur) {
@@ -106,9 +96,16 @@ window.addEventListener('load', function () {
         document.getElementById(settings['homeview']).classList.add('active');
         document.getElementById(settings['homeview'] + 'content').hidden = false;
 
+        date         = moment().startOf('day');
+        let year     = date.year();
+        let months   = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        let month    = date.month();
+        let days     = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+        Serie.regExpDate = new RegExp('<h4>Season (\\d{1,}), Episode (\\d{1,}): <a href="[^"]*">([^<]*)</a></h4><b>(\\d{1,2} [A-S][a-z]+ ' + (year + 1) + '|\\d{1,2} (' + months.splice(month + 1, 12).join('|') + ') ' + year + '|(' + days.splice(date.date() - 1, 31).join('|') + ') ' + months[month] + ' ' + year + ')</b>');
+        moment.locale(window.navigator.language);
+
         parseArrays(items['arrays']);
-        displayAll(arrays);
-        // checkAll(arrays);
+        checkAll(arrays);
     });
 
     restore.value              = chromeI18n('restore');
@@ -130,7 +127,8 @@ window.addEventListener('load', function () {
     confirmyes.value           = chromeI18n('yes');
 }, false);
 
-function displayAll() {
+function checkAll() {
+    let toCheck = [];
     let arrayType, i, length, tr;
     for (let type in arrays) {
         arrayType = arrays[type];
@@ -138,22 +136,24 @@ function displayAll() {
         switch (type) {
             case 'series':
                 for (i = 0, length = arrayType.length; i != length; i++)
-                    (new Serie(arrayType[i]));
+                    toCheck.push(new Serie(arrayType[i]));
                 break;
-            /*case 'movies':
+            case 'movies':
                 for (i = 0, length = arrayType.length; i != length; i++)
-                    (new Movie(arrayType[i]));
+                    toCheck.push(new Movie(arrayType[i]));
                 break;
             case 'blurays':
                 for (i = 0, length = arrayType.length; i != length; i++)
-                    (new Bluray(arrayType[i]));
+                    toCheck.push(new Bluray(arrayType[i]));
                 break;
-            case 'news':
+            /*case 'news':
                 for (i = 0, length = arrayType.length; i != length; i++)
                     (new New(arrayType[i]));
                 break;*/
         }
     }
+    for (let i = 0, length = toCheck.length; i != length; i++)
+        toCheck[i].check();
 }
 
 var dropdownNews = [
@@ -410,23 +410,6 @@ newsvalid.addEventListener('click', function () {
     parseNews('', '', newsname, newsnamespan, newslink, newslinkspan, newsregexp, newsregexpspan);
 }, false);
 
-function addDelete(li, typeDom, type, value) {
-    let img       = document.createElement('img');
-    img.className = 'button';
-    img.src       = '/img/delete.png';
-    img.title     = chromeI18n('delete');
-    img.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        confirmyes.onclick = function () {
-            removeElement(typeDom, li, type, value, confirmfade);
-        };
-        confirmlight.classList.add('visible');
-        confirmfade.classList.add('visible');
-    }, false);
-    li.firstElementChild.appendChild(img);
-}
-
 function addEdit(li, typeDom, type, valueObject, value) {
     let img       = document.createElement('img');
     img.className = 'button';
@@ -510,51 +493,6 @@ function sortNews(typeDom, type, value, link, name, text, current) {
     addEdit(li, typeDom, type, value, value['link']);
 }
 
-function sortSMB(typeDom, website, type, value, name, icon, tmpDate, green) {
-    let li      = document.createElement('li');
-    let current = (name == null ? website + value : name) + ' ';
-    let j = 1, children = typeDom.children, length = children.length;
-    if (name == null) {
-        li.innerHTML = '<a class="widget-list-link" href="' + website + value + '" target="_blank"><img class="full" src=""><div>' + website + value + ' <span class="red">' + chromeI18n(name === null ? 'unreachable' : 'error') + '</span></div></a>';
-        li.firstElementChild.addEventListener('click', (function (_li) {
-            return function () {
-                typeDom.removeChild(_li);
-                getLinkAll(type, value);
-            };
-        })(li), false);
-        for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) < 0; j++) ;
-    }
-    else if (tmpDate == null) {
-        li.innerHTML = '<a class="widget-list-link" href="' + website + value + '" target="_blank"><img class="full" src="' + (icon == null ? '' : icon[1]) + '"><div>' + name + ' <span>-</span></div></a>';
-        for ( ; j != length && children[j].firstElementChild.children[1].lastElementChild.innerHTML != '-'; j++) ;
-        for ( ; j != length && compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) < 0; j++) ;
-    }
-    else {
-        li.innerHTML = '<a class="widget-list-link" href="' + website + value + '" target="_blank"><img class="full" src="' + (icon == null ? '' : icon[1]) + '"><div>' + name + ' <span' + (green ? ' class="green"' : '') + '>' + tmpDate.format('LL') + '</span></div></a>';
-        let val;
-        for ( ; j != length; j++) {
-            val = children[j].firstElementChild.children[1].lastElementChild.innerHTML;
-            if (val == '-' || !tmpDate.isAfter(moment(val, 'LL')))
-                break;
-        }
-        for ( ; j != length; j++) {
-            val = children[j].firstElementChild.children[1].lastElementChild.innerHTML;
-            if (val == '-' || !tmpDate.isSame(moment(val, 'LL')) || compareStrings(children[j].firstElementChild.children[1].childNodes[0].nodeValue, current) > 0)
-                break;
-        }
-    }
-    typeDom.insertBefore(li, j != length ? children[j] : null);
-    addDelete(li, typeDom, type, value);
-}
-
-function compareStrings(string1, string2) {
-    return string1.localeCompare(string2, window.navigator.language, { 'sensitivity': 'accent' });
-}
-
-function convertIntTo2Int(value) {
-    return value < 10 ? '0' + value : value;
-}
-
 function propertyInArray(value, property, array) {
     let i, length;
     for (i = 0, length = array.length; i != length && array[i][property] != value; i++) ;
@@ -567,50 +505,7 @@ function objectInArray(value, array) {
     return i == length ? -1 : i;
 }
 
-function checkAll(arrays) {
-    date         = moment().startOf('day');
-    let year     = date.year();
-    let months   = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    let month    = date.month();
-    let days     = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
-    regExpSeries = new RegExp('<h4>Season (\\d{1,}), Episode (\\d{1,}): <a href="[^"]*">([^<]*)</a></h4><b>(\\d{1,2} [A-S][a-z]+ ' + (year + 1) + '|\\d{1,2} (' + months.splice(month + 1, 12).join('|') + ') ' + year + '|(' + days.splice(date.date() - 1, 31).join('|') + ') ' + months[month] + ' ' + year + ')</b>');
-    moment.locale(window.navigator.language);
-
-    let i, tmp, length;
-    for (let key in arrays) {
-        for (i = 0, tmp = arrays[key], length = tmp.length; i != length; i++)
-            getLinkAll(key, tmp[i]);
-    }
-}
-
-function getLinkAll(type, value) {
-    let file = new XMLHttpRequest();
-    file.open('GET', createLink[type](value), true);
-    file.setRequestHeader('Pragma', 'no-cache');
-    file.setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
-    file.onreadystatechange = function () {
-        if (file.readyState == XMLHttpRequest.DONE)
-            getLink[type](type, value, file.status == 200, file.responseText);
-    };
-    file.send();
-}
-
-var createLink = {
-    'news': function (value) {
-        return value['link'];
-    },
-    'series': function (value) {
-        return imdb + value + '/epcast';
-    },
-    'movies': function (value) {
-        return imdb + value + '/';
-    },
-    'blurays': function (value) {
-        return bluray + value;
-    }
-};
-
-var getLink = {
+/*var getLink = {
     'news': function (type, value, status, response) {
         let name = value['name'] != '' ? value['name'] : value['link'];
         if (!status)
@@ -645,61 +540,8 @@ var getLink = {
                 sortNews(viewnews, type, value, value['link'], name);
             }
         }
-    },
-
-    'series': function (type, value, status, response) {
-        if (!status)
-            sortSMB(viewseries, imdb, type, value, null);
-        else {
-            let name = response.match(regExpSeriesName);
-            if (name != null) {
-                let result = response.match(regExpSeries);
-                if (result != null) {
-                    let tmpDate = moment(new Date(result[4]));
-                    sortSMB(viewseries, imdb, type, value,
-                        name[1] + ' S' + convertIntTo2Int(result[1]) + 'E' + convertIntTo2Int(result[2]) + (/^Episode #/.test(result[3]) ? '' : ': ' + result[3]), response.match(regExpSeriesIcon), tmpDate, !tmpDate.isAfter(date));
-                }
-                else sortSMB(viewseries, imdb, type, value, name[1], response.match(regExpSeriesIcon));
-            }
-            else sortSMB(viewseries, imdb, type, value);
-        }
-    },
-
-    'movies': function (type, value, status, response) {
-        if (!status)
-            sortSMB(viewmovies, imdb, type, value, null);
-        else {
-            let name = response.match(regExpMoviesName);
-            if (name != null) {
-                let result = response.match(regExpMovies);
-                if (result != null && iso.findCountryByName(result[3])['value'] == result[1]) {
-                    let tmpDate = moment(new Date(result[2]));
-                    sortSMB(viewmovies, imdb, type, value, name[1], response.match(regExpMoviesIcon), tmpDate, !tmpDate.isAfter(date));
-                }
-                else sortSMB(viewmovies, imdb, type, value, name[1], response.match(regExpMoviesIcon));
-            }
-            else sortSMB(viewmovies, imdb, type, value);
-        }
-    },
-
-    'blurays': function (type, value, status, response) {
-        if (!status)
-            sortSMB(viewblurays, bluray, type, value, null);
-        else {
-            let name = response.match(regExpBluraysName);
-            if (name != null) {
-                name       = name.length == 3 ? name[1] + ' <img src="' + name[2] + '">' : name[1];
-                let result = response.match(regExpBlurays);
-                if (result != null) {
-                    let tmpDate = moment(new Date(result[1]));
-                    sortSMB(viewblurays, bluray, type, value, name, response.match(regExpBluraysIcon), tmpDate, !tmpDate.isAfter(date));
-                }
-                else sortSMB(viewblurays, bluray, type, value, name, response.match(regExpBluraysIcon));
-            }
-            else sortSMB(viewblurays, bluray, type, value);
-        }
     }
-};
+};*/
 
 restoreh.addEventListener('change', function (event) {
     let file    = new FileReader();

@@ -116,6 +116,9 @@
     "confirm": {
         "message": "Êtes-vous sûr(e) ?"
     },
+    "open": {
+        "message": "Ouvrir"
+    },
     "delete": {
         "message": "Supprimer"
     },
