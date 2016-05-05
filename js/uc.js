@@ -14,6 +14,14 @@ function writeSettings() {
     chrome.storage.local.set({ 'settings': settings });
 }
 
+function parseSettings(tmpSettings) {
+    for (let key in tmpSettings) {
+        if (key in settings)
+            settings[key] = tmpSettings[key];
+    }
+    writeSettings();
+}
+
 function toggleHeaderActive(e) {
     var element                                                 = e.target;
     var activeHeader                                            = element.parentElement.getElementsByClassName('active')[0];
@@ -27,14 +35,6 @@ function toggleHeaderActive(e) {
 
 function writeArrays() {
     chrome.storage.local.set({ 'arrays': arrays });
-}
-
-function parseSettings(tmpSettings) {
-    for (let key in tmpSettings) {
-        if (key in settings)
-            settings[key] = tmpSettings[key];
-    }
-    writeSettings();
 }
 
 function parseArrays(tmpArrays) {
@@ -60,24 +60,6 @@ function getLink(link, onDone) {
             onDone(file.status == 200, file.responseText);
     };
     file.send();
-}
-
-var deleteDynamic = {
-    'news': function (type, value) {
-        let i = propertyInArray(value, 'link', arrays[type]);
-        if (i != -1) {
-            arrays[type].splice(i, 1);
-            writeArrays();
-        }
-    }
-};
-
-function writeDynamic(type, value, cur) {
-    let i = propertyInArray(value, 'link', arrays[type]);
-    if (i != -1) {
-        arrays[type][i]['current'] = cur;
-        writeArrays();
-    }
 }
 
 window.addEventListener('load', function () {
