@@ -53,23 +53,20 @@
     "viewbluraysheaderactions": {
         "message": "Actions"
     },
-    "name": {
-        "message": "Name"
-    },
     "viewnewsheadername": {
         "message": "Name"
     },
-    "viewnewsheaderlink": {
-        "message": "Link"
+    "viewnewsheadericon": {
+        "message": "Icon"
     },
-    "viewnewsheaderregexp": {
-        "message": "RegExp"
-    },
-    "viewnewsheaderregexpresult": {
-        "message": "RegExp result"
+    "viewnewsheaderresult": {
+        "message": "Result"
     },
     "viewnewsheaderactions": {
         "message": "Actions"
+    },
+    "name": {
+        "message": "Name"
     },
     "search": {
         "message": "Search"

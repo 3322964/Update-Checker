@@ -1,4 +1,3 @@
-const regExpNewsName    = /<title>([^<]*)/;
 const chromeI18n        = chrome.i18n.getMessage;
 const getFavicon        = 'http://www.google.com/s2/favicons?domain_url=';
 var settings            = { 'homeview': 'viewseries' };
@@ -129,7 +128,7 @@ window.addEventListener('load', function () {
 
 function checkAll() {
     let toCheck = [];
-    let arrayType, i, length, tr;
+    let arrayType, i, length;
     for (let type in arrays) {
         arrayType = arrays[type];
 
@@ -146,13 +145,13 @@ function checkAll() {
                 for (i = 0, length = arrayType.length; i != length; i++)
                     toCheck.push(new Bluray(arrayType[i]));
                 break;
-            /*case 'news':
+            case 'news':
                 for (i = 0, length = arrayType.length; i != length; i++)
-                    (new New(arrayType[i]));
-                break;*/
+                    toCheck.push(new New(arrayType[i]));
+                break;
         }
     }
-    for (let i = 0, length = toCheck.length; i != length; i++)
+    for (i = 0, length = toCheck.length; i != length; i++)
         toCheck[i].check();
 }
 
@@ -410,29 +409,6 @@ newsvalid.addEventListener('click', function () {
     parseNews('', '', newsname, newsnamespan, newslink, newslinkspan, newsregexp, newsregexpspan);
 }, false);
 
-function addEdit(li, typeDom, type, valueObject, value) {
-    let img       = document.createElement('img');
-    img.className = 'button';
-    img.src       = '/img/edit.png';
-    img.title     = chromeI18n('edit');
-    img.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        newsnameedit.value   = valueObject['name'];
-        newslinkedit.value   = valueObject['link'];
-        newsregexpedit.value = valueObject['regexp'];
-        newsnameedit.click();
-        newslinkedit.click();
-        newsregexpedit.click();
-        newsvalidedit.onclick = function () {
-            parseNews(valueObject['current'], valueObject['link'], newsnameedit, newsnameeditspan, newslinkedit, newslinkeditspan, newsregexpedit, newsregexpeditspan, typeDom, li, type, value, newsfade);
-        };
-        newslight.classList.add('visible');
-        newsfade.classList.add('visible');
-    }, false);
-    li.firstElementChild.appendChild(img);
-}
-
 function confirmFadeClick() {
     confirmlight.classList.remove('visible');
     confirmfade.classList.remove('visible');
@@ -444,53 +420,16 @@ function newsFadeClick() {
 }
 
 confirmfade.addEventListener('click', confirmFadeClick, false);
-newsfade.addEventListener('click', newsFadeClick, false);
 confirmno.addEventListener('click', confirmFadeClick, false);
+newsfade.addEventListener('click', newsFadeClick, false);
 newscanceledit.addEventListener('click', newsFadeClick, false);
 
 function escapeHTML(result) {
-    return result.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return result.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/:\/\/([^@]*)@/, '://***@');
 }
 
 function escapeAttribute(result) {
     return escapeHTML(result).replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
-}
-
-function sortNews(typeDom, type, value, link, name, text, current) {
-    let tr      = document.createElement('tr');
-    let tmpName = ' ' + escapeHTML(name) + ' ';
-    let j = 1, children = typeDom.children, length = children.length;
-    if (text == null) {
-        tr.innerHTML = '<td><a href="' + escapeAttribute(link) + '" target="_blank"></a></td><td><img src="' + getFavicon + escape(link) + '">' + escapeHTML(name).replace(/:\/\/([^@]*)@/, '://***@') + '</td><td>' + chromeI18n(text === null ? 'unreachable' : 'error') + '</td>';
-        tr.firstElementChild.addEventListener('click', (function (_tr) {
-            return function () {
-                typeDom.removeChild(_tr);
-                getLinkAll(type, value);
-            };
-        })(tr), false);
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, tmpName) < 0; j++) ;
-    }
-    else if (current == null) {
-        tr.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="news"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span>' + escapeHTML(text) + '</span></div></a>';
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) ;
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green'; j++) ;
-        for ( ; j != length && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, tmpName) < 0; j++) ;
-    }
-    else {
-        tr.innerHTML = '<a class="widget-list-link" href="' + escapeAttribute(link) + '" target="_blank"><div class="news"><img src="' + getFavicon + escape(link) + '"> ' + escapeHTML(name) + ' <span class="green">' + escapeHTML(text) + '</span></div></a>';
-        tr.firstElementChild.addEventListener('click', (function (_tr) {
-            return function () {
-                writeDynamic(type, value['link'], current);
-                typeDom.removeChild(_tr);
-                getLinkAll(type, value);
-            };
-        })(tr), false);
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'red'; j++) ;
-        for ( ; j != length && children[j].firstElementChild.firstElementChild.lastElementChild.className == 'green' && compareStrings(children[j].firstElementChild.firstElementChild.childNodes[1].nodeValue, tmpName) < 0; j++) ;
-    }
-    typeDom.insertBefore(li, j != length ? children[j] : null);
-    addDelete(li, typeDom, type, value['link']);
-    addEdit(li, typeDom, type, value, value['link']);
 }
 
 function propertyInArray(value, property, array) {
@@ -504,44 +443,6 @@ function objectInArray(value, array) {
     for (i = 0, length = array.length; i != length && array[i] != value; i++) ;
     return i == length ? -1 : i;
 }
-
-/*var getLink = {
-    'news': function (type, value, status, response) {
-        let name = value['name'] != '' ? value['name'] : value['link'];
-        if (!status)
-            sortNews(viewnews, type, value, value['link'], name, null);
-        else if (value['regexp'] == '') {
-            let rssParser = new RSSParser(response, value['current']);
-            if (rssParser.getErrorFlag())
-                sortNews(viewnews, type, value, value['link'], name);
-            else {
-                if (value['name'] == '')
-                    name = rssParser.getName();
-                let newItemCount = rssParser.getNewItemCount();
-                sortNews(viewnews, type, value, rssParser.getLink(), name, chrome.i18n.getMessage('newitems', [newItemCount]), newItemCount != 0 ? rssParser.getNewDate() : null);
-            }
-        }
-        else {
-            if (value['name'] == '') {
-                let tmp = response.match(regExpNewsName);
-                if (tmp != null && tmp.length == 2)
-                    name = tmp[1];
-            }
-            try {
-                let result = response.match(new RegExp(value['regexp']));
-                if (result.length != 1)
-                    result.splice(0, 1);
-                result = result.join(' ');
-                if (result.trim() == '')
-                    result = '-';
-                sortNews(viewnews, type, value, value['link'], name, result, result != value['current'] ? result : null);
-            }
-            catch (err) {
-                sortNews(viewnews, type, value, value['link'], name);
-            }
-        }
-    }
-};*/
 
 restoreh.addEventListener('change', function (event) {
     let file    = new FileReader();

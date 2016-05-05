@@ -1,6 +1,6 @@
 class Movie extends SMB {
-    constructor(imdbId) {
-        super(1, viewmoviesbody, 'movies', imdbId, 'http://www.imdb.com/title/' + imdbId + '/');
+    constructor(value) {
+        super(1, viewmoviesbody, 'movies', value, 'http://www.imdb.com/title/' + value + '/');
     }
     check() {
         getLink(this.link, (ok, response) => {

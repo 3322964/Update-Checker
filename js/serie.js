@@ -1,6 +1,6 @@
 class Serie extends SMB {
-    constructor(imdbId) {
-        super(4, viewseriesbody, 'series', imdbId, 'http://www.imdb.com/title/' + imdbId + '/');
+    constructor(value) {
+        super(4, viewseriesbody, 'series', value, 'http://www.imdb.com/title/' + value + '/');
     }
     check() {
         getLink(this.link + 'epcast', (ok, response) => {
@@ -15,9 +15,9 @@ class Serie extends SMB {
                     if (result == null)
                         this.sortNoDate(name[1]);
                     else {
-                        this.tr.children[1].innerHTML = result[1];
-                        this.tr.children[2].innerHTML = result[2];
-                        this.tr.children[3].innerHTML = result[3];
+                        this.tr.children[1].innerHTML = escapeHTML(result[1]);
+                        this.tr.children[2].innerHTML = escapeHTML(result[2]);
+                        this.tr.children[3].innerHTML = escapeHTML(result[3]);
                         this.sortDate(name[1], result[4]);
                     }
                 }

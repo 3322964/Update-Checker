@@ -54,16 +54,13 @@
         "message": "Actions"
     },
     "viewnewsheadername": {
-        "message": "Name"
+        "message": "Nom"
     },
-    "viewnewsheaderlink": {
-        "message": "Lien"
+    "viewnewsheadericon": {
+        "message": "Icône"
     },
-    "viewnewsheaderregexp": {
-        "message": "RegExp"
-    },
-    "viewnewsheaderregexpresult": {
-        "message": "Résultat de la RegExp"
+    "viewnewsheaderresult": {
+        "message": "Résultat"
     },
     "viewnewsheaderactions": {
         "message": "Actions"

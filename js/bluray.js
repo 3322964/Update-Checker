@@ -1,6 +1,6 @@
 class Bluray extends SMB {
-    constructor(blurayId) {
-        super(2, viewbluraysbody, 'blurays', blurayId, 'http://www.blu-ray.com/movies/' + blurayId);
+    constructor(value) {
+        super(2, viewbluraysbody, 'blurays', value, 'http://www.blu-ray.com/movies/' + value);
     }
     check() {
         getLink(this.link, (ok, response) => {
@@ -12,7 +12,7 @@ class Bluray extends SMB {
                     this.sortRed();
                 else {
                     if (name.length == 3)
-                        this.tr.children[1].innerHTML = '<img src="' + name[2] + '">';
+                        this.tr.children[1].innerHTML = '<img src="' + escapeAttribute(name[2]) + '">';
                     let result = response.match(Bluray.regExpDate);
                     if (result == null)
                         this.sortNoDate(name[1]);
