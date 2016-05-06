@@ -4,14 +4,12 @@ class New {
         this.body         = viewnewsbody;
         this.type         = 'news';
         this.value        = value;
-        this.name         = this.value['name'];
         this.link         = this.value['link'];
         this.regexp       = this.value['regexp'];
         this.current      = this.value['current'];
-        if (this.name == '')
-            this.name = this.link;
+        this.name         = this.link;
         this.tr           = document.createElement('tr');
-        this.tr.innerHTML = '<td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td><td><img src="' + getFavicon + escape(this.link) + '"></td><td class="checking"></td><td><a>' + chromeI18n('edit') + '</a> / <a>' + chromeI18n('delete') + '</a></td>';
+        this.tr.innerHTML = '<td><img src="' + getFavicon + escape(this.link) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td><td class="checking"></td><td><a>' + chromeI18n('edit') + '</a> / <a>' + chromeI18n('delete') + '</a></td>';
         this.tr.lastElementChild.firstElementChild.addEventListener('click', () => {
             newsnameedit.value   = this.value['name'];
             newslinkedit.value   = this.value['link'];
@@ -26,12 +24,19 @@ class New {
             newsfade.classList.add('visible');
         }, false);
         this.tr.lastElementChild.lastElementChild.addEventListener('click', () => {
-            confirmyes.onclick = () => {
+            let save = this.tr.lastElementChild;
+            this.tr.removeChild(save);
+            let td       = document.createElement('td');
+            td.innerHTML = '<a>' + chromeI18n('confirm') + '</a> / <a>' + chromeI18n('cancel') + '</a>';
+            td.firstElementChild.addEventListener('click', () => {
+                this.body.removeChild(this.tr);
                 this.delete();
-                confirmfade.click();
-            };
-            confirmlight.classList.add('visible');
-            confirmfade.classList.add('visible');
+            }, false);
+            td.lastElementChild.addEventListener('click', () => {
+                this.tr.removeChild(td);
+                this.tr.appendChild(save);
+            }, false);
+            this.tr.appendChild(td);
         }, false);
         this.body.appendChild(this.tr);
     }
@@ -44,9 +49,8 @@ class New {
                 if (rssParser.getErrorFlag())
                     this.sortRed();
                 else {
-                    if (this.value['name'] == '')
-                        this.setName(rssParser.getName());
-                    this.tr.children[0].firstElementChild.href = escapeAttribute(rssParser.getLink());
+                    this.setName(rssParser.getName());
+                    this.tr.children[1].firstElementChild.href = escapeAttribute(rssParser.getLink());
                     let newItemCount                           = rssParser.getNewItemCount();
                     let result                                 = chrome.i18n.getMessage('newitems', [newItemCount]);
                     if (newItemCount == 0)
@@ -55,11 +59,9 @@ class New {
                 }
             }
             else {
-                if (this.value['name'] == '') {
-                    let tmp = response.match(New.regExpName);
-                    if (tmp != null && tmp.length == 2)
-                        this.setName(tmp[1]);
-                }
+                let tmp = response.match(New.regExpName);
+                if (tmp != null && tmp.length == 2)
+                    this.setName(tmp[1]);
                 try {
                     let result = response.match(new RegExp(this.regexp));
                     if (result.length != 1)
@@ -77,7 +79,7 @@ class New {
     }
     setName(name) {
         this.name                                       = escapeHTML(name);
-        this.tr.children[0].firstElementChild.innerHTML = this.name;
+        this.tr.children[1].firstElementChild.innerHTML = this.name;
     }
     sortRed() {
         this.tr.children[this.currentId].className = 'red';
@@ -85,7 +87,7 @@ class New {
         let trs                                    = this.body.children;
         let i                                      = 0;
         let length                                 = trs.length;
-        for ( ; i != length && trs[i].children[this.currentId].className == 'red' && trs[i].children[0].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
+        for ( ; i != length && trs[i].children[this.currentId].className == 'red' && trs[i].children[1].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
         this.body.insertBefore(this.tr, i != length ? trs[i] : null);
     }
     sortOrange() {
@@ -95,7 +97,7 @@ class New {
         let i                                      = 0;
         let length                                 = trs.length;
         for ( ; i != length && trs[i].children[this.currentId].className == 'red'; i++) ;
-        for ( ; i != length && trs[i].children[this.currentId].className == 'orange' && trs[i].children[0].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
+        for ( ; i != length && trs[i].children[this.currentId].className == 'orange' && trs[i].children[1].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
         this.body.insertBefore(this.tr, i != length ? trs[i] : null);
     }
     sortCurrent(result, current) {
@@ -114,7 +116,7 @@ class New {
         let value;
         for ( ; i != length && trs[i].children[this.currentId].className == 'red'; i++) ;
         for ( ; i != length && trs[i].children[this.currentId].className == 'orange'; i++) ;
-        for ( ; i != length && trs[i].children[this.currentId].className == 'green' && trs[i].children[0].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
+        for ( ; i != length && trs[i].children[this.currentId].className == 'green' && trs[i].children[1].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
         this.body.insertBefore(this.tr, i != length ? trs[i] : null);
     }
     sortNoCurrent(result) {
@@ -126,7 +128,7 @@ class New {
         for ( ; i != length && trs[i].children[this.currentId].className == 'red'; i++) ;
         for ( ; i != length && trs[i].children[this.currentId].className == 'orange'; i++) ;
         for ( ; i != length && trs[i].children[this.currentId].className == 'green'; i++) ;
-        for ( ; i != length && trs[i].children[0].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
+        for ( ; i != length && trs[i].children[this.currentId].className == '' && trs[i].children[1].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
         this.body.insertBefore(this.tr, i != length ? trs[i] : null);
     }
     delete() {

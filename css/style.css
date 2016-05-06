@@ -563,6 +563,7 @@ nav {
     .table-head > tr > th:hover {
         text-decoration: underline; }
     .table-head > tr > th:first-child {
+        width: 16px;
         border-left: 1px solid #ccc;
         border-top-left-radius: 3px; }
     .table-head > tr > th:last-child {

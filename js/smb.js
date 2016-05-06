@@ -1,5 +1,5 @@
 class SMB {
-    constructor(dateId, body, type, value, link) {
+    constructor(dateId, body, type, value, link, icon) {
         this.dateId = dateId;
         this.body   = body;
         this.type   = type;
@@ -7,22 +7,28 @@ class SMB {
         this.link   = link;
         this.name   = this.link;
         this.tr     = document.createElement('tr');
-        let string  = '<td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td>';
-        for (let i = 1; i != dateId; i++)
+        let string  = '<td><img src="' + getFavicon + icon + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td>';
+        for (let i = 2; i != dateId; i++)
             string += '<td></td>';
         this.tr.innerHTML = string + '<td class="checking"></td><td><a>' + chromeI18n('delete') + '</a></td>';
         this.tr.lastElementChild.lastElementChild.addEventListener('click', () => {
-            confirmyes.onclick = () => {
+            let save = this.tr.lastElementChild;
+            this.tr.removeChild(save);
+            let td       = document.createElement('td');
+            td.innerHTML = '<a>' + chromeI18n('confirm') + '</a> / <a>' + chromeI18n('cancel') + '</a>';
+            td.firstElementChild.addEventListener('click', () => {
                 this.body.removeChild(this.tr);
                 let i = objectInArray(this.value, arrays[this.type]);
                 if (i != -1) {
                     arrays[this.type].splice(i, 1);
                     writeArrays();
                 }
-                confirmfade.click();
-            };
-            confirmlight.classList.add('visible');
-            confirmfade.classList.add('visible');
+            }, false);
+            td.lastElementChild.addEventListener('click', () => {
+                this.tr.removeChild(td);
+                this.tr.appendChild(save);
+            }, false);
+            this.tr.appendChild(td);
         }, false);
         this.body.appendChild(this.tr);
     }
@@ -32,7 +38,7 @@ class SMB {
         let trs                                 = this.body.children;
         let i                                   = 0;
         let length                              = trs.length;
-        for ( ; i != length && trs[i].children[this.dateId].className == 'red' && trs[i].children[0].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
+        for ( ; i != length && trs[i].children[this.dateId].className == 'red' && trs[i].children[1].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
         this.body.insertBefore(this.tr, i != length ? trs[i] : null);
     }
     sortOrange() {
@@ -42,12 +48,12 @@ class SMB {
         let i                                   = 0;
         let length                              = trs.length;
         for ( ; i != length && trs[i].children[this.dateId].className == 'red'; i++) ;
-        for ( ; i != length && trs[i].children[this.dateId].className == 'orange' && trs[i].children[0].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
+        for ( ; i != length && trs[i].children[this.dateId].className == 'orange' && trs[i].children[1].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
         this.body.insertBefore(this.tr, i != length ? trs[i] : null);
     }
     setName(name) {
         this.name                                                 = escapeHTML(name);
-        this.tr.children[0].firstElementChild.innerHTML           = this.name;
+        this.tr.children[1].firstElementChild.innerHTML           = this.name;
         this.tr.children[this.dateId].className                   = '';
     }
     sortDate(name, result) {
@@ -69,7 +75,7 @@ class SMB {
         }
         for ( ; i != length; i++) {
             value = trs[i].children[this.dateId].innerHTML;
-            if (value == '' || !this.date.isSame(moment(value, 'LL')) || trs[i].children[0].firstElementChild.innerHTML.localeCompare(this.name) > 0)
+            if (value == '' || !this.date.isSame(moment(value, 'LL')) || trs[i].children[1].firstElementChild.innerHTML.localeCompare(this.name) > 0)
                 break;
         }
         this.body.insertBefore(this.tr, i != length ? trs[i] : null);
@@ -80,7 +86,7 @@ class SMB {
         let i      = 0;
         let length = trs.length;
         for ( ; i != length && trs[i].children[this.dateId].innerHTML != ''; i++) ;
-        for ( ; i != length && trs[i].children[0].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
+        for ( ; i != length && trs[i].children[1].firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
         this.body.insertBefore(this.tr, i != length ? trs[i] : null);
     }
 }

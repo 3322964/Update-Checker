@@ -43,9 +43,13 @@ function parseArrays(tmpArrays) {
         if (key in arrays)
             arrays[key] = tmpArrays[key];
     }
-    if (tmpArrays != null && tmpArrays['rss'] != null) {
-        for (let i = 0, length = tmpArrays['rss'].length; i != length; i++)
-            arrays['news'].push({ 'name': '', 'link': tmpArrays['rss'][i]['link'], 'regexp': '', 'current': tmpArrays['rss'][i]['current'] });
+    if (tmpArrays != null) {
+        for (let i = 0, length = arrays['news'].length; i != length; i++)
+            delete arrays['news'][i]['name'];
+        if (tmpArrays['rss'] != null) {
+            for (let i = 0, length = tmpArrays['rss'].length; i != length; i++)
+                arrays['news'].push({ 'link': tmpArrays['rss'][i]['link'], 'regexp': '', 'current': tmpArrays['rss'][i]['current'] });
+        }
     }
     writeArrays();
 }
@@ -102,10 +106,6 @@ window.addEventListener('load', function () {
     newsregexpedit.placeholder = chromeI18n('regexp');
     newscanceledit.value       = chromeI18n('cancel');
     newsvalidedit.value        = chromeI18n('ok');
-
-    confirmtext.innerHTML      = chromeI18n('confirm');
-    confirmno.value            = chromeI18n('no');
-    confirmyes.value           = chromeI18n('yes');
 }, false);
 
 function checkAll() {
@@ -391,18 +391,11 @@ newsvalid.addEventListener('click', function () {
     parseNews('', '', newsname, newsnamespan, newslink, newslinkspan, newsregexp, newsregexpspan);
 }, false);
 
-function confirmFadeClick() {
-    confirmlight.classList.remove('visible');
-    confirmfade.classList.remove('visible');
-}
-
 function newsFadeClick() {
     newslight.classList.remove('visible');
     newsfade.classList.remove('visible');
 }
 
-confirmfade.addEventListener('click', confirmFadeClick, false);
-confirmno.addEventListener('click', confirmFadeClick, false);
 newsfade.addEventListener('click', newsFadeClick, false);
 newscanceledit.addEventListener('click', newsFadeClick, false);
 

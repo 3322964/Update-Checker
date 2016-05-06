@@ -56,9 +56,6 @@
     "viewnewsheadername": {
         "message": "Nom"
     },
-    "viewnewsheadericon": {
-        "message": "Icône"
-    },
     "viewnewsheaderresult": {
         "message": "Résultat"
     },
@@ -83,14 +80,11 @@
     "help": {
         "message": "Aide"
     },
-    "yes": {
-        "message": "Oui"
-    },
-    "no": {
-        "message": "Non"
-    },
     "ok": {
         "message": "OK"
+    },
+    "confirm": {
+        "message": "Confirmer"
     },
     "cancel": {
         "message": "Annuler"
@@ -109,12 +103,6 @@
     },
     "empty": {
         "message": "Ce champ doit être rempli"
-    },
-    "confirm": {
-        "message": "Êtes-vous sûr(e) ?"
-    },
-    "open": {
-        "message": "Ouvrir"
     },
     "delete": {
         "message": "Supprimer"
