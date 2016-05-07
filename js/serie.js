@@ -33,7 +33,7 @@ class Serie extends SMB {
             let arrayType = arrays.series;
             let tmp;
             while ((tmp = regExp.exec(response)) != null) {
-                if (tmp[3].match(/Series\)/) && objectInArray(tmp[1], arrays['series']) == -1)
+                if (tmp[3].match(/Series\)/) && objectInArray(tmp[1], arrayType) == -1)
                     output += '<option value="' + tmp[1] + '">' + tmp[2] + tmp[3] + '</option>';
             }
             return output;
