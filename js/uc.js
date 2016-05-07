@@ -52,8 +52,7 @@ function writeArrays() {
 
 function parseArrays(tmpArrays) {
     arrays = { series: [], movies: [], blurays: [], news: [] };
-    let type;
-    for (type in tmpArrays) {
+    for (let type in tmpArrays) {
         if (type in arrays)
             arrays[type] = tmpArrays[type];
     }
@@ -66,11 +65,13 @@ function parseArrays(tmpArrays) {
         }
     }
     writeArrays();
+}
 
+function checkArrays() {
     createDateAndRegExpDate();
     let toCheck = [];
     let arrayType, classType, i, length;
-    for (type in arrays) {
+    for (let type in arrays) {
         arrayType = arrays[type];
         switch(type) {
             case 'series': classType = Serie; break;
@@ -145,8 +146,9 @@ window.addEventListener('load', function () {
     addEventsToInput(newslink);
     addEventsToDropdowns(newsregexpdropdown);
 
-    restore.value = chromeI18n('restore');
-    backup.value  = chromeI18n('backup');
+    viewdatamanagement.innerHTML = chromeI18n('datamanagement');
+    importdata.innerHTML         = chromeI18n('importdata');
+    exportdata.innerHTML         = chromeI18n('exportdata');
 
     moment.locale(window.navigator.language);
 
@@ -155,6 +157,7 @@ window.addEventListener('load', function () {
         document.getElementById(settings).classList.add('active');
         document.getElementById(settings + 'content').hidden = false;
         parseArrays(items.arrays);
+        checkArrays();
     });
 }, false);
 
@@ -238,23 +241,25 @@ function doAll(body, text) {
         toClick[i].click();
 }
 
-restoreh.addEventListener('change', function (event) {
+importdatah.addEventListener('change', function (event) {
     let file    = new FileReader();
     file.onload = function (e) {
         event.target.value = '';
         try {
-            parseArrays(JSON.parse(e.target.result).arrays);
+            let string = JSON.parse(e.target.result).arrays;
+            parseArrays(string);
+            window.location.reload();
         }
         catch (err) {}
     };
     file.readAsText(event.target.files[0]);
 }, false);
 
-restore.addEventListener('click', function () {
-    restoreh.click();
+importdata.addEventListener('click', function () {
+    importdatah.click();
 }, false);
 
-backup.addEventListener('click', function () {
+exportdata.addEventListener('click', function () {
     let a      = document.createElement('a');
     a.download = 'Update Checker.json';
     a.href     = window.URL.createObjectURL(new Blob([JSON.stringify({ arrays: arrays }, null, 4)], { type: 'text/plain;charset=UTF-8' }));

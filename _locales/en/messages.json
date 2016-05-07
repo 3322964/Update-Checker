@@ -100,10 +100,13 @@
             }
         }
     },
-    "restore": {
-        "message": "Restore..."
+    "datamanagement": {
+        "message": "Data management"
     },
-    "backup": {
-        "message": "Backup"
+    "importdata": {
+        "message": "Import data"
+    },
+    "exportdata": {
+        "message": "Export data"
     }
 }

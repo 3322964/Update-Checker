@@ -97,10 +97,13 @@
             }
         }
     },
-    "restore": {
-        "message": "Restaurer..."
+    "datamanagement": {
+        "message": "Gestion des données"
     },
-    "backup": {
-        "message": "Sauvegarder"
+    "importdata": {
+        "message": "Importer des données"
+    },
+    "exportdata": {
+        "message": "Exporter les données"
     }
 }
