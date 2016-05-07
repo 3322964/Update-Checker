@@ -1,8 +1,6 @@
-const chromeI18n        = chrome.i18n.getMessage;
-const getFavicon        = 'http://www.google.com/s2/favicons?domain_url=';
-var settings            = { homeview: 'viewseries' };
-var files               = {};
-var arrays, date, timeout;
+const chromeI18n = chrome.i18n.getMessage;
+const getFavicon = 'http://www.google.com/s2/favicons?domain_url=';
+var arrays, date;
 
 for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
     tmp = elements[i].id;
@@ -30,18 +28,6 @@ function objectInArray(value, array) {
     return i == length ? -1 : i;
 }
 
-function writeSettings() {
-    chrome.storage.local.set({ settings: settings });
-}
-
-function parseSettings(tmpSettings) {
-    for (let key in tmpSettings) {
-        if (key in settings)
-            settings[key] = tmpSettings[key];
-    }
-    writeSettings();
-}
-
 function toggleHeaderActive(e) {
     var element                                                 = e.target;
     var activeHeader                                            = element.parentElement.getElementsByClassName('active')[0];
@@ -49,8 +35,15 @@ function toggleHeaderActive(e) {
     activeHeader.classList.remove('active');
     element.classList.add('active');
     document.getElementById(element.id + 'content').hidden = false;
-    settings.homeview                                      = element.id;
-    writeSettings();
+    chrome.storage.local.set({ settings: element.id });
+}
+
+function createDateAndRegExpDate() {
+    date             = moment().startOf('day');
+    let year         = date.year();
+    let months       = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    let month        = date.month();
+    Serie.regExpDate = new RegExp('<h4>Season (\\d{1,}), Episode (\\d{1,}): <a href="[^"]*">([^<]*)</a></h4><b>(\\d{1,2} [A-S][a-z]+ ' + (year + 1) + '|\\d{1,2} (' + months.splice(month + 1, 12).join('|') + ') ' + year + '|(' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31].splice(date.date() - 1, 31).join('|') + ') ' + months[month] + ' ' + year + ')</b>');
 }
 
 function writeArrays() {
@@ -58,12 +51,13 @@ function writeArrays() {
 }
 
 function parseArrays(tmpArrays) {
-    arrays = { news: [], series: [], movies: [], blurays: [] };
-    for (let key in tmpArrays) {
-        if (key in arrays)
-            arrays[key] = tmpArrays[key];
+    arrays = { series: [], movies: [], blurays: [], news: [] };
+    let type;
+    for (type in tmpArrays) {
+        if (type in arrays)
+            arrays[type] = tmpArrays[type];
     }
-    if (tmpArrays != null) {
+    if (tmpArrays != null) { // A SUPPRIMER DANS LONGTEMPS
         for (let i = 0, length = arrays.news.length; i != length; i++)
             delete arrays.news[i].name;
         if (tmpArrays.rss != null) {
@@ -72,6 +66,23 @@ function parseArrays(tmpArrays) {
         }
     }
     writeArrays();
+
+    createDateAndRegExpDate();
+    let toCheck = [];
+    let arrayType, classType, i, length;
+    for (type in arrays) {
+        arrayType = arrays[type];
+        switch(type) {
+            case 'series': classType = Serie; break;
+            case 'movies': classType = Movie; break;
+            case 'blurays': classType = Bluray; break;
+            case 'news': classType = New; break;
+        }
+        for (i = 0, length = arrayType.length; i != length; i++)
+            toCheck.push(new classType(arrayType[i]));
+    }
+    for (i = 0, length = toCheck.length; i != length; i++)
+        toCheck[i].check();
 }
 
 function getLink(link, onDone) {
@@ -87,68 +98,65 @@ function getLink(link, onDone) {
 }
 
 window.addEventListener('load', function () {
-    for (let i = 0, headers = header.children, length = headers.length; i != length; i++) {
+    let headers = header.children;
+    for (let i = 0, length = headers.length; i != length; i++) {
         headers[i].innerHTML = chromeI18n(headers[i].id);
         headers[i].addEventListener('click', toggleHeaderActive, false);
-
-        let ths = document.getElementById(headers[i].id + 'content').firstElementChild.firstElementChild.firstElementChild.children;
-        for (let i = 1, length = ths.length; i != length; i++)
-            ths[i].innerHTML = chromeI18n(ths[i].id);
     }
 
-    restore.value          = chromeI18n('restore');
-    backup.value           = chromeI18n('backup');
+    viewmoviesreleasedate.innerHTML = viewbluraysreleasedate.innerHTML = chromeI18n('releasedate');
+    viewseriesseason.innerHTML                  = chromeI18n('season');
+    viewseriesepisode.innerHTML                 = chromeI18n('episode');
+    viewseriesepisodename.innerHTML             = chromeI18n('episodename');
+    viewseriesepisodebroadcastingdate.innerHTML = chromeI18n('episodebroadcastingdate');
+    viewblurayscountry.innerHTML                = chromeI18n('country');
+    viewnewsname.innerHTML                      = chromeI18n('name');
+    viewnewsresult.innerHTML                    = chromeI18n('result');
+    viewnewsactions.innerHTML                   = chromeI18n('actions');
 
-    newslink.placeholder   = chromeI18n('link');
-    newsregexp.placeholder = chromeI18n('regexp');
-    newsadd.innerHTML      = chromeI18n('add');
+    addEventsToInputsSMB('series', Serie, seriesbody, viewseriesgeneralactions, seriesrecheckall, viewseriesname, viewseriesactions, seriesname, seriesresults, seriesadd);
+    addEventsToInputsSMB('movies', Movie, moviesbody, viewmoviesgeneralactions, moviesrecheckall, viewmoviesname, viewmoviesactions, moviesname, moviesresults, moviesadd);
+    addEventsToInputsSMB('blurays', Bluray, bluraysbody, viewbluraysgeneralactions, bluraysrecheckall, viewbluraysname, viewbluraysactions, bluraysname, bluraysresults, bluraysadd);
+
+    viewnewsgeneralactions.innerHTML = chromeI18n('generalactions');
+    newsopensavenews.innerHTML       = chromeI18n('opensavenews');
+    newssavenews.innerHTML           = chromeI18n('savenews');
+    newsrecheckall.innerHTML         = chromeI18n('recheckall');
+    newslink.placeholder             = chromeI18n('link');
+    newsregexp.placeholder           = chromeI18n('regexp');
+    newsadd.innerHTML                = chromeI18n('add');
+    newsopensavenews.addEventListener('click', function () {
+        let toClick = [];
+        let trs     = newsbody.children;
+        let i, length;
+        for (i = 0, length = trs.length - 1; i != length; i++) {
+            if (trs[i].domResult.className == 'green')
+                toClick.push(trs[i].domName.firstElementChild);
+        }
+        for (i = 0, length = toClick.length; i != length; i++)
+            toClick[i].click();
+    }, false);
+    newssavenews.addEventListener('click', function () {
+        doAll(newsbody, chromeI18n('save'));
+    }, false);
+    newsrecheckall.addEventListener('click', function () {
+        doAll(newsbody, chromeI18n('recheck'));
+    }, false);
+    addEventsToInput(newslink);
+    addEventsToDropdowns(newsregexpdropdown);
+
+    restore.value = chromeI18n('restore');
+    backup.value  = chromeI18n('backup');
+
+    moment.locale(window.navigator.language);
 
     chrome.storage.local.get(null, function (items) {
-        parseSettings(items.settings);
-        document.getElementById(settings.homeview).classList.add('active');
-        document.getElementById(settings.homeview + 'content').hidden = false;
-
-        date         = moment().startOf('day');
-        let year     = date.year();
-        let months   = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        let month    = date.month();
-        let days     = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
-        Serie.regExpDate = new RegExp('<h4>Season (\\d{1,}), Episode (\\d{1,}): <a href="[^"]*">([^<]*)</a></h4><b>(\\d{1,2} [A-S][a-z]+ ' + (year + 1) + '|\\d{1,2} (' + months.splice(month + 1, 12).join('|') + ') ' + year + '|(' + days.splice(date.date() - 1, 31).join('|') + ') ' + months[month] + ' ' + year + ')</b>');
-        moment.locale(window.navigator.language);
-
+        let settings = items.settings == null ? 'viewseries' : items.settings;
+        document.getElementById(settings).classList.add('active');
+        document.getElementById(settings + 'content').hidden = false;
         parseArrays(items.arrays);
-        checkAll(arrays);
     });
 }, false);
-
-function checkAll() {
-    let toCheck = [];
-    let arrayType, i, length;
-    for (let type in arrays) {
-        arrayType = arrays[type];
-
-        switch (type) {
-            case 'series':
-                for (i = 0, length = arrayType.length; i != length; i++)
-                    toCheck.push(new Serie(arrayType[i]));
-                break;
-            case 'movies':
-                for (i = 0, length = arrayType.length; i != length; i++)
-                    toCheck.push(new Movie(arrayType[i]));
-                break;
-            case 'blurays':
-                for (i = 0, length = arrayType.length; i != length; i++)
-                    toCheck.push(new Bluray(arrayType[i]));
-                break;
-            case 'news':
-                for (i = 0, length = arrayType.length; i != length; i++)
-                    toCheck.push(new New(arrayType[i]));
-                break;
-        }
-    }
-    for (i = 0, length = toCheck.length; i != length; i++)
-        toCheck[i].check();
-}
 
 var dropdownNews = [
     { title: 'Chrome Web Store', link: 'https://chrome.google.com/webstore/detail/*', regexp: 'itemprop="version" content="([^"]*)' },
@@ -168,103 +176,67 @@ function addEventsToDropdowns(newsregexpdropdown) {
     }
 }
 
-addEventsToDropdowns(newsregexpdropdown);
-
-function removeError(e) {
-    e.target.className = '';
+function removeInvalid(e) {
+    e.target.classList.remove('invalid');
 }
 
 function addEventsToInput(input) {
-    input.addEventListener('keydown', removeError, false);
-    input.addEventListener('input', removeError, false);
-    input.addEventListener('click', removeError, false);
+    input.addEventListener('keydown', removeInvalid, false);
+    input.addEventListener('input', removeInvalid, false);
+    input.addEventListener('click', removeInvalid, false);
 }
 
-addEventsToInput(newslink);
-addEventsToInput(newsregexp);
+function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheckall, viewname, viewactions, name, results, add) {
+    viewgeneralactions.innerHTML = chromeI18n('generalactions');
+    recheckall.innerHTML         = chromeI18n('recheckall');
+    viewname.innerHTML           = chromeI18n('name');
+    viewactions.innerHTML        = chromeI18n('actions');
+    name.placeholder             = chromeI18n('name');
+    add.innerHTML                = chromeI18n('add');
 
-function addSearch(type, classType, typeName, typeSelect, typeAdd) {
-    typeName.placeholder                   = chromeI18n('name');
-    typeSelect.firstElementChild.innerHTML = chromeI18n('noresults');
-    typeAdd.innerHTML                      = chromeI18n('add');
+    recheckall.addEventListener('click', function () {
+        doAll(body, chromeI18n('recheck'));
+    }, false);
 
-    addEventsToInput(typeName);
+    addEventsToInput(name);
 
-    typeAdd.addEventListener('click', function () {
-        typeName.click();
-        let value = typeSelect.value;
+    name.addEventListener('keyup', classType.parse, false);
+    name.addEventListener('search', classType.parse, false);
+
+    add.addEventListener('click', function () {
+        name.click();
+        let value = results.value;
         if (value == '')
-            typeName.classList.add('invalid');
+            name.classList.add('invalid');
         else {
-            let arrayType = arrays[type];
-            let toCheck   = new classType(arrayType[arrayType.push(value) - 1]);
+            name.value     = '';
+            results.hidden = true;
+            let arrayType  = arrays[type];
+            let toCheck    = new classType(arrayType[arrayType.push(value) - 1]);
             writeArrays();
             toCheck.check();
-            typeName.value       = '';
-            typeSelect.innerHTML = '<option value="" selected disabled>' + chromeI18n('noresults') + '</option>';
         }
     }, false);
 }
 
-addSearch('series', Serie, seriesname, seriesselect, seriesadd);
-addSearch('movies', Movie, moviesname, moviesselect, moviesadd);
-addSearch('blurays', Bluray, bluraysname, bluraysselect, bluraysadd);
-
-function getSearch(type, typeName, typeSelect, link, onDone) {
-    typeName.click();
-    typeSelect.click();
-    typeSelect.innerHTML = '<option value="" selected disabled>' + chromeI18n('noresults') + '</option>';
-    let string           = typeName.value.trim();
-    if (string != '') {
-        try {
-            files[type].onreadystatechange = null;
-            files[type].abort();
-        }
-        catch (err) {}
-
-        typeName.classList.add('loading');
-        files[type] = new XMLHttpRequest();
-
-        if (type == 'blurays') {
-            files[type].open('POST', link, true);
-            files[type].setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        }
-        else {
-            files[type].open('GET', link + encodeURIComponent(string), true);
-            files[type].setRequestHeader('Pragma', 'no-cache');
-            files[type].setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
-        }
-
-        files[type].onreadystatechange = function () {
-            if (files[type].readyState == XMLHttpRequest.DONE) {
-                typeName.classList.remove('loading');
-                if (files[type].status != 200)
-                    typeName.classList.add('invalid');
-                else {
-                    typeSelect.innerHTML = onDone(files[type].responseText);
-                    if (typeSelect.innerHTML == '') {
-                        typeSelect.innerHTML = '<option value="" selected disabled>' + chromeI18n('noresults') + '</option>';
-                        typeName.classList.add('invalid');
-                    }
-                }
-            }
-        };
-        if (type == 'blurays')
-            files[type].send('userid=-1&country=all&section=bluraymovies&keyword='+ encodeURIComponent(string));
-        else files[type].send();
-    }
-}
-
-seriesname.addEventListener('keyup', Serie.parse, false);
-seriesname.addEventListener('search', Serie.parse, false);
-moviesname.addEventListener('keyup', Movie.parse, false);
-moviesname.addEventListener('search', Movie.parse, false);
-bluraysname.addEventListener('keyup', Bluray.parse, false);
-bluraysname.addEventListener('search', Bluray.parse, false);
-
 newsadd.addEventListener('click', function () {
-    New.parseNews('', '', newslink, newsregexp);
+    New.parse('', '', newslink, newsregexp);
 }, false);
+
+function doAll(body, text) {
+    let toClick = [];
+    let trs     = body.children;
+    let i, length, elements, j, elementsLength;
+    for (i = 0, length = trs.length - 1; i != length; i++) {
+        elements = trs[i].domActions.children;
+        for (j = 0, elementsLength = elements.length; j != elementsLength; j++) {
+            if (elements[j].innerHTML == text)
+                toClick.push(elements[j]);
+        }
+    }
+    for (i = 0, length = toClick.length; i != length; i++)
+        toClick[i].click();
+}
 
 restoreh.addEventListener('change', function (event) {
     let file    = new FileReader();
@@ -272,17 +244,8 @@ restoreh.addEventListener('change', function (event) {
         event.target.value = '';
         try {
             parseArrays(JSON.parse(e.target.result).arrays);
-            checkAll(arrays);
         }
-        catch (err) {
-            clearTimeout(timeout);
-            restore.classList.add('redlike');
-            restore.value = chromeI18n('jsoncompliant');
-            timeout       = setTimeout(function () {
-                restore.value = chromeI18n('restore');
-                restore.classList.remove('redlike');
-            }, 3000);
-        }
+        catch (err) {}
     };
     file.readAsText(event.target.files[0]);
 }, false);

@@ -16,92 +16,106 @@
         </div></nav></header>
 
         <div id="viewseriescontent" class="container" hidden>
+            <div class="heading">
+                <h2 id="viewseriesgeneralactions"></h2>
+                <ul class="heading-links">
+                    <li><a id="seriesrecheckall"></a></li>
+                </ul>
+            </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th id="viewseriesheadername"></th>
-                        <th id="viewseriesheaderseason"></th>
-                        <th id="viewseriesheaderepisode"></th>
-                        <th id="viewseriesheaderepisodename"></th>
-                        <th id="viewseriesheaderepisodebroadcastingdate"></th>
-                        <th id="viewseriesheaderactions"></th>
+                        <th id="viewseriesname"></th>
+                        <th id="viewseriesseason"></th>
+                        <th id="viewseriesepisode"></th>
+                        <th id="viewseriesepisodename"></th>
+                        <th id="viewseriesepisodebroadcastingdate"></th>
+                        <th id="viewseriesactions"></th>
                     </tr>
                 </thead>
-                <tbody id="viewseriesbody" class="table-body">
+                <tbody id="seriesbody" class="table-body">
                     <tr>
                         <td></td>
                         <td colspan="4"><input id="seriesname" type="search"></td>
-                        <td>
-                            <select id="seriesselect">
-                                <option value="" selected disabled></option>
-                            </select>
-                        </td>
+                        <td><select id="seriesresults" hidden></select></td>
                         <td><a id="seriesadd"></a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div id="viewmoviescontent" class="container" hidden>
+            <div class="heading">
+                <h2 id="viewmoviesgeneralactions"></h2>
+                <ul class="heading-links">
+                    <li><a id="moviesrecheckall"></a></li>
+                </ul>
+            </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th id="viewmoviesheadername"></th>
-                        <th id="viewmoviesheaderreleasedate"></th>
-                        <th id="viewmoviesheaderactions"></th>
+                        <th id="viewmoviesname"></th>
+                        <th id="viewmoviesreleasedate"></th>
+                        <th id="viewmoviesactions"></th>
                     </tr>
                 </thead>
-                <tbody id="viewmoviesbody" class="table-body">
+                <tbody id="moviesbody" class="table-body">
                     <tr>
                         <td></td>
                         <td><input id="moviesname" type="text"></td>
-                        <td>
-                            <select id="moviesselect">
-                                <option value="" selected disabled></option>
-                            </select>
-                        </td>
+                        <td><select id="moviesresults" hidden></select></td>
                         <td><a id="moviesadd"></a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div id="viewblurayscontent" class="container" hidden>
+            <div class="heading">
+                <h2 id="viewbluraysgeneralactions"></h2>
+                <ul class="heading-links">
+                    <li><a id="bluraysrecheckall"></a></li>
+                </ul>
+            </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th id="viewbluraysheadername"></th>
-                        <th id="viewbluraysheadercountry"></th>
-                        <th id="viewbluraysheaderreleasedate"></th>
-                        <th id="viewbluraysheaderactions"></th>
+                        <th id="viewbluraysname"></th>
+                        <th id="viewblurayscountry"></th>
+                        <th id="viewbluraysreleasedate"></th>
+                        <th id="viewbluraysactions"></th>
                     </tr>
                 </thead>
-                <tbody id="viewbluraysbody" class="table-body">
+                <tbody id="bluraysbody" class="table-body">
                     <tr>
                         <td></td>
                         <td colspan="2"><input id="bluraysname" type="text"></td>
-                        <td>
-                            <select id="bluraysselect">
-                                <option value="" selected disabled></option>
-                            </select>
-                        </td>
+                        <td><select id="bluraysresults" hidden></select></td>
                         <td><a id="bluraysadd"></a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div id="viewnewscontent" class="container" hidden>
+            <div class="heading">
+                <h2 id="viewnewsgeneralactions"></h2>
+                <ul class="heading-links">
+                    <li><a id="newsopensavenews"></a></li>
+                    <li><a id="newssavenews"></a></li>
+                    <li><a id="newsrecheckall"></a></li>
+                </ul>
+            </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th id="viewnewsheadername"></th>
-                        <th id="viewnewsheaderresult"></th>
-                        <th id="viewnewsheaderactions"></th>
+                        <th id="viewnewsname"></th>
+                        <th id="viewnewsresult"></th>
+                        <th id="viewnewsactions"></th>
                     </tr>
                 </thead>
-                <tbody id="viewnewsbody" class="table-body">
+                <tbody id="newsbody" class="table-body">
                     <tr>
                         <td></td>
                         <td><input id="newslink" type="url" required></td>
@@ -116,8 +130,8 @@
         </div>
 
         <input id="restoreh" type="file" accept=".json" hidden>
-        <input id="restore" type="button" class="checkout-btn">
-        <input id="backup" type="button" class="checkout-btn">
+        <input id="restore" type="button">
+        <input id="backup" type="button">
 
         <script src="/js/lib/countries.min.js"></script>
         <script src="/js/lib/moment-with-locales.min.js"></script>

@@ -1,87 +1,3 @@
-.search-ac {
-    display: none;
-    position: absolute;
-    top: 123px;
-    left: 12px;
-    right: 12px;
-    z-index: 10;
-    background: #fdfdfd;
-    border: 1px solid;
-    border-color: #cbcfe2 #c8cee7 #c4c7d7;
-    border-radius: 3px;
-    background-image: linear-gradient(to bottom, #fdfdfd, #eceef4);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
-    .search-ac.visible {
-        display: block; }
-    .search-ac li {
-        display: block; }
-        .search-ac li:first-child {
-            margin-top: -1px; }
-        .search-ac li:first-child:before, .search-ac li:first-child:after {
-            content: '';
-            display: block;
-            width: 0;
-            height: 0;
-            position: absolute;
-            left: 50%;
-            margin-left: -5px;
-            border: 5px outset transparent; }
-        .search-ac li:first-child:before {
-            border-bottom: 5px solid #c4c7d7;
-            top: -11px; }
-        .search-ac li:first-child:after {
-            border-bottom: 5px solid #fdfdfd;
-            top: -10px; }
-        .search-ac li:first-child:hover:before, .search-ac li:first-child:hover:after {
-            display: none; }
-        .search-ac li:last-child {
-            margin-bottom: -1px; }
-    .search-ac a {
-        line-height: 20px;
-        cursor: pointer;
-        display: block;
-        position: relative;
-        margin: 0 -1px;
-        padding: 6px 40px 6px 10px;
-        color: #808394;
-        font-weight: 500;
-        text-decoration: none;
-        text-shadow: 0 1px white;
-        border: 1px solid transparent;
-        border-radius: 3px; }
-        .search-ac a.greenlike {
-            color: #0C0; }
-        .search-ac a:before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            margin-top: -9px;
-            width: 18px;
-            height: 18px;
-            background: url(/img/arrow.png) 0 0 no-repeat; }
-        .search-ac a:hover {
-            color: white;
-            text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
-            background: #338cdf;
-            border-color: #2380dd #2179d5 #1a60aa;
-            background-image: linear-gradient(to bottom, #59aaf4, #338cdf);
-            box-shadow: inset 0 1px rgba(255, 255, 255, 0.2), 0 1px rgba(0, 0, 0, 0.08); }
-
-.help {
-    position: absolute;
-    right: 20px;
-    top: 91px;
-    width: 32px;
-    height: 32px;
-    background: url(/img/help.png) no-repeat;
-    background-size: 100% 100%; }
-    .help.highlight {
-        background: url(/img/help-highlight.png) no-repeat;
-        background-size: 100% 100%; }
-    .help + .checkout-input {
-        padding-right: 44px; }
-
 html, body, a, div, h2, table, thead, tbody, tr, th, td, header, nav, ul, li, input, datalist, select {
     margin: 0;
     padding: 0;
@@ -91,6 +7,7 @@ html, body, a, div, h2, table, thead, tbody, tr, th, td, header, nav, ul, li, in
     vertical-align: baseline; }
 
 body {
+    -webkit-user-select: none;
     font: 12px/20px 'Lucida Grande', Verdana, sans-serif;
     color: #404040;
     background: #eee; }
@@ -99,7 +16,6 @@ ul {
     list-style: none; }
 
 a {
-    cursor: pointer;
     color: #007fcc;
     text-decoration: none; }
     a:hover {
@@ -231,7 +147,6 @@ nav {
     .table-head > tr > th:hover {
         text-decoration: underline; }
     .table-head > tr > th:first-child {
-        width: 16px;
         border-left: 1px solid #ccc;
         border-top-left-radius: 3px; }
     .table-head > tr > th:last-child {
@@ -243,6 +158,13 @@ nav {
         content: '\25B2'; }
     .table-head > tr > th.desc:after {
         content: '\25BC'; }
+
+    .table-head > tr > th:first-child { /* favicon */
+        width: 16px; }
+    .table-head > tr > th:last-child { /* #viewtypeactions */
+        width: 200px; }
+    #viewnewsactions {
+        width: 300px; }
 
 .table-body > tr:nth-child(2n) {
     background: #f8f8f8; }
@@ -275,6 +197,8 @@ nav {
     .table-body > tr > td.loading {
         background: url(/img/ajax-loader.gif) no-repeat;
         background-position: 5px center; }
+    .table-body > tr > td > a {
+        cursor: pointer; }
 
 input, select {
     height: calc(100% - 4px);

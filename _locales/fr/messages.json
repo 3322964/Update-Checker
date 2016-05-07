@@ -14,62 +14,35 @@
     "viewnews": {
         "message": "Actualités"
     },
-    "viewseriesheadername": {
-        "message": "Nom"
-    },
-    "viewseriesheaderseason": {
-        "message": "Saison"
-    },
-    "viewseriesheaderepisode": {
-        "message": "Épisode"
-    },
-    "viewseriesheaderepisodename": {
-        "message": "Nom de l'épisode"
-    },
-    "viewseriesheaderepisodebroadcastingdate": {
-        "message": "Date de diffusion de l'épisode"
-    },
-    "viewseriesheaderactions": {
-        "message": "Actions"
-    },
-    "viewmoviesheadername": {
-        "message": "Nom"
-    },
-    "viewmoviesheaderreleasedate": {
-        "message": "Date de sortie"
-    },
-    "viewmoviesheaderactions": {
-        "message": "Actions"
-    },
-    "viewbluraysheadername": {
-        "message": "Nom"
-    },
-    "viewbluraysheadercountry": {
-        "message": "Pays"
-    },
-    "viewbluraysheaderreleasedate": {
-        "message": "Date de sortie"
-    },
-    "viewbluraysheaderactions": {
-        "message": "Actions"
-    },
-    "viewnewsheadername": {
-        "message": "Nom"
-    },
-    "viewnewsheaderresult": {
-        "message": "Résultat"
-    },
-    "viewnewsheaderactions": {
-        "message": "Actions"
-    },
     "name": {
         "message": "Nom"
     },
-    "search": {
-        "message": "Rechercher"
+    "season": {
+        "message": "Saison"
     },
-    "add": {
-        "message": "Ajouter"
+    "episode": {
+        "message": "Épisode"
+    },
+    "episodename": {
+        "message": "Nom de l'épisode"
+    },
+    "episodebroadcastingdate": {
+        "message": "Date de diffusion de l'épisode"
+    },
+    "actions": {
+        "message": "Actions"
+    },
+    "releasedate": {
+        "message": "Date de sortie"
+    },
+    "country": {
+        "message": "Pays"
+    },
+    "result": {
+        "message": "Résultat"
+    },
+    "name": {
+        "message": "Nom"
     },
     "link": {
         "message": "Lien"
@@ -77,32 +50,44 @@
     "regexp": {
         "message": "RegExp (Laissez ce champ vide pour un flux RSS)"
     },
-    "help": {
-        "message": "Aide"
+    "error": {
+        "message": "Erreur"
     },
-    "ok": {
-        "message": "OK"
+    "unreachable": {
+        "message": "Lien inaccessible"
+    },
+    "add": {
+        "message": "Ajouter"
+    },
+    "save": {
+        "message": "Enregistrer"
+    },
+    "recheck": {
+        "message": "Revérifier"
+    },
+    "edit": {
+        "message": "Éditer"
+    },
+    "delete": {
+        "message": "Supprimer"
+    },
+    "generalactions": {
+        "message": "Actions générales"
+    },
+    "opensavenews": {
+        "message": "Ouvrir et enregistrer les nouveautés"
+    },
+    "savenews": {
+        "message": "Enregistrer les nouveautés"
+    },
+    "recheckall": {
+        "message": "Tout revérifier"
     },
     "confirm": {
         "message": "Confirmer"
     },
     "cancel": {
         "message": "Annuler"
-    },
-    "unreachable": {
-        "message": "Lien inaccessible"
-    },
-    "error": {
-        "message": "Erreur"
-    },
-    "noresults": {
-        "message": "Aucun résultat"
-    },
-    "delete": {
-        "message": "Supprimer"
-    },
-    "edit": {
-        "message": "Éditer"
     },
     "newitems": {
         "message": "Nouveautés : $count$",
@@ -117,8 +102,5 @@
     },
     "backup": {
         "message": "Sauvegarder"
-    },
-    "jsoncompliant": {
-        "message": "JSON non conforme"
     }
 }

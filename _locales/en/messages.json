@@ -14,62 +14,38 @@
     "viewnews": {
         "message": "News"
     },
-    "viewseriesheadername": {
+    "name": {
         "message": "Name"
     },
-    "viewseriesheaderseason": {
+    "season": {
         "message": "Season"
     },
-    "viewseriesheaderepisode": {
+    "episode": {
         "message": "Episode"
     },
-    "viewseriesheaderepisodename": {
+    "episodename": {
         "message": "Episode name"
     },
-    "viewseriesheaderepisodebroadcastingdate": {
+    "episodebroadcastingdate": {
         "message": "Episode broadcasting date"
     },
-    "viewseriesheaderactions": {
+    "actions": {
         "message": "Actions"
     },
-    "viewmoviesheadername": {
-        "message": "Name"
-    },
-    "viewmoviesheaderreleasedate": {
+    "releasedate": {
         "message": "Release date"
     },
-    "viewmoviesheaderactions": {
-        "message": "Actions"
-    },
-    "viewbluraysheadername": {
-        "message": "Name"
-    },
-    "viewbluraysheadercountry": {
+    "country": {
         "message": "Country"
-    },
-    "viewbluraysheaderreleasedate": {
-        "message": "Release Date"
     },
     "viewbluraysheaderactions": {
         "message": "Actions"
     },
-    "viewnewsheadername": {
-        "message": "Name"
-    },
-    "viewnewsheaderresult": {
+    "result": {
         "message": "Result"
-    },
-    "viewnewsheaderactions": {
-        "message": "Actions"
     },
     "name": {
         "message": "Name"
-    },
-    "search": {
-        "message": "Search"
-    },
-    "add": {
-        "message": "Add"
     },
     "link": {
         "message": "Link"
@@ -77,32 +53,44 @@
     "regexp": {
         "message": "RegExp (Leave this field empty for a RSS feed)"
     },
-    "help": {
-        "message": "Help"
+    "error": {
+        "message": "Error"
     },
-    "ok": {
-        "message": "OK"
+    "unreachable": {
+        "message": "Unreachable link"
+    },
+    "add": {
+        "message": "Add"
+    },
+    "save": {
+        "message": "Save"
+    },
+    "recheck": {
+        "message": "Recheck"
+    },
+    "edit": {
+        "message": "Edit"
+    },
+    "delete": {
+        "message": "Delete"
+    },
+    "generalactions": {
+        "message": "General actions"
+    },
+    "opensaveall": {
+        "message": "Open & save new items"
+    },
+    "saveall": {
+        "message": "Save new items"
+    },
+    "recheckall": {
+        "message": "Recheck all"
     },
     "confirm": {
         "message": "Confirm"
     },
     "cancel": {
         "message": "Cancel"
-    },
-    "unreachable": {
-        "message": "Unreachable link"
-    },
-    "error": {
-        "message": "Error"
-    },
-    "noresults": {
-        "message": "No results"
-    },
-    "delete": {
-        "message": "Delete"
-    },
-    "edit": {
-        "message": "Edit"
     },
     "newitems": {
         "message": "New items: $count$",
@@ -117,8 +105,5 @@
     },
     "backup": {
         "message": "Backup"
-    },
-    "jsoncompliant": {
-        "message": "Non-compliant JSON"
     }
 }
