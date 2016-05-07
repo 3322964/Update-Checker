@@ -96,13 +96,7 @@
         "message": "Erreur"
     },
     "noresults": {
-        "message": "Aucun résultat trouvé"
-    },
-    "alreadyexists": {
-        "message": "Ceci existe déjà"
-    },
-    "empty": {
-        "message": "Ce champ doit être rempli"
+        "message": "Aucun résultat"
     },
     "delete": {
         "message": "Supprimer"

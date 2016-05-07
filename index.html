@@ -29,6 +29,16 @@
                     </tr>
                 </thead>
                 <tbody id="viewseriesbody" class="table-body">
+                    <tr>
+                        <td></td>
+                        <td colspan="4"><input id="seriesname" type="search"></td>
+                        <td>
+                            <select id="seriesselect">
+                                <option value="" selected disabled></option>
+                            </select>
+                        </td>
+                        <td><a id="seriesadd"></a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -43,6 +53,16 @@
                     </tr>
                 </thead>
                 <tbody id="viewmoviesbody" class="table-body">
+                    <tr>
+                        <td></td>
+                        <td><input id="moviesname" type="text"></td>
+                        <td>
+                            <select id="moviesselect">
+                                <option value="" selected disabled></option>
+                            </select>
+                        </td>
+                        <td><a id="moviesadd"></a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -58,6 +78,16 @@
                     </tr>
                 </thead>
                 <tbody id="viewbluraysbody" class="table-body">
+                    <tr>
+                        <td></td>
+                        <td colspan="2"><input id="bluraysname" type="text"></td>
+                        <td>
+                            <select id="bluraysselect">
+                                <option value="" selected disabled></option>
+                            </select>
+                        </td>
+                        <td><a id="bluraysadd"></a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -72,63 +102,22 @@
                     </tr>
                 </thead>
                 <tbody id="viewnewsbody" class="table-body">
+                    <tr>
+                        <td></td>
+                        <td><input id="newslink" type="url" required></td>
+                        <td>
+                            <input id="newsregexp" type="text" list="newsregexpdropdown">
+                            <datalist id="newsregexpdropdown"></datalist>
+                        </td>
+                        <td><a id="newsadd"></a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
 
-        <li class="widget-list-header">
-            <div class="table">
-                <div class="cell">
-                    <input id="restoreh" type="file" accept=".json" hidden>
-                    <input id="restore" type="button" class="checkout-btn">
-                </div>
-                <div class="cell"><input id="backup" type="button" class="checkout-btn"></div>
-            </div>
-            <label><input id="seriesname" type="text" class="checkout-input"><div id="seriesnamespan" class="inputerror"></div></label>
-            <input id="seriessearch" type="button" class="checkout-btn">
-            <div id="seriesresults" class="checkout" hidden></div>
-            <div id="seriesbuttons" class="table hidden">
-                <div class="cell"><input id="seriesvalid" type="button" class="checkout-btn"></div>
-                <div class="cell"><input id="seriescancel" type="button" class="checkout-btn redlike"></div>
-            </div>
-            <label><input id="moviesname" type="text" class="checkout-input"><div id="moviesnamespan" class="inputerror"></div></label>
-            <input id="moviessearch" type="button" class="checkout-btn">
-            <div id="moviesresults" class="checkout" hidden></div>
-            <div id="moviesbuttons" class="table hidden">
-                <div class="cell"><input id="moviesvalid" type="button" class="checkout-btn"></div>
-                <div class="cell"><input id="moviescancel" type="button" class="checkout-btn redlike"></div>
-            </div>
-            <label><input id="bluraysname" type="text" class="checkout-input"><div id="bluraysnamespan" class="inputerror"></div></label>
-            <input id="blurayssearch" type="button" class="checkout-btn">
-            <div id="bluraysresults" class="checkout" hidden></div>
-            <div id="bluraysbuttons" class="table hidden">
-                <div class="cell"><input id="bluraysvalid" type="button" class="checkout-btn"></div>
-                <div class="cell"><input id="blurayscancel" type="button" class="checkout-btn redlike"></div>
-            </div>
-            <label><input id="newsname" type="text" class="checkout-input"><div id="newsnamespan" class="inputerror"></div></label>
-            <label><input id="newslink" type="text" class="checkout-input"><div id="newslinkspan" class="inputerror"></div></label>
-            <label>
-                <a id="newsregexphelp" class="help"></a>
-                <input id="newsregexp" type="text" class="checkout-input" placeholder="RegExp"><div id="newsregexpspan" class="inputerror"></div>
-                <ul id="newsregexpdropdown" class="search-ac"></ul>
-            </label>
-            <input id="newsvalid" type="button" class="checkout-btn">
-        </li>
-
-        <div id="newslight" class="light">
-            <label><input id="newsnameedit" type="text" class="checkout-input"><div id="newsnameeditspan" class="inputerror"></div></label>
-            <label><input id="newslinkedit" type="text" class="checkout-input"><div id="newslinkeditspan" class="inputerror"></div></label>
-            <label>
-                <a id="newsregexphelpedit" class="help"></a>
-                <input id="newsregexpedit" type="text" class="checkout-input" placeholder="RegExp"><div id="newsregexpeditspan" class="inputerror"></div>
-                <ul id="newsregexpdropdownedit" class="search-ac"></ul>
-            </label>
-            <div class="table">
-                <div class="cell"><input id="newsvalidedit" type="button" class="checkout-btn"></div>
-                <div class="cell"><input id="newscanceledit" type="button" class="checkout-btn redlike"></div>
-            </div>
-        </div>
-        <div id="newsfade" class="fade"></div>
+        <input id="restoreh" type="file" accept=".json" hidden>
+        <input id="restore" type="button" class="checkout-btn">
+        <input id="backup" type="button" class="checkout-btn">
 
         <script src="/js/lib/countries.min.js"></script>
         <script src="/js/lib/moment-with-locales.min.js"></script>

@@ -4,19 +4,34 @@ class Movie extends SMB {
     }
     check() {
         getLink(this.link, (ok, response) => {
-            if (!ok)
-                this.sortOrange();
-            else {
-                let name = response.match(Movie.regExpName);
-                if (name == null)
-                    this.sortRed();
+            if (!this.deleted) {
+                if (!ok)
+                    this.sortOrange();
                 else {
-                    let result = response.match(Movie.regExpDate);
-                    if (result == null || iso.findCountryByName(result[3])['value'] != result[1])
-                        this.sortNoDate(name[1]);
-                    else this.sortDate(name[1], result[2]);
+                    let name = response.match(Movie.regExpName);
+                    if (name == null)
+                        this.sortRed();
+                    else {
+                        let result = response.match(Movie.regExpDate);
+                        if (result == null || iso.findCountryByName(result[3]).value != result[1])
+                            this.sortNoDate(name[1]);
+                        else this.sortDate(name[1], result[2]);
+                    }
                 }
             }
+        });
+    }
+    static parse() {
+        getSearch('movies', moviesname, moviesselect, 'http://www.imdb.com/find?s=tt&q=', (response) => {
+            let regExp    = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g;
+            let output    = '';
+            let arrayType = arrays.movies;
+            let tmp;
+            while ((tmp = regExp.exec(response)) != null) {
+                if (!tmp[3].match(/Series\)/) && !tmp[3].match(/\(Video Game\)/) && !tmp[3].match(/\(Video\)/) && !tmp[3].match(/\(TV Episode\)/) && objectInArray(tmp[1], arrayType) == -1)
+                    output += '<option value="' + tmp[1] + '">' + tmp[2] + tmp[3] + '</option>';
+            }
+            return output;
         });
     }
 }

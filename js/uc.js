@@ -1,6 +1,6 @@
 const chromeI18n        = chrome.i18n.getMessage;
 const getFavicon        = 'http://www.google.com/s2/favicons?domain_url=';
-var settings            = { 'homeview': 'viewseries' };
+var settings            = { homeview: 'viewseries' };
 var files               = {};
 var arrays, date, timeout;
 
@@ -10,8 +10,28 @@ for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
         window[tmp] = elements[i];
 }
 
+function escapeHTML(result) {
+    return result.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/:\/\/([^@]*)@/, '://***@');
+}
+
+function escapeAttribute(result) {
+    return escapeHTML(result).replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+}
+
+function propertyInArray(value, property, array) {
+    let i, length;
+    for (i = 0, length = array.length; i != length && array[i][property] != value; i++) ;
+    return i == length ? -1 : i;
+}
+
+function objectInArray(value, array) {
+    let i, length;
+    for (i = 0, length = array.length; i != length && array[i] != value; i++) ;
+    return i == length ? -1 : i;
+}
+
 function writeSettings() {
-    chrome.storage.local.set({ 'settings': settings });
+    chrome.storage.local.set({ settings: settings });
 }
 
 function parseSettings(tmpSettings) {
@@ -29,26 +49,26 @@ function toggleHeaderActive(e) {
     activeHeader.classList.remove('active');
     element.classList.add('active');
     document.getElementById(element.id + 'content').hidden = false;
-    settings['homeview']                                   = element.id;
+    settings.homeview                                      = element.id;
     writeSettings();
 }
 
 function writeArrays() {
-    chrome.storage.local.set({ 'arrays': arrays });
+    chrome.storage.local.set({ arrays: arrays });
 }
 
 function parseArrays(tmpArrays) {
-    arrays = { 'news': [], 'series': [], 'movies': [], 'blurays': [] };
+    arrays = { news: [], series: [], movies: [], blurays: [] };
     for (let key in tmpArrays) {
         if (key in arrays)
             arrays[key] = tmpArrays[key];
     }
     if (tmpArrays != null) {
-        for (let i = 0, length = arrays['news'].length; i != length; i++)
-            delete arrays['news'][i]['name'];
-        if (tmpArrays['rss'] != null) {
-            for (let i = 0, length = tmpArrays['rss'].length; i != length; i++)
-                arrays['news'].push({ 'link': tmpArrays['rss'][i]['link'], 'regexp': '', 'current': tmpArrays['rss'][i]['current'] });
+        for (let i = 0, length = arrays.news.length; i != length; i++)
+            delete arrays.news[i].name;
+        if (tmpArrays.rss != null) {
+            for (let i = 0, length = tmpArrays.rss.length; i != length; i++)
+                arrays.news.push({ link: tmpArrays.rss[i].link, regexp: '', current: tmpArrays.rss[i].current });
         }
     }
     writeArrays();
@@ -72,14 +92,21 @@ window.addEventListener('load', function () {
         headers[i].addEventListener('click', toggleHeaderActive, false);
 
         let ths = document.getElementById(headers[i].id + 'content').firstElementChild.firstElementChild.firstElementChild.children;
-        for (let i = 0, length = ths.length; i != length; i++)
+        for (let i = 1, length = ths.length; i != length; i++)
             ths[i].innerHTML = chromeI18n(ths[i].id);
     }
 
+    restore.value          = chromeI18n('restore');
+    backup.value           = chromeI18n('backup');
+
+    newslink.placeholder   = chromeI18n('link');
+    newsregexp.placeholder = chromeI18n('regexp');
+    newsadd.innerHTML      = chromeI18n('add');
+
     chrome.storage.local.get(null, function (items) {
-        parseSettings(items['settings']);
-        document.getElementById(settings['homeview']).classList.add('active');
-        document.getElementById(settings['homeview'] + 'content').hidden = false;
+        parseSettings(items.settings);
+        document.getElementById(settings.homeview).classList.add('active');
+        document.getElementById(settings.homeview + 'content').hidden = false;
 
         date         = moment().startOf('day');
         let year     = date.year();
@@ -89,23 +116,9 @@ window.addEventListener('load', function () {
         Serie.regExpDate = new RegExp('<h4>Season (\\d{1,}), Episode (\\d{1,}): <a href="[^"]*">([^<]*)</a></h4><b>(\\d{1,2} [A-S][a-z]+ ' + (year + 1) + '|\\d{1,2} (' + months.splice(month + 1, 12).join('|') + ') ' + year + '|(' + days.splice(date.date() - 1, 31).join('|') + ') ' + months[month] + ' ' + year + ')</b>');
         moment.locale(window.navigator.language);
 
-        parseArrays(items['arrays']);
+        parseArrays(items.arrays);
         checkAll(arrays);
     });
-
-    restore.value              = chromeI18n('restore');
-    backup.value               = chromeI18n('backup');
-
-    newsname.placeholder       = chromeI18n('name');
-    newslink.placeholder       = chromeI18n('link');
-    newsregexp.placeholder     = chromeI18n('regexp');
-    newsvalid.value            = chromeI18n('add');
-
-    newsnameedit.placeholder   = chromeI18n('name');
-    newslinkedit.placeholder   = chromeI18n('link');
-    newsregexpedit.placeholder = chromeI18n('regexp');
-    newscanceledit.value       = chromeI18n('cancel');
-    newsvalidedit.value        = chromeI18n('ok');
 }, false);
 
 function checkAll() {
@@ -138,293 +151,127 @@ function checkAll() {
 }
 
 var dropdownNews = [
-    { 'title': 'Chrome Web Store', 'link': 'https://chrome.google.com/webstore/detail/*', 'regexp': 'itemprop="version" content="([^"]*)' },
-    { 'title': 'Facebook', 'link': 'https://www.facebook.com*', 'regexp': 'id="requestsCountValue">([^<]*)</span> <i class="accessible_elem">([^<]*)<(/).*id="mercurymessagesCountValue">([^<]*)</span> <i class="accessible_elem">([^<]*)<(/).*id="notificationsCountValue">([^<]*)</span> <i class="accessible_elem">([^<]*)' },
-    { 'title': 'Google Play Store Apps', 'link': 'https://play.google.com/store/apps/details?id=*', 'regexp': 'itemprop="softwareVersion"> v(\\S*)' },
-    { 'title': 'Outlook', 'link': 'https://*.mail.live.com*', 'regexp': '<span\\s+class="count">\\s*([^<]*)(?:<[^>]*>[^<]*){17}<span\\s+class="count">\\s*([^<]*)' },
-    { 'title': 'RuTracker', 'link': 'http://rutracker.org/forum/tracker.php?nm=*', 'regexp': 'data-topic_id=.* href="([^"]*)' },
-    { 'title': 'YouTube', 'link': 'https://www.youtube.com/*/*/videos', 'regexp': 'class="yt-lockup-title "><a [^>]*>([^<]*)' }
+    { title: 'Chrome Web Store', link: 'https://chrome.google.com/webstore/detail/*', regexp: 'itemprop="version" content="([^"]*)' },
+    { title: 'Facebook', link: 'https://www.facebook.com*', regexp: 'id="requestsCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="mercurymessagesCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="notificationsCountValue">([^<]*)</span> <i [^>]*>([^<]*)' },
+    { title: 'Google Play Store Apps', link: 'https://play.google.com/store/apps/details?id=*', regexp: 'itemprop="softwareVersion"> v(\\S*)' },
+    { title: 'Outlook', link: 'https://*.mail.live.com*', regexp: '<span\\s+class="count">\\s*([^<]*)(?:<[^>]*>[^<]*){17}<span\\s+class="count">\\s*([^<]*)' },
+    { title: 'RuTracker', link: 'http://rutracker.org/forum/tracker.php?nm=*', regexp: 'data-topic_id=.* href="([^"]*)' },
+    { title: 'YouTube', link: 'https://www.youtube.com/*/*/videos', regexp: 'class="yt-lockup-title "><a [^>]*>([^<]*)' }
 ];
 
-function linkToRegExp(link) {
-    return new RegExp('^' + link.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&').replace(/^https?:\/\/(www\\\.)?/, 'https?://(www\\.)?').replace(/\\\*/g, '.*'));
-}
-
-function addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdropdown) {
-    function highlightDropdowns() {
-        let link   = newslink.value.trim();
-        let regexp = newsregexp.value.trim();
-        let i, length;
-        for (i = 0, length = dropdownNews.length; i != length; i++) {
-            if ((regexp != '' || link != '') && (regexp == '' || dropdownNews[i]['regexp'] == regexp) && (link == '' || link.match(linkToRegExp(dropdownNews[i]['link'])))) {
-                newsregexpdropdown.children[i].firstElementChild.classList.add('greenlike');
-                break;
-            }
-            newsregexpdropdown.children[i].firstElementChild.classList.remove('greenlike');
-        }
-        if (i != length) {
-            newsregexphelp.classList.add('highlight');
-            for (i++; i != length; i++)
-                newsregexpdropdown.children[i].firstElementChild.classList.remove('greenlike');
-        }
-        else newsregexphelp.classList.remove('highlight');
-    }
-
-    newslink.addEventListener('input', highlightDropdowns, false);
-    newsregexp.addEventListener('input', highlightDropdowns, false);
-    newsregexp.addEventListener('click', highlightDropdowns, false);
-
-    newsregexphelp.title = chromeI18n('help');
-    newsregexphelp.addEventListener('click', function () {
-        newsregexpdropdown.classList.add('visible');
-    }, false);
-
+function addEventsToDropdowns(newsregexpdropdown) {
     for (let i = 0, length = dropdownNews.length; i != length; i++) {
-        let li       = document.createElement('li');
-        li.innerHTML = '<a name="' + i + '">' + dropdownNews[i]['title'] + ' (' + dropdownNews[i]['link'] + ')</a>';
-        li.firstElementChild.addEventListener('click', function (e) {
-            newsregexp.value = dropdownNews[parseInt(e.target.name)]['regexp'];
-            newsregexpdropdown.classList.remove('visible');
-        }, false);
-        newsregexpdropdown.appendChild(li)
+        let option       = document.createElement('option');
+        option.value     = dropdownNews[i].regexp;
+        option.innerHTML = dropdownNews[i].title + ' (' + dropdownNews[i].link + ')';
+        newsregexpdropdown.appendChild(option);
     }
 }
 
-addEventsToDropdowns(newslink, newsregexphelp, newsregexp, newsregexpdropdown);
-addEventsToDropdowns(newslinkedit, newsregexphelpedit, newsregexpedit, newsregexpdropdownedit);
-
-document.addEventListener('click', function (e) {
-    let potentialNewsRegExp = e.target.parentElement;
-    if (potentialNewsRegExp == null || potentialNewsRegExp.lastElementChild == null || (potentialNewsRegExp.lastElementChild != newsregexpdropdown && potentialNewsRegExp.lastElementChild != newsregexpdropdownedit)) {
-        newsregexpdropdown.classList.remove('visible');
-        newsregexpdropdownedit.classList.remove('visible');
-    }
-}, false);
+addEventsToDropdowns(newsregexpdropdown);
 
 function removeError(e) {
-    if (e.target.classList.contains('error')) {
-        e.target.classList.remove('error');
-        document.getElementById(e.target.id + 'span').innerHTML = '';
-    }
+    e.target.className = '';
 }
 
-function addEventsToInputs(typeValid) {
-    for (let i = 0, inputs = document.body.getElementsByClassName('checkout-input'), length = inputs.length; i != length; i++) {
-        inputs[i].addEventListener('keydown', removeError, false);
-        inputs[i].addEventListener('input', removeError, false);
-        inputs[i].addEventListener('click', removeError, false);
-
-        inputs[i].addEventListener('keypress', function (e) {
-            if (e.keyCode == 13)
-                typeValid.click();
-        }, false);
-    }
+function addEventsToInput(input) {
+    input.addEventListener('keydown', removeError, false);
+    input.addEventListener('input', removeError, false);
+    input.addEventListener('click', removeError, false);
 }
 
-addEventsToInputs(newsvalid);
-addEventsToInputs(newsvalidedit);
+addEventsToInput(newslink);
+addEventsToInput(newsregexp);
 
-function addSearchValid(type, typeName, typeSearch, typeResults, typeButtons, typeValid, typeCancel) {
-    typeName.placeholder = chromeI18n('name');
-    typeSearch.value     = chromeI18n('search');
-    typeValid.value      = chromeI18n('add');
-    typeCancel.value     = chromeI18n('cancel');
+function addSearch(type, classType, typeName, typeSelect, typeAdd) {
+    typeName.placeholder                   = chromeI18n('name');
+    typeSelect.firstElementChild.innerHTML = chromeI18n('noresults');
+    typeAdd.innerHTML                      = chromeI18n('add');
 
-    addEventsToInputs(typeSearch);
+    addEventsToInput(typeName);
 
-    typeValid.addEventListener('click', function () {
-        let array = arrays[type], checked = typeResults.getElementsByTagName('input');
-        for (let i = 0, length = checked.length; i != length; i++) {
-            if (checked[i].checked && objectInArray(checked[i].value, array) == -1)
-                getLinkAll(type, array[array.push(checked[i].value) - 1]);
+    typeAdd.addEventListener('click', function () {
+        typeName.click();
+        let value = typeSelect.value;
+        if (value == '')
+            typeName.classList.add('invalid');
+        else {
+            let arrayType = arrays[type];
+            let toCheck   = new classType(arrayType[arrayType.push(value) - 1]);
+            writeArrays();
+            toCheck.check();
+            typeName.value       = '';
+            typeSelect.innerHTML = '<option value="" selected disabled>' + chromeI18n('noresults') + '</option>';
         }
-        writeArrays();
-        typeName.value     = '';
-        typeResults.hidden = true;
-        typeButtons.classList.add('hidden');
-    }, false);
-
-    typeCancel.addEventListener('click', function () {
-        typeName.value     = '';
-        typeResults.hidden = true;
-        typeButtons.classList.add('hidden');
     }, false);
 }
 
-addSearchValid('series', seriesname, seriessearch, seriesresults, seriesbuttons, seriesvalid, seriescancel);
-addSearchValid('movies', moviesname, moviessearch, moviesresults, moviesbuttons, moviesvalid, moviescancel);
-addSearchValid('blurays', bluraysname, blurayssearch, bluraysresults, bluraysbuttons,bluraysvalid, blurayscancel);
+addSearch('series', Serie, seriesname, seriesselect, seriesadd);
+addSearch('movies', Movie, moviesname, moviesselect, moviesadd);
+addSearch('blurays', Bluray, bluraysname, bluraysselect, bluraysadd);
 
-function showError(string, element, elementspan) {
-    element.classList.add('error');
-    elementspan.innerHTML = string;
-}
-
-function getSearch(type, typeName, typeNameSpan, typeResults, typeButtons, link, toDoSuccess, toDoError) {
+function getSearch(type, typeName, typeSelect, link, onDone) {
     typeName.click();
-    let string = typeName.value.trim();
-    if (string == '') {
-        showError(chromeI18n('empty'), typeName, typeNameSpan);
-        return;
-    }
-    typeResults.hidden = true;
-    typeButtons.classList.add('hidden');
+    typeSelect.click();
+    typeSelect.innerHTML = '<option value="" selected disabled>' + chromeI18n('noresults') + '</option>';
+    let string           = typeName.value.trim();
+    if (string != '') {
+        try {
+            files[type].onreadystatechange = null;
+            files[type].abort();
+        }
+        catch (err) {}
 
-    try {
-        files[type].onreadystatechange = null;
-        files[type].abort();
-    }
-    catch (err) {}
+        typeName.classList.add('loading');
+        files[type] = new XMLHttpRequest();
 
-    typeName.classList.add('loading');
-    files[type] = new XMLHttpRequest();
+        if (type == 'blurays') {
+            files[type].open('POST', link, true);
+            files[type].setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        }
+        else {
+            files[type].open('GET', link + encodeURIComponent(string), true);
+            files[type].setRequestHeader('Pragma', 'no-cache');
+            files[type].setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
+        }
 
-    if (type == 'blurays') {
-        files[type].open('POST', link, true);
-        files[type].setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    }
-    else {
-        files[type].open('GET', link + encodeURIComponent(string), true);
-        files[type].setRequestHeader('Pragma', 'no-cache');
-        files[type].setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
-    }
-
-    files[type].onreadystatechange = function () {
-        if (files[type].readyState == XMLHttpRequest.DONE) {
-            typeName.classList.remove('loading');
-            if (files[type].status == 200) {
-                let output            = toDoSuccess(files[type].responseText, arrays[type]);
-                typeResults.innerHTML = output;
-                if (output != '') {
-                    typeResults.hidden    = false;
-                    typeResults.scrollTop = 0;
-                    typeButtons.classList.remove('hidden');
+        files[type].onreadystatechange = function () {
+            if (files[type].readyState == XMLHttpRequest.DONE) {
+                typeName.classList.remove('loading');
+                if (files[type].status != 200)
+                    typeName.classList.add('invalid');
+                else {
+                    typeSelect.innerHTML = onDone(files[type].responseText);
+                    if (typeSelect.innerHTML == '') {
+                        typeSelect.innerHTML = '<option value="" selected disabled>' + chromeI18n('noresults') + '</option>';
+                        typeName.classList.add('invalid');
+                    }
                 }
-                else showError(chromeI18n('noresults'), typeName, typeNameSpan);
             }
-            else showError(chromeI18n('unreachable'), typeName, typeNameSpan);
-        }
-    };
-    if (type == 'blurays')
-        files[type].send('userid=-1&country=all&section=bluraymovies&keyword='+ encodeURIComponent(string));
-    else files[type].send();
-}
-
-seriessearch.addEventListener('click', function () {
-    getSearch('series', seriesname, seriesnamespan, seriesresults, seriesbuttons,
-        'http://www.imdb.com/find?s=tt&q=',
-        function (response, array) {
-            let regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
-            while ((tmp = regExp.exec(response)) != null)
-                if (tmp[3].match(/Series\)/))
-                    output += '<label><input type="checkbox" class="tasks-list-cb" value="' + tmp[1] + (objectInArray(tmp[1], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + imdb + tmp[1] + '" target="_blank">' + tmp[2] + tmp[3] + '</a></br>';
-            return output;
-        }
-    );
-}, false);
-
-moviessearch.addEventListener('click', function () {
-    getSearch('movies', moviesname, moviesnamespan, moviesresults, moviesbuttons,
-        'http://www.imdb.com/find?s=tt&q=',
-        function (response, array) {
-            let regExp = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g, tmp, output = '';
-            while ((tmp = regExp.exec(response)) != null)
-                if (!tmp[3].match(/Series\)/) && !tmp[3].match(/\(Video Game\)/) && !tmp[3].match(/\(Video\)/) && !tmp[3].match(/\(TV Episode\)/))
-                    output += '<label><input type="checkbox" class="tasks-list-cb" value="' + tmp[1] + (objectInArray(tmp[1], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + imdb + tmp[1] + '" target="_blank">' + tmp[2] + tmp[3] + '</a></br>';
-            return output;
-        }
-    );
-}, false);
-
-blurayssearch.addEventListener('click', function () {
-    getSearch('blurays', bluraysname, bluraysnamespan, bluraysresults, bluraysbuttons,
-        'http://www.blu-ray.com/search/quicksearch.php',
-        function (response, array) {
-            let tmp = response.match(/var urls = new Array\(([^\)]*)/), output = '';
-            if (tmp == null)
-                return output;
-            let URLs   = tmp[1].replace(/'|http:\/\/www\.blu-ray\.com\/movies\//g, '').split(', ');
-            let regExp = /<img src="([^"]*)" [^>]*>&nbsp;([^\n<]*)/g;
-            for (let i = 0; (tmp = regExp.exec(response)) != null; i++)
-                output += '<label><input type="checkbox" class="tasks-list-cb" value="' + URLs[i] + (objectInArray(URLs[i], array) == -1 ? '"><span class="tasks-list-mark"></span></label><a href="' : '" disabled><span class="tasks-list-mark"></span></label><a href="') + bluray + URLs[i] + '" target="_blank">' + tmp[2] + '</a> <img src="' + tmp[1] + '"></br>';
-            return output;
-        }
-    );
-}, false);
-
-function removeElement(typeDom, li, type, value, fade) {
-    typeDom.removeChild(li);
-    deleteDynamic[type](type, value);
-    fade.click();
-}
-
-function parseNews(current, save, newsname, newsnamespan, newslink, newslinkspan, newsregexp, newsregexpspan, typeDom, li, type, value, newsfade) {
-    newsname.click();
-    newslink.click();
-    newsregexp.click();
-    let name         = newsname.value.trim(), link = newslink.value.trim(), regexp = newsregexp.value.trim();
-    let errorOccured = false;
-    if (link == '') {
-        showError(chromeI18n('empty'), newslink, newslinkspan);
-        errorOccured = true;
+        };
+        if (type == 'blurays')
+            files[type].send('userid=-1&country=all&section=bluraymovies&keyword='+ encodeURIComponent(string));
+        else files[type].send();
     }
-    let aN = arrays['news'];
-    if (save != link && propertyInArray(link, 'link', aN) != -1) {
-        showError(chromeI18n('alreadyexists'), newslink, newslinkspan);
-        errorOccured = true;
-    }
-    if (errorOccured)
-        return;
-    if (typeDom)
-        removeElement(typeDom, li, type, value, newsfade);
-    else {
-        newsname.value   = '';
-        newslink.value   = '';
-        newsregexp.value = '';
-        newsregexp.click();
-    }
-    getLinkAll('news', aN[aN.push({ 'name': name, 'link': link, 'regexp': regexp, 'current': current }) - 1]);
-    writeArrays();
 }
 
-newsvalid.addEventListener('click', function () {
-    parseNews('', '', newsname, newsnamespan, newslink, newslinkspan, newsregexp, newsregexpspan);
+seriesname.addEventListener('keyup', Serie.parse, false);
+seriesname.addEventListener('search', Serie.parse, false);
+moviesname.addEventListener('keyup', Movie.parse, false);
+moviesname.addEventListener('search', Movie.parse, false);
+bluraysname.addEventListener('keyup', Bluray.parse, false);
+bluraysname.addEventListener('search', Bluray.parse, false);
+
+newsadd.addEventListener('click', function () {
+    New.parseNews('', '', newslink, newsregexp);
 }, false);
-
-function newsFadeClick() {
-    newslight.classList.remove('visible');
-    newsfade.classList.remove('visible');
-}
-
-newsfade.addEventListener('click', newsFadeClick, false);
-newscanceledit.addEventListener('click', newsFadeClick, false);
-
-function escapeHTML(result) {
-    return result.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/:\/\/([^@]*)@/, '://***@');
-}
-
-function escapeAttribute(result) {
-    return escapeHTML(result).replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
-}
-
-function propertyInArray(value, property, array) {
-    let i, length;
-    for (i = 0, length = array.length; i != length && array[i][property] != value; i++) ;
-    return i == length ? -1 : i;
-}
-
-function objectInArray(value, array) {
-    let i, length;
-    for (i = 0, length = array.length; i != length && array[i] != value; i++) ;
-    return i == length ? -1 : i;
-}
 
 restoreh.addEventListener('change', function (event) {
     let file    = new FileReader();
     file.onload = function (e) {
         event.target.value = '';
         try {
-            parseArrays(JSON.parse(e.target.result)['arrays']);
+            parseArrays(JSON.parse(e.target.result).arrays);
             checkAll(arrays);
         }
         catch (err) {
@@ -447,7 +294,7 @@ restore.addEventListener('click', function () {
 backup.addEventListener('click', function () {
     let a      = document.createElement('a');
     a.download = 'Update Checker.json';
-    a.href     = window.URL.createObjectURL(new Blob([JSON.stringify({ 'arrays': arrays }, null, 4)], { 'type': 'text/plain;charset=UTF-8' }));
+    a.href     = window.URL.createObjectURL(new Blob([JSON.stringify({ arrays: arrays }, null, 4)], { type: 'text/plain;charset=UTF-8' }));
     a.click();
     window.URL.revokeObjectURL(a.href);
 }, false);

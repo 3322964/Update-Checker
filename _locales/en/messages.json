@@ -96,13 +96,7 @@
         "message": "Error"
     },
     "noresults": {
-        "message": "No results found"
-    },
-    "alreadyexists": {
-        "message": "This already exists"
-    },
-    "empty": {
-        "message": "This field must be filled"
+        "message": "No results"
     },
     "delete": {
         "message": "Delete"
