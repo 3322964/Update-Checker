@@ -1,5 +1,5 @@
 # Update-Checker
-Update Checker monitors: TV series, movies & Blu-ray release dates; RSS feeds new items; & changes in any website with a RegExp.
+Update Checker checks for TV series, movies & Blu-ray release dates, and changes in any webpage (RSS and RegExp).
 
 How to use: follow this [tutorial](https://developer.chrome.com/extensions/getstarted#unpacked).
 
