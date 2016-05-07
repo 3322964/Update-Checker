@@ -151,7 +151,7 @@ window.addEventListener('load', function () {
     moment.locale(window.navigator.language);
 
     chrome.storage.local.get(null, function (items) {
-        let settings = items.settings == null ? 'viewseries' : items.settings;
+        let settings = (items.settings == null || typeof items.settings != 'string') ? 'viewseries' : items.settings;
         document.getElementById(settings).classList.add('active');
         document.getElementById(settings + 'content').hidden = false;
         parseArrays(items.arrays);
