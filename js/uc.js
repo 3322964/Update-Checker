@@ -73,7 +73,7 @@ function checkArrays() {
     let arrayType, classType, i, length;
     for (let type in arrays) {
         arrayType = arrays[type];
-        switch(type) {
+        switch (type) {
             case 'series': classType = Serie; break;
             case 'movies': classType = Movie; break;
             case 'blurays': classType = Bluray; break;

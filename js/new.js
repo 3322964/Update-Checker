@@ -65,7 +65,6 @@ class New {
                         this.sortRed();
                     else {
                         this.setName(rssParser.getName());
-                        if (this.edited)
                         this.tr.domName.firstElementChild.href = escapeAttribute(rssParser.getLink());
                         let newItemCount                       = rssParser.getNewItemCount();
                         let result                             = chrome.i18n.getMessage('newitems', [newItemCount]);
