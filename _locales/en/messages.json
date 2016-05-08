@@ -1,6 +1,6 @@
 {
     "description": {
-        "message": "Update Checker checks for TV series, movies & Blu-ray release dates, and changes in any webpage (RSS and RegExp)."
+        "message": "Update Checker checks TV series, movies & Blu-ray release dates, and changes in any webpage (RSS and RegExp)."
     },
     "viewseries": {
         "message": "TV series"
