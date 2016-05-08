@@ -21,8 +21,8 @@ class New {
             let td1       = document.createElement('td');
             let td2       = document.createElement('td');
             let td        = document.createElement('td');
-            td1.innerHTML = '<input type="url" placeholder="' + chromeI18n('link') + '" required value="' + this.link + '"">';
-            td2.innerHTML = '<input type="text" placeholder="' + chromeI18n('regexp') + '" list="news' + this.link + '" value="' + this.regexp + '""><datalist id="news' + this.link + '"></datalist>';
+            td1.innerHTML = '<input type="url" placeholder="' + chromeI18n('link') + '" required value="' + escapeAttribute(this.link) + '"">';
+            td2.innerHTML = '<input type="text" placeholder="' + chromeI18n('regexp') + '" list="news' + escapeAttribute(this.link) + '" value="' + escapeAttribute(this.regexp) + '"><datalist id="news' + escapeAttribute(this.link) + '"></datalist>';
             td.innerHTML  = '<a>' + chromeI18n('confirm') + '</a> &middot; <a>' + chromeI18n('cancel') + '</a>';
             addEventsToDropdowns(td2.lastElementChild);
             addEventsToInput(td1.firstElementChild);
@@ -117,7 +117,7 @@ class New {
         this.body.insertBefore(this.tr, trs[i]);
     }
     sortCurrent(result, current) {
-        this.tr.domResult.innerHTML = result;
+        this.tr.domResult.innerHTML = escapeHTML(result);
         this.tr.domResult.className = 'green';
         this.tr.domName.firstElementChild.addEventListener('click', () => {
             this.save(current);
@@ -139,7 +139,7 @@ class New {
         this.body.insertBefore(this.tr, trs[i]);
     }
     sortNoCurrent(result) {
-        this.tr.domResult.innerHTML = result;
+        this.tr.domResult.innerHTML = escapeHTML(result);
         this.tr.domResult.className = '';
         let trs                     = this.body.children;
         let i                       = 0;
