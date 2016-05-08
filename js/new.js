@@ -193,4 +193,4 @@ class New {
     }
 }
 
-New.regExpName = /<title>([^<]*)/;
+New.regExpName = /<title(?: [^>]*)?>([^<]*)/;
