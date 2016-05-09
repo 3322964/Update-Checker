@@ -199,14 +199,13 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
 
     add.addEventListener('click', function () {
         name.click();
-        let value = results.value;
-        if (value == '')
+        if (results.hidden)
             name.classList.add('invalid');
         else {
             name.value     = '';
             results.hidden = true;
             let arrayType  = arrays[type];
-            let toCheck    = new classType(arrayType[arrayType.push(value) - 1]);
+            let toCheck    = new classType(arrayType[arrayType.push(results.value) - 1]);
             writeArrays();
             toCheck.check();
         }

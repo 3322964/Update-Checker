@@ -170,7 +170,7 @@ class New {
     static parse(current, previousLink, newslink, newsregexp, remove) {
         newslink.click();
         let link      = newslink.value.trim();
-        let regexp    = newsregexp.value.trim();
+        let regexp    = newsregexp.value;
         let arrayNews = arrays.news;
         if (!newslink.validity.valid || (previousLink != link && propertyInArray(link, 'link', arrayNews) != -1))
             newslink.className = 'invalid';
