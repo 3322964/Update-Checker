@@ -1,6 +1,5 @@
 class SMB {
     constructor(dateId, body, type, value, link, favicon) {
-        this.deleted   = false;
         this.body      = body;
         this.type      = type;
         this.value     = value;
@@ -86,19 +85,19 @@ class SMB {
         this.body.insertBefore(this.tr, trs[i]);
     }
     reCheck() {
+        this.request.abort();
         this.body.removeChild(this.tr);
         createDateAndRegExpDate();
         let toCheck = new this.constructor(this.value);
         toCheck.check();
-        this.deleted = true;
     }
     delete() {
+        this.request.abort();
         this.body.removeChild(this.tr);
         let i = objectInArray(this.value, arrays[this.type]);
         if (i != -1) {
             arrays[this.type].splice(i, 1);
             writeArrays();
         }
-        this.deleted = true;
     }
 }

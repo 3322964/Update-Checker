@@ -226,5 +226,5 @@ input, select {
         background: #fbd3c4;
         border-color: #e55d48 #e5725a #e5725a; }
     input.loading {
-        background: url(/img/ajax-loader.gif) no-repeat;
+        background: url(/img/ajax-loader.gif) no-repeat, white;
         background-position: right 25px center; }

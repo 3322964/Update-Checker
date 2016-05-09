@@ -1,6 +1,5 @@
 class New {
     constructor(value) {
-        this.deleted       = false;
         this.body          = newsbody;
         this.type          = 'news';
         this.value         = value;
@@ -55,40 +54,39 @@ class New {
         this.body.insertBefore(this.tr, this.body.lastElementChild);
     }
     check() {
-        getLink(this.link, (ok, response) => {
-            if (!this.deleted) {
-                if (!ok)
-                    this.sortOrange();
-                else if (this.regexp == '') {
-                    let rssParser = new RSSParser(response, this.current);
-                    if (rssParser.getErrorFlag())
-                        this.sortRed();
-                    else {
-                        this.setName(rssParser.getName());
-                        this.tr.domName.firstElementChild.href = escapeAttribute(rssParser.getLink());
-                        let newItemCount                       = rssParser.getNewItemCount();
-                        let result                             = chrome.i18n.getMessage('newitems', [newItemCount]);
-                        if (newItemCount == 0)
-                            this.sortNoCurrent(result);
-                        else this.sortCurrent(result, rssParser.getNewDate());
-                    }
-                }
+        this.request = new GetRequest(this.link);
+        this.request.send((ok, response) => {
+            if (!ok)
+                this.sortOrange();
+            else if (this.regexp == '') {
+                let rssParser = new RSSParser(response, this.current);
+                if (rssParser.getErrorFlag())
+                    this.sortRed();
                 else {
-                    let tmp = response.match(New.regExpName);
-                    if (tmp != null && tmp.length == 2)
-                        this.setName(tmp[1]);
-                    try {
-                        let result = response.match(new RegExp(this.regexp));
-                        if (result.length != 1)
-                            result.splice(0, 1);
-                        result = result.join(' ').trim();
-                        if (result == this.current)
-                            this.sortNoCurrent(result);
-                        else this.sortCurrent(result, result);
-                    }
-                    catch (err) {
-                        this.sortRed();
-                    }
+                    this.setName(rssParser.getName());
+                    this.tr.domName.firstElementChild.href = escapeAttribute(rssParser.getLink());
+                    let newItemCount                       = rssParser.getNewItemCount();
+                    let result                             = chrome.i18n.getMessage('newitems', [newItemCount]);
+                    if (newItemCount == 0)
+                        this.sortNoCurrent(result);
+                    else this.sortCurrent(result, rssParser.getNewDate());
+                }
+            }
+            else {
+                let tmp = response.match(New.regExpName);
+                if (tmp != null && tmp.length == 2)
+                    this.setName(tmp[1]);
+                try {
+                    let result = response.match(new RegExp(this.regexp));
+                    if (result.length != 1)
+                        result.splice(0, 1);
+                    result = result.join(' ').trim();
+                    if (result == this.current)
+                        this.sortNoCurrent(result);
+                    else this.sortCurrent(result, result);
+                }
+                catch (err) {
+                    this.sortRed();
                 }
             }
         });
@@ -160,19 +158,19 @@ class New {
         this.reCheck();
     }
     reCheck() {
+        this.request.abort();
         this.body.removeChild(this.tr);
         let toCheck = new New(this.value);
         toCheck.check();
-        this.deleted = true;
     }
     delete() {
+        this.request.abort();
         this.body.removeChild(this.tr);
         let i = propertyInArray(this.link, 'link', arrays[this.type]);
         if (i != -1) {
             arrays[this.type].splice(i, 1);
             writeArrays();
         }
-        this.deleted = true;
     }
     static parse(current, previousLink, newslink, newsregexp, remove) {
         newslink.click();

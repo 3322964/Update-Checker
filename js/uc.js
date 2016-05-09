@@ -86,18 +86,6 @@ function checkArrays() {
         toCheck[i].check();
 }
 
-function getLink(link, onDone) {
-    let file = new XMLHttpRequest();
-    file.open('GET', link, true);
-    file.setRequestHeader('Pragma', 'no-cache');
-    file.setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
-    file.onreadystatechange = function () {
-        if (file.readyState == XMLHttpRequest.DONE)
-            onDone(file.status == 200, file.responseText);
-    };
-    file.send();
-}
-
 window.addEventListener('load', function () {
     let headers = header.children;
     for (let i = 0, length = headers.length; i != length; i++) {
