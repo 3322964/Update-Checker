@@ -8,7 +8,7 @@ class New {
         this.current       = value.current;
         this.name          = this.link;
         this.tr            = document.createElement('tr');
-        this.tr.innerHTML  = '<td><img src="' + getFavicon + escape(this.link) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td><td></td><td><a>' + chromeI18n('recheck') + '</a> &middot; <a>' + chromeI18n('edit') + '</a> &middot; <a>' + chromeI18n('delete') + '</a></td>';
+        this.tr.innerHTML  = '<td><img src="' + getFavicon(this.link) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td><td></td><td><a>' + chromeI18n('recheck') + '</a> &middot; <a>' + chromeI18n('edit') + '</a> &middot; <a>' + chromeI18n('delete') + '</a></td>';
         this.tr.domName    = this.tr.children[1];
         this.tr.domResult  = this.tr.children[2];
         this.tr.domActions = this.tr.lastElementChild;
@@ -62,9 +62,11 @@ class New {
                     this.sortRed();
                 else {
                     this.setName(rssParser.getName());
-                    this.tr.domName.firstElementChild.href = escapeAttribute(rssParser.getLink());
-                    let newItemCount                       = rssParser.getNewItemCount();
-                    let result                             = chrome.i18n.getMessage('newitems', [newItemCount]);
+                    let link                                        = rssParser.getLink();
+                    this.tr.domName.firstElementChild.href          = escapeAttribute(link);
+                    this.tr.firstElementChild.firstElementChild.src = getFavicon(link);
+                    let newItemCount                                = rssParser.getNewItemCount();
+                    let result                                      = chrome.i18n.getMessage('newitems', [newItemCount]);
                     if (newItemCount == 0)
                         this.sortNoCurrent(result);
                     else this.sortCurrent(result, rssParser.getNewDate());

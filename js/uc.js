@@ -1,5 +1,4 @@
 const chromeI18n = chrome.i18n.getMessage;
-const getFavicon = 'http://www.google.com/s2/favicons?domain_url=';
 var arrays, date;
 
 for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
@@ -14,6 +13,10 @@ function escapeHTML(string) {
 
 function escapeAttribute(string) {
     return string.replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+}
+
+function getFavicon(link) {
+    return 'http://www.google.com/s2/favicons?domain_url=' + encodeURIComponent(link);
 }
 
 function propertyInArray(value, property, array) {

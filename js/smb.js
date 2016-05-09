@@ -6,7 +6,7 @@ class SMB {
         this.link      = link;
         this.name      = this.link;
         this.tr        = document.createElement('tr');
-        let string     = '<td><img src="' + getFavicon + favicon + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td>';
+        let string     = '<td><img src="' + getFavicon(favicon) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td>';
         for (let i = 1; i != dateId; i++)
             string += '<td></td>';
         this.tr.innerHTML  = string + '<td><a>' + chromeI18n('recheck') + '</a> &middot; <a>' + chromeI18n('delete') + '</a></td>';
@@ -80,7 +80,7 @@ class SMB {
         let i      = 0;
         let length = trs.length - 1;
         for ( ; i != length && trs[i].domDate.innerHTML != ''; i++) ;
-        for ( ; i != length && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
+        for ( ; i != length && trs[i].domDate.className == '' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
         this.body.insertBefore(this.tr, trs[i]);
     }
     reCheck() {
