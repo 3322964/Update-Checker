@@ -1,8 +1,8 @@
 class Request {
-    constructor(element, link, type) {
+    constructor(element, method, link) {
         this.element = element;
         this.file    = new XMLHttpRequest();
-        this.file.open(type, link, true);
+        this.file.open(method, link, true);
     };
     send(onDone, data) {
         this.element.classList.add('loading');
@@ -23,7 +23,7 @@ class Request {
 
 class GetRequest extends Request {
     constructor(element, link) {
-        super(element, link, 'GET');
+        super(element, 'GET', link);
         this.file.setRequestHeader('Pragma', 'no-cache');
         this.file.setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
     }
@@ -31,7 +31,7 @@ class GetRequest extends Request {
 
 class PostRequest extends Request {
     constructor(element, link) {
-        super(element, link, 'POST');
+        super(element, 'POST', link);
         this.file.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     }
 }
