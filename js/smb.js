@@ -7,18 +7,18 @@ class SMB {
         this.name      = this.link;
         this.tr        = document.createElement('tr');
         let string     = '<td><img src="' + getFavicon + favicon + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td>';
-        for (let i = 2; i != dateId; i++)
+        for (let i = 1; i != dateId; i++)
             string += '<td></td>';
-        this.tr.innerHTML  = string + '<td class="loading"></td><td><a>' + chromeI18n('recheck') + '</a> &middot; <a>' + chromeI18n('delete') + '</a></td>';
+        this.tr.innerHTML  = string + '<td><a>' + chromeI18n('recheck') + '</a> &middot; <a>' + chromeI18n('delete') + '</a></td>';
         this.tr.domName    = this.tr.children[1];
         this.tr.domDate    = this.tr.children[dateId];
         this.tr.domActions = this.tr.lastElementChild;
-        this.tr.domActions.firstElementChild.addEventListener('click', this.reCheck.bind(this), false);
+        this.tr.domActions.firstElementChild.addEventListener('click', () => this.reCheck(), false);
         this.tr.domActions.lastElementChild.addEventListener('click', () => {
             this.tr.removeChild(this.tr.domActions);
             let td       = document.createElement('td');
             td.innerHTML = '<a>' + chromeI18n('confirm') + '</a> &middot; <a>' + chromeI18n('cancel') + '</a>';
-            td.firstElementChild.addEventListener('click', this.delete.bind(this), false);
+            td.firstElementChild.addEventListener('click', () => this.delete(), false);
             td.lastElementChild.addEventListener('click', () => {
                 this.tr.removeChild(td);
                 this.tr.appendChild(this.tr.domActions);
@@ -49,7 +49,6 @@ class SMB {
     setName(name) {
         this.name                                   = escapeHTML(name);
         this.tr.domName.firstElementChild.innerHTML = this.name;
-        this.tr.domDate.className                   = '';
     }
     sortDate(name, result) {
         this.setName(name);

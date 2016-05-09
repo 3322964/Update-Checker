@@ -1,40 +1,37 @@
 class Request {
-    constructor() {
-        this.file = new XMLHttpRequest();
+    constructor(element, link, type) {
+        this.element = element;
+        this.file    = new XMLHttpRequest();
+        this.file.open(type, link, true);
     };
-    send(onDone) {
-        this.file.onreadystatechange = function () {
-            if (this.readyState == XMLHttpRequest.DONE)
-                onDone(this.status == 200, this.responseText);
+    send(onDone, data) {
+        this.element.classList.add('loading');
+        this.file.onreadystatechange = () => {
+            if (this.file.readyState == XMLHttpRequest.DONE) {
+                this.element.classList.remove('loading');
+                onDone(this.file.status == 200, this.file.responseText);
+            }
         };
+        this.file.send(data);
     }
     abort() {
         this.file.onreadystatechange = null;
         this.file.abort();
+        this.element.classList.remove('loading');
     }
 }
 
 class GetRequest extends Request {
-    constructor(link) {
-        super();
-        this.file.open('GET', link, true);
+    constructor(element, link) {
+        super(element, link, 'GET');
         this.file.setRequestHeader('Pragma', 'no-cache');
         this.file.setRequestHeader('Cache-Control', 'no-cache, must-revalidate');
-    }
-    send(onDone) {
-        super.send(onDone);
-        this.file.send();
     }
 }
 
 class PostRequest extends Request {
-    constructor(link) {
-        super();
-        this.file.open('POST', 'http://www.blu-ray.com/search/quicksearch.php', true);
+    constructor(element, link) {
+        super(element, link, 'POST');
         this.file.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    }
-    send(onDone, data) {
-        super.send(onDone);
-        this.file.send(data);
     }
 }

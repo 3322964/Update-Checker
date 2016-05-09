@@ -8,12 +8,12 @@ for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = ele
         window[tmp] = elements[i];
 }
 
-function escapeHTML(result) {
-    return result.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/:\/\/([^@]*)@/, '://***@');
+function escapeHTML(string) {
+    return string.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function escapeAttribute(result) {
-    return escapeHTML(result).replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+function escapeAttribute(string) {
+    return string.replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
 }
 
 function propertyInArray(value, property, array) {

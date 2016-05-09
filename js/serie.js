@@ -3,7 +3,7 @@ class Serie extends SMB {
         super(5, seriesbody, 'series', value, 'http://www.imdb.com/title/' + value + '/', 'http://www.imdb.com/');
     }
     check() {
-        this.request = new GetRequest(this.link + 'epcast');
+        this.request = new GetRequest(this.tr.domDate, this.link + 'epcast');
         this.request.send((ok, response) => {
             if (!ok)
                 this.sortOrange();
@@ -29,19 +29,13 @@ class Serie extends SMB {
         seriesname.click();
         seriesresults.hidden = true;
 
-        try {
+        if (Serie.request != null)
             Serie.request.abort();
-        }
-        catch (err) {}
 
         let value = seriesname.value.trim();
-        if (value == '')
-            seriesname.classList.remove('loading');
-        else {
-            seriesname.classList.add('loading');
-            Serie.request = new GetRequest('http://www.imdb.com/find?s=tt&q=' + encodeURIComponent(value));
+        if (value != '') {
+            Serie.request = new GetRequest(seriesname, 'http://www.imdb.com/find?s=tt&q=' + encodeURIComponent(value));
             Serie.request.send(function (ok, response) {
-                seriesname.classList.remove('loading');
                 if (!ok)
                     seriesname.classList.add('invalid');
                 else {

@@ -8,11 +8,11 @@ class New {
         this.current       = value.current;
         this.name          = this.link;
         this.tr            = document.createElement('tr');
-        this.tr.innerHTML  = '<td><img src="' + getFavicon + escape(this.link) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td><td class="loading"></td><td><a>' + chromeI18n('recheck') + '</a> &middot; <a>' + chromeI18n('edit') + '</a> &middot; <a>' + chromeI18n('delete') + '</a></td>';
+        this.tr.innerHTML  = '<td><img src="' + getFavicon + escape(this.link) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td><td></td><td><a>' + chromeI18n('recheck') + '</a> &middot; <a>' + chromeI18n('edit') + '</a> &middot; <a>' + chromeI18n('delete') + '</a></td>';
         this.tr.domName    = this.tr.children[1];
         this.tr.domResult  = this.tr.children[2];
         this.tr.domActions = this.tr.lastElementChild;
-        this.tr.domActions.firstElementChild.addEventListener('click', this.reCheck.bind(this), false);
+        this.tr.domActions.firstElementChild.addEventListener('click', () => this.reCheck(), false);
         this.tr.domActions.children[1].addEventListener('click', () => {
             this.tr.removeChild(this.tr.domName);
             this.tr.removeChild(this.tr.domResult);
@@ -20,14 +20,12 @@ class New {
             let td1       = document.createElement('td');
             let td2       = document.createElement('td');
             let td        = document.createElement('td');
-            td1.innerHTML = '<input type="url" placeholder="' + chromeI18n('link') + '" required value="' + escapeAttribute(this.link) + '"">';
+            td1.innerHTML = '<input type="url" placeholder="' + chromeI18n('link') + '" required value="' + escapeAttribute(this.link) + '">';
             td2.innerHTML = '<input type="text" placeholder="' + chromeI18n('regexp') + '" list="news' + escapeAttribute(this.link) + '" value="' + escapeAttribute(this.regexp) + '"><datalist id="news' + escapeAttribute(this.link) + '"></datalist>';
             td.innerHTML  = '<a>' + chromeI18n('confirm') + '</a> &middot; <a>' + chromeI18n('cancel') + '</a>';
             addEventsToDropdowns(td2.lastElementChild);
             addEventsToInput(td1.firstElementChild);
-            td.firstElementChild.addEventListener('click', () => {
-                New.parse(this.current, this.link, td1.firstElementChild, td2.firstElementChild, this.delete.bind(this));
-            }, false);
+            td.firstElementChild.addEventListener('click', () => New.parse(this.current, this.link, td1.firstElementChild, td2.firstElementChild, () => this.delete()), false);
             td.lastElementChild.addEventListener('click', () => {
                 this.tr.removeChild(td1);
                 this.tr.removeChild(td2);
@@ -44,7 +42,7 @@ class New {
             this.tr.removeChild(this.tr.domActions);
             let td       = document.createElement('td');
             td.innerHTML = '<a>' + chromeI18n('confirm') + '</a> &middot; <a>' + chromeI18n('cancel') + '</a>';
-            td.firstElementChild.addEventListener('click', this.delete.bind(this), false);
+            td.firstElementChild.addEventListener('click', () => this.delete(), false);
             td.lastElementChild.addEventListener('click', () => {
                 this.tr.removeChild(td);
                 this.tr.appendChild(this.tr.domActions);
@@ -54,7 +52,7 @@ class New {
         this.body.insertBefore(this.tr, this.body.lastElementChild);
     }
     check() {
-        this.request = new GetRequest(this.link);
+        this.request = new GetRequest(this.tr.domResult, this.link);
         this.request.send((ok, response) => {
             if (!ok)
                 this.sortOrange();
@@ -117,14 +115,10 @@ class New {
     sortCurrent(result, current) {
         this.tr.domResult.innerHTML = escapeHTML(result);
         this.tr.domResult.className = 'green';
-        this.tr.domName.firstElementChild.addEventListener('click', () => {
-            this.save(current);
-        }, false);
+        this.tr.domName.firstElementChild.addEventListener('click', () => this.save(current), false);
         let a       = document.createElement('a');
         a.innerHTML = chromeI18n('save');
-        a.addEventListener('click', () => {
-            this.save(current);
-        }, false);
+        a.addEventListener('click', () => this.save(current), false);
         this.tr.domActions.insertBefore(document.createTextNode(' · '), this.tr.domActions.firstElementChild);
         this.tr.domActions.insertBefore(a, this.tr.domActions.firstChild);
         let trs    = this.body.children;
@@ -138,7 +132,6 @@ class New {
     }
     sortNoCurrent(result) {
         this.tr.domResult.innerHTML = escapeHTML(result);
-        this.tr.domResult.className = '';
         let trs                     = this.body.children;
         let i                       = 0;
         let length                  = trs.length - 1;

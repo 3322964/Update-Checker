@@ -3,7 +3,7 @@ class Movie extends SMB {
         super(2, moviesbody, 'movies', value, 'http://www.imdb.com/title/' + value + '/', 'http://www.imdb.com/');
     }
     check() {
-        this.request = new GetRequest(this.link);
+        this.request = new GetRequest(this.tr.domDate, this.link);
         this.request.send((ok, response) => {
             if (!ok)
                 this.sortOrange();
@@ -24,19 +24,13 @@ class Movie extends SMB {
         moviesname.click();
         moviesresults.hidden = true;
 
-        try {
+        if (Movie.request != null)
             Movie.request.abort();
-        }
-        catch (err) {}
 
         let value = moviesname.value.trim();
-        if (value == '')
-            moviesname.classList.remove('loading');
-        else {
-            moviesname.classList.add('loading');
-            Movie.request = new GetRequest('http://www.imdb.com/find?s=tt&q=' + encodeURIComponent(value));
+        if (value != '') {
+            Movie.request = new GetRequest(moviesname, 'http://www.imdb.com/find?s=tt&q=' + encodeURIComponent(value));
             Movie.request.send(function (ok, response) {
-                moviesname.classList.remove('loading');
                 if (!ok)
                     moviesname.classList.add('invalid');
                 else {

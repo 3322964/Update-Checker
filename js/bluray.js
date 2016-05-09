@@ -3,7 +3,7 @@ class Bluray extends SMB {
         super(3, bluraysbody, 'blurays', value, 'http://www.blu-ray.com/movies/' + value, 'http://www.blu-ray.com/');
     }
     check() {
-        this.request = new GetRequest(this.link);
+        this.request = new GetRequest(this.tr.domDate, this.link);
         this.request.send((ok, response) => {
             if (!ok)
                 this.sortOrange();
@@ -26,19 +26,13 @@ class Bluray extends SMB {
         bluraysname.click();
         bluraysresults.hidden = true;
 
-        try {
+        if (Bluray.request != null)
             Bluray.request.abort();
-        }
-        catch (err) {}
 
         let value = bluraysname.value.trim();
-        if (value == '')
-            bluraysname.classList.remove('loading');
-        else {
-            bluraysname.classList.add('loading');
-            Bluray.request = new PostRequest('http://www.blu-ray.com/search/quicksearch.php');
+        if (value != '') {
+            Bluray.request = new PostRequest(bluraysname, 'http://www.blu-ray.com/search/quicksearch.php');
             Bluray.request.send(function (ok, response) {
-                bluraysname.classList.remove('loading');
                 if (!ok)
                     bluraysname.classList.add('invalid');
                 else {
