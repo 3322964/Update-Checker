@@ -22,7 +22,7 @@ class RSSParser {
                 let length  = this.items.snapshotLength;
                 let tmpDate = new Date(previousDate);
                 if (!moment(tmpDate).isValid())
-                    for (this.newItemCount = 0; this.newItemCount != length && xml.evaluate(rssDate, items.snapshotItem(this.newItemCount), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent != previousDate; this.newItemCount++) ;
+                    for (this.newItemCount = 0; this.newItemCount != length && xml.evaluate(rssDate, this.items.snapshotItem(this.newItemCount), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent != previousDate; this.newItemCount++) ;
                 else for (this.newItemCount = 0; this.newItemCount != length && moment(new Date(xml.evaluate(rssDate, this.items.snapshotItem(this.newItemCount), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent)).isAfter(tmpDate); this.newItemCount++) ;
             }
             if (this.newItemCount != 0)
