@@ -38,9 +38,6 @@
     "country": {
         "message": "Country"
     },
-    "viewbluraysheaderactions": {
-        "message": "Actions"
-    },
     "result": {
         "message": "Result"
     },
@@ -77,10 +74,10 @@
     "generalactions": {
         "message": "General actions"
     },
-    "opensaveall": {
+    "opensavenews": {
         "message": "Open & save new items"
     },
-    "saveall": {
+    "savenews": {
         "message": "Save new items"
     },
     "recheckall": {
