@@ -237,8 +237,7 @@ importdatah.addEventListener('change', function (event) {
     file.onload = function (e) {
         event.target.value = '';
         try {
-            let string = JSON.parse(e.target.result).arrays;
-            parseArrays(string);
+            parseArrays(JSON.parse(e.target.result).arrays);
             window.location.reload();
         }
         catch (err) {}
