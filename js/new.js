@@ -126,7 +126,6 @@ class New {
         let trs    = this.body.children;
         let i      = 0;
         let length = trs.length - 1;
-        let value;
         for ( ; i != length && trs[i].domResult.className == 'red'; i++) ;
         for ( ; i != length && trs[i].domResult.className == 'orange'; i++) ;
         for ( ; i != length && trs[i].domResult.className == 'green' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
