@@ -140,6 +140,16 @@ window.addEventListener('load', function () {
             toClick[i].click();
     }, false);
     newsrecheckall.addEventListener('click', function () {
+        let toClick = [];
+        let trs     = body.children;
+        let i, length, elements, j, elementsLength;
+        for (i = 0, length = trs.length - 1; i != length; i++) {
+            if (trs[i].domResult.className == 'green')
+                toClick.push(trs[i].domActions.children[1]);
+            else toClick.push(trs[i].domActions.firstElementChild);
+        }
+        for (i = 0, length = toClick.length; i != length; i++)
+            toClick[i].click();
         doAll(newsbody, chromeI18n('recheck'));
     }, false);
     addEventsToInput(newslink);
@@ -198,7 +208,13 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
     add.innerHTML                = chromeI18n('add');
 
     recheckall.addEventListener('click', function () {
-        doAll(body, chromeI18n('recheck'));
+        let toClick = [];
+        let trs     = body.children;
+        let i, length;
+        for (i = 0, length = trs.length - 1; i != length; i++)
+            toClick.push(trs[i].domActions.firstElementChild);
+        for (i = 0, length = toClick.length; i != length; i++)
+            toClick[i].click();
     }, false);
 
     addEventsToInput(name);
@@ -224,20 +240,6 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
 newsadd.addEventListener('click', function () {
     New.parse('', '', newslink, newsregexp);
 }, false);
-
-function doAll(body, text) {
-    let toClick = [];
-    let trs     = body.children;
-    let i, length, elements, j, elementsLength;
-    for (i = 0, length = trs.length - 1; i != length; i++) {
-        if (trs[i].domActions.firstElementChild.innerHTML == text)
-            toClick.push(trs[i].domActions.firstElementChild);
-        else if (trs[i].domActions.children[1].innerHTML == text)
-            toClick.push(trs[i].domActions.children[1]);
-    }
-    for (i = 0, length = toClick.length; i != length; i++)
-        toClick[i].click();
-}
 
 importdatah.addEventListener('change', function (event) {
     let file    = new FileReader();
