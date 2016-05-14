@@ -129,7 +129,15 @@ window.addEventListener('load', function () {
             toClick[i].click();
     }, false);
     newssavenews.addEventListener('click', function () {
-        doAll(newsbody, chromeI18n('save'));
+        let toClick = [];
+        let trs     = newsbody.children;
+        let i, length;
+        for (i = 0, length = trs.length - 1; i != length; i++) {
+            if (trs[i].domResult.className == 'green')
+                toClick.push(trs[i].domActions.firstElementChild);
+        }
+        for (i = 0, length = toClick.length; i != length; i++)
+            toClick[i].click();
     }, false);
     newsrecheckall.addEventListener('click', function () {
         doAll(newsbody, chromeI18n('recheck'));
@@ -222,11 +230,10 @@ function doAll(body, text) {
     let trs     = body.children;
     let i, length, elements, j, elementsLength;
     for (i = 0, length = trs.length - 1; i != length; i++) {
-        elements = trs[i].domActions.children;
-        for (j = 0, elementsLength = elements.length; j != elementsLength; j++) {
-            if (elements[j].innerHTML == text)
-                toClick.push(elements[j]);
-        }
+        if (trs[i].domActions.firstElementChild.innerHTML == text)
+            toClick.push(trs[i].domActions.firstElementChild);
+        else if (trs[i].domActions.children[1].innerHTML == text)
+            toClick.push(trs[i].domActions.children[1]);
     }
     for (i = 0, length = toClick.length; i != length; i++)
         toClick[i].click();

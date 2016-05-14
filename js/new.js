@@ -49,7 +49,7 @@ class New {
             }, false);
             this.tr.appendChild(td);
         }, false);
-        this.body.insertBefore(this.tr, this.body.lastElementChild);
+        this.body.insertBefore(this.tr, this.body.firstElementChild);
     }
     check() {
         this.request = new GetRequest(this.tr.domResult, this.link);
@@ -99,20 +99,22 @@ class New {
         this.tr.domResult.className = 'red';
         this.tr.domResult.innerHTML = chromeI18n('error');
         let trs                     = this.body.children;
-        let i                       = 0;
-        let length                  = trs.length - 1;
-        for ( ; i != length && trs[i].domResult.className == 'red' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
-        this.body.insertBefore(this.tr, trs[i]);
+        let i                       = trs.length - 2;
+        for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == 'green'; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == 'orange'; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == 'red' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortOrange() {
         this.tr.domResult.className = 'orange';
         this.tr.domResult.innerHTML = chromeI18n('unreachable');
         let trs                     = this.body.children;
-        let i                       = 0;
-        let length                  = trs.length - 1;
-        for ( ; i != length && trs[i].domResult.className == 'red'; i++) ;
-        for ( ; i != length && trs[i].domResult.className == 'orange' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
-        this.body.insertBefore(this.tr, trs[i]);
+        let i                       = trs.length - 2;
+        for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == 'green'; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == 'orange' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortCurrent(result, current) {
         this.tr.domResult.innerHTML = escapeHTML(result);
@@ -123,24 +125,18 @@ class New {
         a.addEventListener('click', () => this.save(current), false);
         this.tr.domActions.insertBefore(document.createTextNode(' · '), this.tr.domActions.firstElementChild);
         this.tr.domActions.insertBefore(a, this.tr.domActions.firstChild);
-        let trs    = this.body.children;
-        let i      = 0;
-        let length = trs.length - 1;
-        for ( ; i != length && trs[i].domResult.className == 'red'; i++) ;
-        for ( ; i != length && trs[i].domResult.className == 'orange'; i++) ;
-        for ( ; i != length && trs[i].domResult.className == 'green' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
-        this.body.insertBefore(this.tr, trs[i]);
+        let trs = this.body.children;
+        let i   = trs.length - 2;
+        for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == 'green' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortNoCurrent(result) {
         this.tr.domResult.innerHTML = escapeHTML(result);
         let trs                     = this.body.children;
-        let i                       = 0;
-        let length                  = trs.length - 1;
-        for ( ; i != length && trs[i].domResult.className == 'red'; i++) ;
-        for ( ; i != length && trs[i].domResult.className == 'orange'; i++) ;
-        for ( ; i != length && trs[i].domResult.className == 'green'; i++) ;
-        for ( ; i != length && trs[i].domResult.className == '' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) < 0; i++) ;
-        this.body.insertBefore(this.tr, trs[i]);
+        let i                       = trs.length - 2;
+        for ( ; i != -1 && trs[i].domResult.className == '' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        this.body.insertBefore(this.tr, trs[i + 1]);
     }
     save(current) {
         this.value.current = current;
