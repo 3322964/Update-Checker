@@ -106,14 +106,15 @@ window.addEventListener('load', function () {
     viewnewsresult.innerHTML                    = chromeI18n('result');
     viewnewsactions.innerHTML                   = chromeI18n('actions');
 
-    addEventsToInputsSMB('series', Serie, seriesbody, viewseriesgeneralactions, seriesrecheckall, viewseriesname, viewseriesactions, seriesname, seriesresults, seriesadd);
-    addEventsToInputsSMB('movies', Movie, moviesbody, viewmoviesgeneralactions, moviesrecheckall, viewmoviesname, viewmoviesactions, moviesname, moviesresults, moviesadd);
-    addEventsToInputsSMB('blurays', Bluray, bluraysbody, viewbluraysgeneralactions, bluraysrecheckall, viewbluraysname, viewbluraysactions, bluraysname, bluraysresults, bluraysadd);
+    addEventsToInputsSMB('series', Serie, seriesbody, viewseriesgeneralactions, seriesrecheckall, seriesrecheckerrors, viewseriesname, viewseriesactions, seriesname, seriesresults, seriesadd);
+    addEventsToInputsSMB('movies', Movie, moviesbody, viewmoviesgeneralactions, moviesrecheckall, moviesrecheckerrors, viewmoviesname, viewmoviesactions, moviesname, moviesresults, moviesadd);
+    addEventsToInputsSMB('blurays', Bluray, bluraysbody, viewbluraysgeneralactions, bluraysrecheckall, bluraysrecheckerrors, viewbluraysname, viewbluraysactions, bluraysname, bluraysresults, bluraysadd);
 
     viewnewsgeneralactions.innerHTML = chromeI18n('generalactions');
     newsopensavenews.innerHTML       = chromeI18n('opensavenews');
     newssavenews.innerHTML           = chromeI18n('savenews');
     newsrecheckall.innerHTML         = chromeI18n('recheckall');
+    newsrecheckerrors.innerHTML      = chromeI18n('recheckerrors');
     newslink.placeholder             = chromeI18n('link');
     newsregexp.placeholder           = chromeI18n('regexp');
     newsadd.innerHTML                = chromeI18n('add');
@@ -141,8 +142,8 @@ window.addEventListener('load', function () {
     }, false);
     newsrecheckall.addEventListener('click', function () {
         let toClick = [];
-        let trs     = body.children;
-        let i, length, elements, j, elementsLength;
+        let trs     = newsbody.children;
+        let i, length;
         for (i = 0, length = trs.length - 1; i != length; i++) {
             if (trs[i].domResult.className == 'green')
                 toClick.push(trs[i].domActions.children[1]);
@@ -150,7 +151,9 @@ window.addEventListener('load', function () {
         }
         for (i = 0, length = toClick.length; i != length; i++)
             toClick[i].click();
-        doAll(newsbody, chromeI18n('recheck'));
+    }, false);
+    newsrecheckerrors.addEventListener('click', function () {
+        recheckErrors(newsbody, 'domResult');
     }, false);
     addEventsToInput(newslink);
     addEventsToDropdowns(newsregexpdropdown);
@@ -199,9 +202,10 @@ function addEventsToInput(input) {
     input.addEventListener('click', removeInvalid, false);
 }
 
-function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheckall, viewname, viewactions, name, results, add) {
+function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheckall, recheckerrors, viewname, viewactions, name, results, add) {
     viewgeneralactions.innerHTML = chromeI18n('generalactions');
     recheckall.innerHTML         = chromeI18n('recheckall');
+    recheckerrors.innerHTML      = chromeI18n('recheckerrors');
     viewname.innerHTML           = chromeI18n('name');
     viewactions.innerHTML        = chromeI18n('actions');
     name.placeholder             = chromeI18n('name');
@@ -215,6 +219,10 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
             toClick.push(trs[i].domActions.firstElementChild);
         for (i = 0, length = toClick.length; i != length; i++)
             toClick[i].click();
+    }, false);
+
+    recheckerrors.addEventListener('click', function() {
+        recheckErrors(body, 'domDate');
     }, false);
 
     addEventsToInput(name);
@@ -240,6 +248,18 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
 newsadd.addEventListener('click', function () {
     New.parse('', '', newslink, newsregexp);
 }, false);
+
+function recheckErrors(body, domString) {
+    let toClick = [];
+    let trs     = body.children;
+    let i, length;
+    for (i = 0, length = trs.length - 1; i != length; i++) {
+        if (trs[i][domString].className == 'red' || trs[i][domString].className == 'orange')
+            toClick.push(trs[i].domActions.firstElementChild);
+    }
+    for (i = 0, length = toClick.length; i != length; i++)
+        toClick[i].click();
+}
 
 importdatah.addEventListener('change', function (event) {
     let file    = new FileReader();

@@ -59,7 +59,7 @@ class New {
             else if (this.regexp == '') {
                 let rssParser = new RSSParser(response, this.current);
                 if (rssParser.getErrorFlag())
-                    this.sortRed();
+                    this.sortRed('rss');
                 else {
                     this.setName(rssParser.getName());
                     let link                                        = rssParser.getLink();
@@ -86,7 +86,7 @@ class New {
                     else this.sortCurrent(result, result);
                 }
                 catch (err) {
-                    this.sortRed();
+                    this.sortRed('regexp');
                 }
             }
         });
@@ -95,9 +95,9 @@ class New {
         this.name                                   = escapeHTML(name);
         this.tr.domName.firstElementChild.innerHTML = this.name;
     }
-    sortRed() {
+    sortRed(string) {
         this.tr.domResult.className = 'red';
-        this.tr.domResult.innerHTML = chromeI18n('error');
+        this.tr.domResult.innerHTML = chromeI18n('error' + string);
         let trs                     = this.body.children;
         let i                       = trs.length - 2;
         for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;
@@ -108,7 +108,7 @@ class New {
     }
     sortOrange() {
         this.tr.domResult.className = 'orange';
-        this.tr.domResult.innerHTML = chromeI18n('unreachable');
+        this.tr.domResult.innerHTML = chromeI18n('errorlink');
         let trs                     = this.body.children;
         let i                       = trs.length - 2;
         for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;

@@ -29,7 +29,7 @@ class SMB {
     }
     sortRed() {
         this.tr.domDate.className = 'red';
-        this.tr.domDate.innerHTML = chromeI18n('error');
+        this.tr.domDate.innerHTML = chromeI18n('errorregexp');
         let trs                   = this.body.children;
         let i                     = trs.length - 2;
         for ( ; i != -1 && trs[i].domDate.className == 'nodate'; i--) ;
@@ -41,7 +41,7 @@ class SMB {
     }
     sortOrange() {
         this.tr.domDate.className = 'orange';
-        this.tr.domDate.innerHTML = chromeI18n('unreachable');
+        this.tr.domDate.innerHTML = chromeI18n('errorlink');
         let trs                   = this.body.children;
         let i                     = trs.length - 2;
         for ( ; i != -1 && trs[i].domDate.className == 'nodate'; i--) ;

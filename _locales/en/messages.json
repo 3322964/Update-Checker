@@ -50,11 +50,14 @@
     "regexp": {
         "message": "RegExp (Leave this field empty for a RSS feed)"
     },
-    "error": {
-        "message": "Error"
+    "errorlink": {
+        "message": "Error (Link)"
     },
-    "unreachable": {
-        "message": "Unreachable link"
+    "errorregexp": {
+        "message": "Error (RegExp)"
+    },
+    "errorrss": {
+        "message": "Error (RSS)"
     },
     "add": {
         "message": "Add"
@@ -82,6 +85,9 @@
     },
     "recheckall": {
         "message": "Recheck all"
+    },
+    "recheckerrors": {
+        "message": "Recheck errors"
     },
     "confirm": {
         "message": "Confirm"
