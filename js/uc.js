@@ -153,7 +153,7 @@ window.addEventListener('load', function () {
             toClick[i].click();
     }, false);
     newsrecheckerrors.addEventListener('click', function () {
-        recheckErrors(newsbody, 'domResult');
+        reCheckErrors(newsbody, 'domResult');
     }, false);
     addEventsToInput(newslink);
     addEventsToDropdowns(newsregexpdropdown);
@@ -222,7 +222,7 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
     }, false);
 
     recheckerrors.addEventListener('click', function() {
-        recheckErrors(body, 'domDate');
+        reCheckErrors(body, 'domDate');
     }, false);
 
     addEventsToInput(name);
@@ -249,7 +249,7 @@ newsadd.addEventListener('click', function () {
     New.parse('', '', newslink, newsregexp);
 }, false);
 
-function recheckErrors(body, domString) {
+function reCheckErrors(body, domString) {
     let toClick = [];
     let trs     = body.children;
     let i, length;
