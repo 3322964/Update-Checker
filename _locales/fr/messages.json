@@ -50,14 +50,8 @@
     "regexp": {
         "message": "RegExp (Laissez ce champ vide pour un flux RSS)"
     },
-    "errorlink": {
-        "message": "Erreur (Lien)"
-    },
-    "errorregexp": {
-        "message": "Erreur (RegExp)"
-    },
-    "errorrss": {
-        "message": "Erreur (RSS)"
+    "error": {
+        "message": "Erreur ($1)"
     },
     "add": {
         "message": "Ajouter"
@@ -96,12 +90,7 @@
         "message": "Annuler"
     },
     "newitems": {
-        "message": "Nouveautés : $count$",
-        "placeholders": {
-            "count": {
-                "content": "$1"
-            }
-        }
+        "message": "Nouveautés : $1"
     },
     "datamanagement": {
         "message": "Gestion des données"

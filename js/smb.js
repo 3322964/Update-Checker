@@ -11,7 +11,7 @@ class SMB {
             string += '<td></td>';
         this.tr.innerHTML  = string + '<td><a>' + chromeI18n('recheck') + '</a> &middot; <a>' + chromeI18n('delete') + '</a></td>';
         this.tr.domName    = this.tr.children[1];
-        this.tr.domDate    = this.tr.children[dateId];
+        this.tr.domResult  = this.tr.children[dateId];
         this.tr.domActions = this.tr.lastElementChild;
         this.tr.domActions.firstElementChild.addEventListener('click', () => this.reCheck(), false);
         this.tr.domActions.lastElementChild.addEventListener('click', () => {
@@ -28,26 +28,26 @@ class SMB {
         this.body.insertBefore(this.tr, this.body.firstElementChild);
     }
     sortRed() {
-        this.tr.domDate.className = 'red';
-        this.tr.domDate.innerHTML = chromeI18n('errorregexp');
-        let trs                   = this.body.children;
-        let i                     = trs.length - 2;
-        for ( ; i != -1 && trs[i].domDate.className == 'nodate'; i--) ;
-        for ( ; i != -1 && trs[i].domDate.className == ''; i--) ;
-        for ( ; i != -1 && trs[i].domDate.className == 'green'; i--) ;
-        for ( ; i != -1 && trs[i].domDate.className == 'orange'; i--) ;
-        for ( ; i != -1 && trs[i].domDate.className == 'red' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        this.tr.domResult.className = 'red';
+        this.tr.domResult.innerHTML = chromeI18n('error', ['RegExp']);
+        let trs                     = this.body.children;
+        let i                       = trs.length - 2;
+        for ( ; i != -1 && trs[i].domResult.className == 'nodate'; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == 'green'; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == 'orange'; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == 'red' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortOrange() {
-        this.tr.domDate.className = 'orange';
-        this.tr.domDate.innerHTML = chromeI18n('errorlink');
-        let trs                   = this.body.children;
-        let i                     = trs.length - 2;
-        for ( ; i != -1 && trs[i].domDate.className == 'nodate'; i--) ;
-        for ( ; i != -1 && trs[i].domDate.className == ''; i--) ;
-        for ( ; i != -1 && trs[i].domDate.className == 'green'; i--) ;
-        for ( ; i != -1 && trs[i].domDate.className == 'orange' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        this.tr.domResult.className = 'orange';
+        this.tr.domResult.innerHTML = chromeI18n('error', [chromeI18n('link')]);
+        let trs                     = this.body.children;
+        let i                       = trs.length - 2;
+        for ( ; i != -1 && trs[i].domResult.className == 'nodate'; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == 'green'; i--) ;
+        for ( ; i != -1 && trs[i].domResult.className == 'orange' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     setName(name) {
@@ -58,21 +58,21 @@ class SMB {
         this.setName(name);
         this.date = moment(new Date(result));
         if (!this.date.isAfter(date))
-            this.tr.domDate.className = 'green';
-        this.tr.domDate.innerHTML = this.date.format('LL');
-        let trs                   = this.body.children;
-        let i                     = trs.length - 2;
-        for ( ; i != -1 && trs[i].domDate.className == 'nodate'; i--) ;
-        for ( ; i != -1 && (trs[i].domDate.className == '' || trs[i].domDate.className == 'green') && this.date.isBefore(moment(trs[i].domDate.innerHTML, 'LL')); i--) ;
-        for ( ; i != -1 && (trs[i].domDate.className == '' || trs[i].domDate.className == 'green') && this.date.isSame(moment(trs[i].domDate.innerHTML, 'LL')) && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+            this.tr.domResult.className = 'green';
+        this.tr.domResult.innerHTML = this.date.format('LL');
+        let trs                     = this.body.children;
+        let i                       = trs.length - 2;
+        for ( ; i != -1 && trs[i].domResult.className == 'nodate'; i--) ;
+        for ( ; i != -1 && (trs[i].domResult.className == '' || trs[i].domResult.className == 'green') && this.date.isBefore(moment(trs[i].domResult.innerHTML, 'LL')); i--) ;
+        for ( ; i != -1 && (trs[i].domResult.className == '' || trs[i].domResult.className == 'green') && this.date.isSame(moment(trs[i].domResult.innerHTML, 'LL')) && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortNoDate(name) {
         this.setName(name);
-        this.tr.domDate.className = 'nodate';
-        let trs                   = this.body.children;
-        let i                     = trs.length - 2;
-        for ( ; i != -1 && trs[i].domDate.className == 'nodate' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        this.tr.domResult.className = 'nodate';
+        let trs                     = this.body.children;
+        let i                       = trs.length - 2;
+        for ( ; i != -1 && trs[i].domResult.className == 'nodate' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     reCheck() {

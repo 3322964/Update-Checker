@@ -50,14 +50,8 @@
     "regexp": {
         "message": "RegExp (Leave this field empty for a RSS feed)"
     },
-    "errorlink": {
-        "message": "Error (Link)"
-    },
-    "errorregexp": {
-        "message": "Error (RegExp)"
-    },
-    "errorrss": {
-        "message": "Error (RSS)"
+    "error": {
+        "message": "Error ($1)"
     },
     "add": {
         "message": "Add"
@@ -96,12 +90,7 @@
         "message": "Cancel"
     },
     "newitems": {
-        "message": "New items: $count$",
-        "placeholders": {
-            "count": {
-                "content": "$1"
-            }
-        }
+        "message": "New items: $1"
     },
     "datamanagement": {
         "message": "Data management"
