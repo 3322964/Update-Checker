@@ -160,9 +160,9 @@ nav {
     .table-head > tr > th.desc:after {
         content: '\25BC'; }
 
-    .table-head > tr > th:first-child { /* favicon */
+    .table-head > tr > th:first-child {
         width: 16px; }
-    .table-head > tr > th:last-child { /* #viewtypeactions */
+    .table-head > tr > th:last-child {
         width: 200px; }
     #viewnewsactions {
         width: 300px; }
