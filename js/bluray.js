@@ -9,13 +9,13 @@ class Bluray extends SMB {
                 this.sortOrange();
             else {
                 let name = response.match(Bluray.regExpName);
-                if (name == null)
+                if (name === null)
                     this.sortRed();
                 else {
-                    if (name.length == 3)
+                    if (name.length === 3)
                         this.tr.children[2].innerHTML = '<img src="' + escapeAttribute(name[2]) + '">';
                     let result = response.match(Bluray.regExpDate);
-                    if (result == null)
+                    if (result === null)
                         this.sortNoDate(name[1]);
                     else this.sortDate(name[1], result[1]);
                 }
@@ -26,29 +26,29 @@ class Bluray extends SMB {
         bluraysname.click();
         bluraysresults.hidden = true;
 
-        if (Bluray.request != null)
+        if ('request' in Bluray)
             Bluray.request.abort();
 
         let value = bluraysname.value.trim();
-        if (value != '') {
+        if (value !== '') {
             Bluray.request = new PostRequest(bluraysname, 'http://www.blu-ray.com/search/quicksearch.php');
             Bluray.request.send(function (ok, response) {
                 if (!ok)
                     bluraysname.classList.add('invalid');
                 else {
                     let tmp = response.match(/var urls = new Array\(([^\)]*)/);
-                    if (tmp == null)
+                    if (tmp === null)
                         bluraysname.classList.add('invalid');
                     else {
                         let URLs      = tmp[1].replace(/'|http:\/\/www\.blu-ray\.com\/movies\//g, '').split(', ');
                         let regExp    = /<img src="http:\/\/images.static-bluray.com\/flags\/([^.]*).png" [^>]*>&nbsp;([^\n<]*)/g;
                         let output    = '';
                         let arrayType = arrays.blurays;
-                        for (let i = 0; (tmp = regExp.exec(response)) != null; i++) {
-                            if (objectInArray(URLs[i], arrayType) == -1)
+                        for (let i = 0; (tmp = regExp.exec(response)) !== null; i++) {
+                            if (objectInArray(URLs[i], arrayType) === -1)
                                 output += '<option value="' + URLs[i] + '">' + tmp[2] + ' (' + tmp[1] + ')</option>';
                         }
-                        if (output == '')
+                        if (output === '')
                             bluraysname.classList.add('invalid');
                         else {
                             bluraysresults.innerHTML = output;

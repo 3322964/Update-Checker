@@ -5,7 +5,7 @@ class RSSParser {
             let xml = (new DOMParser()).parseFromString(stringToParse, 'text/xml');
             let tmp = xml.evaluate(RSSParser.xPathLink, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
             let rssDate;
-            if (tmp != null) {
+            if (tmp !== null) {
                 this.link  = tmp.textContent;
                 this.items = xml.evaluate(RSSParser.xPathItems, xml, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
                 rssDate    = RSSParser.xPathDate;
@@ -16,16 +16,16 @@ class RSSParser {
                 rssDate    = RSSParser.xPathDate2;
             }
             this.name = xml.evaluate(RSSParser.xPathTitle, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
-            if (previousDate == '')
+            if (previousDate === '')
                 this.newItemCount = this.items.snapshotLength;
             else {
                 let length  = this.items.snapshotLength;
                 let tmpDate = new Date(previousDate);
                 if (!moment(tmpDate).isValid())
-                    for (this.newItemCount = 0; this.newItemCount != length && xml.evaluate(rssDate, this.items.snapshotItem(this.newItemCount), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent != previousDate; this.newItemCount++) ;
-                else for (this.newItemCount = 0; this.newItemCount != length && moment(new Date(xml.evaluate(rssDate, this.items.snapshotItem(this.newItemCount), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent)).isAfter(tmpDate); this.newItemCount++) ;
+                    for (this.newItemCount = 0; this.newItemCount !== length && xml.evaluate(rssDate, this.items.snapshotItem(this.newItemCount), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent !== previousDate; this.newItemCount++) ;
+                else for (this.newItemCount = 0; this.newItemCount !== length && moment(new Date(xml.evaluate(rssDate, this.items.snapshotItem(this.newItemCount), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent)).isAfter(tmpDate); this.newItemCount++) ;
             }
-            if (this.newItemCount != 0)
+            if (this.newItemCount !== 0)
                 this.newDate = xml.evaluate(rssDate, this.items.snapshotItem(0), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
         }
         catch (err) {

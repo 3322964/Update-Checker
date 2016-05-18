@@ -56,7 +56,7 @@ class New {
         this.request.send((ok, response) => {
             if (!ok)
                 this.sortOrange();
-            else if (this.regexp == '') {
+            else if (this.regexp === '') {
                 let rssParser = new RSSParser(response, this.current);
                 if (rssParser.getErrorFlag())
                     this.sortRed('RSS');
@@ -67,21 +67,21 @@ class New {
                     this.tr.firstElementChild.firstElementChild.src = getFavicon(link);
                     let newItemCount                                = rssParser.getNewItemCount();
                     let result                                      = chrome.i18n.getMessage('newitems', [newItemCount]);
-                    if (newItemCount == 0)
+                    if (newItemCount === 0)
                         this.sortNoCurrent(result);
                     else this.sortCurrent(result, rssParser.getNewDate());
                 }
             }
             else {
                 let tmp = response.match(New.regExpName);
-                if (tmp != null && tmp.length == 2)
+                if (tmp !== null && tmp.length === 2)
                     this.setName(tmp[1]);
                 try {
                     let result = response.match(new RegExp(this.regexp));
-                    if (result.length != 1)
+                    if (result.length !== 1)
                         result.splice(0, 1);
                     result = result.join(' ').trim();
-                    if (result == this.current)
+                    if (result === this.current)
                         this.sortNoCurrent(result);
                     else this.sortCurrent(result, result);
                 }
@@ -100,10 +100,10 @@ class New {
         this.tr.domResult.innerHTML = chromeI18n('error', [string]);
         let trs                     = this.body.children;
         let i                       = trs.length - 2;
-        for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == 'green'; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == 'orange'; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == 'red' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === ''; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'green'; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'orange'; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'red' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortOrange() {
@@ -111,9 +111,9 @@ class New {
         this.tr.domResult.innerHTML = chromeI18n('error', [chromeI18n('link')]);
         let trs                     = this.body.children;
         let i                       = trs.length - 2;
-        for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == 'green'; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == 'orange' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === ''; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'green'; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'orange' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortCurrent(result, current) {
@@ -127,21 +127,21 @@ class New {
         this.tr.domActions.insertBefore(a, this.tr.domActions.firstChild);
         let trs = this.body.children;
         let i   = trs.length - 2;
-        for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == 'green' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === ''; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'green' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortNoCurrent(result) {
         this.tr.domResult.innerHTML = escapeHTML(result);
         let trs                     = this.body.children;
         let i                       = trs.length - 2;
-        for ( ; i != -1 && trs[i].domResult.className == '' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === '' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     save(current) {
         this.value.current = current;
         let i = propertyInArray(this.link, 'link', arrays[this.type]);
-        if (i != -1) {
+        if (i !== -1) {
             arrays[this.type][i].current = current;
             writeArrays();
         }
@@ -157,7 +157,7 @@ class New {
         this.request.abort();
         this.body.removeChild(this.tr);
         let i = propertyInArray(this.link, 'link', arrays[this.type]);
-        if (i != -1) {
+        if (i !== -1) {
             arrays[this.type].splice(i, 1);
             writeArrays();
         }
@@ -167,12 +167,12 @@ class New {
         let link      = newslink.value.trim();
         let regexp    = newsregexp.value;
         let arrayNews = arrays.news;
-        if (!newslink.validity.valid || (previousLink != link && propertyInArray(link, 'link', arrayNews) != -1))
+        if (!newslink.validity.valid || (previousLink !== link && propertyInArray(link, 'link', arrayNews) !== -1))
             newslink.className = 'invalid';
         else {
             newslink.value   = '';
             newsregexp.value = '';
-            if (remove != null)
+            if (remove !== undefined)
                 remove();
             let toCheck = new New(arrayNews[arrayNews.push({ link: link, regexp: regexp, current: current }) - 1]);
             writeArrays();

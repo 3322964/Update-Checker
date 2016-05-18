@@ -7,9 +7,9 @@ class Request {
     send(onDone, data) {
         this.element.classList.add('loading');
         this.file.onreadystatechange = () => {
-            if (this.file.readyState == XMLHttpRequest.DONE) {
+            if (this.file.readyState === XMLHttpRequest.DONE) {
                 this.element.classList.remove('loading');
-                onDone(this.file.status == 200, this.file.responseText);
+                onDone(this.file.status === 200, this.file.responseText);
             }
         };
         this.file.send(data);

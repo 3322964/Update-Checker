@@ -7,7 +7,7 @@ class SMB {
         this.name      = this.link;
         this.tr        = document.createElement('tr');
         let string     = '<td><img src="' + getFavicon(favicon) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td>';
-        for (let i = 1; i != dateId; i++)
+        for (let i = 1; i !== dateId; i++)
             string += '<td></td>';
         this.tr.innerHTML  = string + '<td><a>' + chromeI18n('recheck') + '</a> &middot; <a>' + chromeI18n('delete') + '</a></td>';
         this.tr.domName    = this.tr.children[1];
@@ -32,11 +32,11 @@ class SMB {
         this.tr.domResult.innerHTML = chromeI18n('error', ['RegExp']);
         let trs                     = this.body.children;
         let i                       = trs.length - 2;
-        for ( ; i != -1 && trs[i].domResult.className == 'nodate'; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == 'green'; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == 'orange'; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == 'red' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'nodate'; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === ''; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'green'; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'orange'; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'red' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortOrange() {
@@ -44,10 +44,10 @@ class SMB {
         this.tr.domResult.innerHTML = chromeI18n('error', [chromeI18n('link')]);
         let trs                     = this.body.children;
         let i                       = trs.length - 2;
-        for ( ; i != -1 && trs[i].domResult.className == 'nodate'; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == ''; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == 'green'; i--) ;
-        for ( ; i != -1 && trs[i].domResult.className == 'orange' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'nodate'; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === ''; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'green'; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'orange' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     setName(name) {
@@ -62,9 +62,9 @@ class SMB {
         this.tr.domResult.innerHTML = this.date.format('LL');
         let trs                     = this.body.children;
         let i                       = trs.length - 2;
-        for ( ; i != -1 && trs[i].domResult.className == 'nodate'; i--) ;
-        for ( ; i != -1 && (trs[i].domResult.className == '' || trs[i].domResult.className == 'green') && this.date.isBefore(moment(trs[i].domResult.innerHTML, 'LL')); i--) ;
-        for ( ; i != -1 && (trs[i].domResult.className == '' || trs[i].domResult.className == 'green') && this.date.isSame(moment(trs[i].domResult.innerHTML, 'LL')) && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'nodate'; i--) ;
+        for ( ; i !== -1 && (trs[i].domResult.className === '' || trs[i].domResult.className === 'green') && this.date.isBefore(moment(trs[i].domResult.innerHTML, 'LL')); i--) ;
+        for ( ; i !== -1 && (trs[i].domResult.className === '' || trs[i].domResult.className === 'green') && this.date.isSame(moment(trs[i].domResult.innerHTML, 'LL')) && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortNoDate(name) {
@@ -72,7 +72,7 @@ class SMB {
         this.tr.domResult.className = 'nodate';
         let trs                     = this.body.children;
         let i                       = trs.length - 2;
-        for ( ; i != -1 && trs[i].domResult.className == 'nodate' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        for ( ; i !== -1 && trs[i].domResult.className === 'nodate' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     reCheck() {
@@ -86,7 +86,7 @@ class SMB {
         this.request.abort();
         this.body.removeChild(this.tr);
         let i = objectInArray(this.value, arrays[this.type]);
-        if (i != -1) {
+        if (i !== -1) {
             arrays[this.type].splice(i, 1);
             writeArrays();
         }

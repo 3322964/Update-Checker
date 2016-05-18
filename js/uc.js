@@ -1,9 +1,9 @@
 const chromeI18n = chrome.i18n.getMessage;
 var arrays, date;
 
-for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i != length; i++) {
+for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i !== length; i++) {
     tmp = elements[i].id;
-    if (tmp != '')
+    if (tmp !== '')
         window[tmp] = elements[i];
 }
 
@@ -21,14 +21,14 @@ function getFavicon(link) {
 
 function propertyInArray(value, property, array) {
     let i, length;
-    for (i = 0, length = array.length; i != length && array[i][property] != value; i++) ;
-    return i == length ? -1 : i;
+    for (i = 0, length = array.length; i !== length && array[i][property] !== value; i++) ;
+    return i === length ? -1 : i;
 }
 
 function objectInArray(value, array) {
     let i, length;
-    for (i = 0, length = array.length; i != length && array[i] != value; i++) ;
-    return i == length ? -1 : i;
+    for (i = 0, length = array.length; i !== length && array[i] !== value; i++) ;
+    return i === length ? -1 : i;
 }
 
 function toggleHeaderActive(e) {
@@ -59,11 +59,11 @@ function parseArrays(tmpArrays) {
         if (type in arrays)
             arrays[type] = tmpArrays[type];
     }
-    if (tmpArrays != null) { // A SUPPRIMER DANS LONGTEMPS
-        for (let i = 0, length = arrays.news.length; i != length; i++)
+    if (tmpArrays !== undefined) { // A SUPPRIMER DANS LONGTEMPS
+        for (let i = 0, length = arrays.news.length; i !== length; i++)
             delete arrays.news[i].name;
-        if (tmpArrays.rss != null) {
-            for (let i = 0, length = tmpArrays.rss.length; i != length; i++)
+        if ('rss' in tmpArrays) {
+            for (let i = 0, length = tmpArrays.rss.length; i !== length; i++)
                 arrays.news.push({ link: tmpArrays.rss[i].link, regexp: '', current: tmpArrays.rss[i].current });
         }
     }
@@ -82,16 +82,16 @@ function checkArrays() {
             case 'blurays': classType = Bluray; break;
             case 'news': classType = New; break;
         }
-        for (i = 0, length = arrayType.length; i != length; i++)
+        for (i = 0, length = arrayType.length; i !== length; i++)
             toCheck.push(new classType(arrayType[i]));
     }
-    for (i = 0, length = toCheck.length; i != length; i++)
+    for (i = 0, length = toCheck.length; i !== length; i++)
         toCheck[i].check();
 }
 
 window.addEventListener('load', function () {
     let headers = header.children;
-    for (let i = 0, length = headers.length; i != length; i++) {
+    for (let i = 0, length = headers.length; i !== length; i++) {
         headers[i].innerHTML = chromeI18n(headers[i].id);
         headers[i].addEventListener('click', toggleHeaderActive, false);
     }
@@ -122,34 +122,34 @@ window.addEventListener('load', function () {
         let toClick = [];
         let trs     = newsbody.children;
         let i, length;
-        for (i = 0, length = trs.length - 1; i != length; i++) {
-            if (trs[i].domResult.className == 'green')
+        for (i = 0, length = trs.length - 1; i !== length; i++) {
+            if (trs[i].domResult.className === 'green')
                 toClick.push(trs[i].domName.firstElementChild);
         }
-        for (i = 0, length = toClick.length; i != length; i++)
+        for (i = 0, length = toClick.length; i !== length; i++)
             toClick[i].click();
     }, false);
     newssavenews.addEventListener('click', function () {
         let toClick = [];
         let trs     = newsbody.children;
         let i, length;
-        for (i = 0, length = trs.length - 1; i != length; i++) {
-            if (trs[i].domResult.className == 'green')
+        for (i = 0, length = trs.length - 1; i !== length; i++) {
+            if (trs[i].domResult.className === 'green')
                 toClick.push(trs[i].domActions.firstElementChild);
         }
-        for (i = 0, length = toClick.length; i != length; i++)
+        for (i = 0, length = toClick.length; i !== length; i++)
             toClick[i].click();
     }, false);
     newsrecheckall.addEventListener('click', function () {
         let toClick = [];
         let trs     = newsbody.children;
         let i, length;
-        for (i = 0, length = trs.length - 1; i != length; i++) {
-            if (trs[i].domResult.className == 'green')
+        for (i = 0, length = trs.length - 1; i !== length; i++) {
+            if (trs[i].domResult.className === 'green')
                 toClick.push(trs[i].domActions.children[1]);
             else toClick.push(trs[i].domActions.firstElementChild);
         }
-        for (i = 0, length = toClick.length; i != length; i++)
+        for (i = 0, length = toClick.length; i !== length; i++)
             toClick[i].click();
     }, false);
     newsrecheckerrors.addEventListener('click', function () {
@@ -165,7 +165,7 @@ window.addEventListener('load', function () {
     moment.locale(window.navigator.language);
 
     chrome.storage.local.get(null, function (items) {
-        let settings = (items.settings == null || typeof items.settings != 'string') ? 'viewseries' : items.settings;
+        let settings = (!('settings' in items) || typeof items.settings !== 'string') ? 'viewseries' : items.settings;
         document.getElementById(settings).classList.add('active');
         document.getElementById(settings + 'content').hidden = false;
         parseArrays(items.arrays);
@@ -184,7 +184,7 @@ var dropdownNews = [
 ];
 
 function addEventsToDropdowns(newsregexpdropdown) {
-    for (let i = 0, length = dropdownNews.length; i != length; i++) {
+    for (let i = 0, length = dropdownNews.length; i !== length; i++) {
         let option       = document.createElement('option');
         option.value     = dropdownNews[i].regexp;
         option.innerHTML = dropdownNews[i].title + ' (' + dropdownNews[i].link + ')';
@@ -215,9 +215,9 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
         let toClick = [];
         let trs     = body.children;
         let i, length;
-        for (i = 0, length = trs.length - 1; i != length; i++)
+        for (i = 0, length = trs.length - 1; i !== length; i++)
             toClick.push(trs[i].domActions.firstElementChild);
-        for (i = 0, length = toClick.length; i != length; i++)
+        for (i = 0, length = toClick.length; i !== length; i++)
             toClick[i].click();
     }, false);
 
@@ -253,11 +253,11 @@ function reCheckErrors(body) {
     let toClick = [];
     let trs     = body.children;
     let i, length;
-    for (i = 0, length = trs.length - 1; i != length; i++) {
-        if (trs[i].domResult.className == 'red' || trs[i].domResult.className == 'orange')
+    for (i = 0, length = trs.length - 1; i !== length; i++) {
+        if (trs[i].domResult.className === 'red' || trs[i].domResult.className === 'orange')
             toClick.push(trs[i].domActions.firstElementChild);
     }
-    for (i = 0, length = toClick.length; i != length; i++)
+    for (i = 0, length = toClick.length; i !== length; i++)
         toClick[i].click();
 }
 

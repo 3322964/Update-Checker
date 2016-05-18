@@ -9,11 +9,11 @@ class Serie extends SMB {
                 this.sortOrange();
             else {
                 let name = response.match(Serie.regExpName);
-                if (name == null)
+                if (name === null)
                     this.sortRed();
                 else {
                     let result = response.match(Serie.regExpDate);
-                    if (result == null)
+                    if (result === null)
                         this.sortNoDate(name[1]);
                     else {
                         this.tr.children[2].innerHTML = escapeHTML(result[1]);
@@ -29,25 +29,25 @@ class Serie extends SMB {
         seriesname.click();
         seriesresults.hidden = true;
 
-        if (Serie.request != null)
+        if ('request' in Serie)
             Serie.request.abort();
 
         let value = seriesname.value.trim();
-        if (value != '') {
+        if (value !== '') {
             Serie.request = new GetRequest(seriesname, 'http://www.imdb.com/find?s=tt&q=' + encodeURIComponent(value));
             Serie.request.send(function (ok, response) {
                 if (!ok)
                     seriesname.classList.add('invalid');
                 else {
-                    let regExp    = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g;
+                    let regExp    = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*Series\)) </g;
                     let output    = '';
                     let arrayType = arrays.series;
                     let tmp;
-                    while ((tmp = regExp.exec(response)) != null) {
-                        if (tmp[3].match(/Series\)/) && objectInArray(tmp[1], arrayType) == -1)
+                    while ((tmp = regExp.exec(response)) !== null) {
+                        if (objectInArray(tmp[1], arrayType) === -1)
                             output += '<option value="' + tmp[1] + '">' + tmp[2] + tmp[3] + '</option>';
                     }
-                    if (output == '')
+                    if (output === '')
                         seriesname.classList.add('invalid');
                     else {
                         seriesresults.innerHTML = output;

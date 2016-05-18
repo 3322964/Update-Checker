@@ -9,11 +9,11 @@ class Movie extends SMB {
                 this.sortOrange();
             else {
                 let name = response.match(Movie.regExpName);
-                if (name == null)
+                if (name === null)
                     this.sortRed();
                 else {
                     let result = response.match(Movie.regExpDate);
-                    if (result == null || iso.findCountryByName(result[3]).value != result[1])
+                    if (result === null || iso.findCountryByName(result[3]).value !== result[1])
                         this.sortNoDate(name[1]);
                     else this.sortDate(name[1], result[2]);
                 }
@@ -24,25 +24,25 @@ class Movie extends SMB {
         moviesname.click();
         moviesresults.hidden = true;
 
-        if (Movie.request != null)
+        if ('request' in Movie)
             Movie.request.abort();
 
         let value = moviesname.value.trim();
-        if (value != '') {
+        if (value !== '') {
             Movie.request = new GetRequest(moviesname, 'http://www.imdb.com/find?s=tt&q=' + encodeURIComponent(value));
             Movie.request.send(function (ok, response) {
                 if (!ok)
                     moviesname.classList.add('invalid');
                 else {
-                    let regExp    = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*) /g;
+                    let regExp    = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>(?![^<]*(?:Series|\(Video Game|\(Video|\(TV Episode)\) <)([^<]*) </g;
                     let output    = '';
                     let arrayType = arrays.movies;
                     let tmp;
-                    while ((tmp = regExp.exec(response)) != null) {
-                        if (!tmp[3].match(/Series\)/) && !tmp[3].match(/\(Video Game\)/) && !tmp[3].match(/\(Video\)/) && !tmp[3].match(/\(TV Episode\)/) && objectInArray(tmp[1], arrayType) == -1)
+                    while ((tmp = regExp.exec(response)) !== null) {
+                        if (objectInArray(tmp[1], arrayType) === -1)
                             output += '<option value="' + tmp[1] + '">' + tmp[2] + tmp[3] + '</option>';
                     }
-                    if (output == '')
+                    if (output === '')
                         moviesname.classList.add('invalid');
                     else {
                         moviesresults.innerHTML = output;
