@@ -15,15 +15,11 @@ class SMB {
         this.tr.domActions = this.tr.lastElementChild;
         this.tr.domActions.firstElementChild.addEventListener('click', () => this.reCheck(), false);
         this.tr.domActions.lastElementChild.addEventListener('click', () => {
-            this.tr.removeChild(this.tr.domActions);
             let td       = document.createElement('td');
             td.innerHTML = '<a>' + chromeI18n('confirm') + '</a> &middot; <a>' + chromeI18n('cancel') + '</a>';
             td.firstElementChild.addEventListener('click', () => this.delete(), false);
-            td.lastElementChild.addEventListener('click', () => {
-                this.tr.removeChild(td);
-                this.tr.appendChild(this.tr.domActions);
-            }, false);
-            this.tr.appendChild(td);
+            td.lastElementChild.addEventListener('click', () => this.tr.replaceChild(this.tr.domActions, td), false);
+            this.tr.replaceChild(td, this.tr.domActions);
         }, false);
         this.body.insertBefore(this.tr, this.body.firstElementChild);
     }

@@ -14,9 +14,6 @@ class New {
         this.tr.domActions = this.tr.lastElementChild;
         this.tr.domActions.firstElementChild.addEventListener('click', () => this.reCheck(), false);
         this.tr.domActions.children[1].addEventListener('click', () => {
-            this.tr.removeChild(this.tr.domName);
-            this.tr.removeChild(this.tr.domResult);
-            this.tr.removeChild(this.tr.domActions);
             let td1       = document.createElement('td');
             let td2       = document.createElement('td');
             let td        = document.createElement('td');
@@ -27,27 +24,20 @@ class New {
             addEventsToInput(td1.firstElementChild);
             td.firstElementChild.addEventListener('click', () => New.parse(this.current, this.link, td1.firstElementChild, td2.firstElementChild, () => this.delete()), false);
             td.lastElementChild.addEventListener('click', () => {
-                this.tr.removeChild(td1);
-                this.tr.removeChild(td2);
-                this.tr.removeChild(td);
-                this.tr.appendChild(this.tr.domName);
-                this.tr.appendChild(this.tr.domResult);
-                this.tr.appendChild(this.tr.domActions);
+                this.tr.replaceChild(this.tr.domName, td1);
+                this.tr.replaceChild(this.tr.domResult, td2);
+                this.tr.replaceChild(this.tr.domActions, td);
             }, false);
-            this.tr.appendChild(td1);
-            this.tr.appendChild(td2);
-            this.tr.appendChild(td);
+            this.tr.replaceChild(td1, this.tr.domName)
+            this.tr.replaceChild(td2, this.tr.domResult);
+            this.tr.replaceChild(td, this.tr.domActions);
         }, false);
         this.tr.domActions.lastElementChild.addEventListener('click', () => {
-            this.tr.removeChild(this.tr.domActions);
             let td       = document.createElement('td');
             td.innerHTML = '<a>' + chromeI18n('confirm') + '</a> &middot; <a>' + chromeI18n('cancel') + '</a>';
             td.firstElementChild.addEventListener('click', () => this.delete(), false);
-            td.lastElementChild.addEventListener('click', () => {
-                this.tr.removeChild(td);
-                this.tr.appendChild(this.tr.domActions);
-            }, false);
-            this.tr.appendChild(td);
+            td.lastElementChild.addEventListener('click', () => this.tr.replaceChild(this.tr.domActions, td), false);
+            this.tr.replaceChild(td, this.tr.domActions);
         }, false);
         this.body.insertBefore(this.tr, this.body.firstElementChild);
     }
