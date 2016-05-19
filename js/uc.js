@@ -20,15 +20,15 @@ function getFavicon(link) {
 }
 
 function propertyInArray(value, property, array) {
-    let i, length;
-    for (i = 0, length = array.length; i !== length && array[i][property] !== value; i++) ;
-    return i === length ? -1 : i;
+    let i;
+    for (i = array.length - 1; i !== -1 && array[i][property] !== value; i--) ;
+    return i;
 }
 
 function objectInArray(value, array) {
-    let i, length;
-    for (i = 0, length = array.length; i !== length && array[i] !== value; i++) ;
-    return i === length ? -1 : i;
+    let i;
+    for (i = array.length - 1; i !== -1 && array[i] !== value; i--) ;
+    return i;
 }
 
 function toggleHeaderActive(e) {

@@ -28,7 +28,7 @@ class New {
                 this.tr.replaceChild(this.tr.domResult, td2);
                 this.tr.replaceChild(this.tr.domActions, td);
             }, false);
-            this.tr.replaceChild(td1, this.tr.domName)
+            this.tr.replaceChild(td1, this.tr.domName);
             this.tr.replaceChild(td2, this.tr.domResult);
             this.tr.replaceChild(td, this.tr.domActions);
         }, false);
