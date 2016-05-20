@@ -61,5 +61,5 @@ class Bluray extends SMB {
     }
 }
 
-Bluray.regExpName = /itemprop="itemReviewed">(?:<a[^>]*>)?([^<]*)(?:<\/a>)? Blu-ray<\/h1><\/a><img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
+Bluray.regExpName = /itemprop="itemReviewed">([^<]*) Blu-ray<\/h1>(?:<\/a>)?<img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
 Bluray.regExpDate = /style="text-decoration: none; color: #666666">([^<]*)/;

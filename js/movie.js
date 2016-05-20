@@ -54,6 +54,6 @@ class Movie extends SMB {
     }
 }
 
-Movie.regExpName = /<title>(.*) \(/;
+Movie.regExpName = /<title>([^<]*) \(/;
 Movie.regExpDate = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See more release dates" >(.*) \(([^\)]*)/;
 // Movie.regExpDate = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See all release dates" > ([^<]*).*\n\(([^\)]*)/;

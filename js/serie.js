@@ -59,4 +59,4 @@ class Serie extends SMB {
     }
 }
 
-Serie.regExpName = /<title>&#x22;(.*)&#x22;/;
+Serie.regExpName = /<title>&#x22;([^<]*)&#x22;/;
