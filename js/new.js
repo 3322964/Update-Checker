@@ -48,18 +48,18 @@ class New {
                 this.sortOrange();
             else if (this.regexp === '') {
                 let rssParser = new RSSParser(response, this.current);
-                if (rssParser.getErrorFlag())
+                if (rssParser.errorFlag)
                     this.sortRed('RSS');
                 else {
-                    this.setName(rssParser.getTitle());
-                    let link                                        = rssParser.getLink();
+                    this.setName(rssParser.title);
+                    let link                                        = rssParser.link;
                     this.tr.domName.firstElementChild.href          = escapeAttribute(link);
                     this.tr.firstElementChild.firstElementChild.src = getFavicon(link);
-                    let newItemCount                                = rssParser.getNewItemCount();
-                    let result                                      = chrome.i18n.getMessage('newitems', [newItemCount]);
+                    let newItemCount                                = rssParser.newItemCount;
+                    let result                                      = chromeI18n('newitems', [newItemCount]);
                     if (newItemCount === 0)
                         this.sortNoCurrent(result);
-                    else this.sortCurrent(result, rssParser.getNewDate());
+                    else this.sortCurrent(result, rssParser.newDate);
                 }
             }
             else {

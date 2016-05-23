@@ -1,53 +1,43 @@
 class RSSParser {
     constructor(stringToParse, previousDate) {
-        this.errorFlag = false;
+        this._errorFlag = false;
         try {
-            let xml    = (new DOMParser()).parseFromString(stringToParse, 'text/xml');
-            let type   = xml.evaluate(RSSParser.xPathType, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            this.title = xml.evaluate(RSSParser.xPathTitle, type, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
-            this.link  = xml.evaluate(RSSParser.xPathLink[type.localName], type, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
-            this.items = xml.evaluate(RSSParser.xPathItems[type.localName], type, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+            let xml     = (new DOMParser()).parseFromString(stringToParse, 'text/xml');
+            let type    = xml.evaluate(RSSParser.xPathType, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            this._title = xml.evaluate(RSSParser.xPathTitle, type, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
+            this._link  = xml.evaluate(RSSParser.xPathLink[type.localName], type, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
+            this.items  = xml.evaluate(RSSParser.xPathItems[type.localName], type, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
             if (previousDate === '')
-                this.newItemCount = this.items.snapshotLength;
+                this._newItemCount = this.items.snapshotLength;
             else {
                 let length = this.items.snapshotLength;
                 let date   = moment(new Date(previousDate));
                 if (!date.isValid())
-                    for (this.newItemCount = 0; this.newItemCount !== length && this.items.snapshotItem(this.newItemCount).textContent !== previousDate; this.newItemCount++) ;
+                    for (this._newItemCount = 0; this._newItemCount !== length && this.items.snapshotItem(this._newItemCount).textContent !== previousDate; this._newItemCount++) ;
                 else {
                     let ok = true;
                     let item, itemDate;
-                    for (this.newItemCount = 0; ok && this.newItemCount !== length; this.newItemCount++) {
-                        item     = this.items.snapshotItem(this.newItemCount).textContent;
+                    for (this._newItemCount = 0; ok && this._newItemCount !== length; this._newItemCount++) {
+                        item     = this.items.snapshotItem(this._newItemCount).textContent;
                         itemDate = moment(new Date(item));
                         if (!itemDate.isValid())
                             ok = itemDate.isAfter(date);
-                        else ok = item === previousDate;
+                        else ok = item !== previousDate;
                     }
                 }
             }
-            if (this.newItemCount !== 0)
-                this.newDate = this.items.snapshotItem(0).textContent;
+            if (this._newItemCount !== 0)
+                this._newDate = this.items.snapshotItem(0).textContent;
         }
         catch (err) {
-            this.errorFlag = true;
+            this._errorFlag = true;
         }
     }
-    getErrorFlag() {
-        return this.errorFlag;
-    }
-    getTitle() {
-        return this.title;
-    }
-    getLink() {
-        return this.link;
-    }
-    getNewItemCount() {
-        return this.newItemCount;
-    }
-    getNewDate() {
-        return this.newDate;
-    }
+    get errorFlag()    { return this._errorFlag;    }
+    get title()        { return this._title;        }
+    get link()         { return this._link;         }
+    get newItemCount() { return this._newItemCount; }
+    get newDate()      { return this._newDate;      }
 }
 
 RSSParser.xPathType  = '*[local-name()=\'rss\']/*[local-name()=\'channel\'] | *[local-name()=\'feed\']';
