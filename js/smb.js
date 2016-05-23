@@ -53,7 +53,7 @@ class SMB {
     sortDate(name, result) {
         this.setName(name);
         this.date = moment(new Date(result));
-        if (!this.date.isAfter(date))
+        if (!this.date.isAfter(moment().startOf('day')))
             this.tr.domResult.className = 'green';
         this.tr.domResult.innerHTML = this.date.format('LL');
         let trs                     = this.body.children;
@@ -74,7 +74,6 @@ class SMB {
     reCheck() {
         this.request.abort();
         this.body.removeChild(this.tr);
-        createDateAndRegExpDate();
         let toCheck = new this.constructor(this.value);
         toCheck.check();
     }

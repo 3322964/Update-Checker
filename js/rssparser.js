@@ -10,11 +10,19 @@ class RSSParser {
             if (previousDate === '')
                 this.newItemCount = this.items.snapshotLength;
             else {
-                let length  = this.items.snapshotLength;
-                let tmpDate = moment(new Date(previousDate));
-                if (!tmpDate.isValid())
+                let length = this.items.snapshotLength;
+                let date   = moment(new Date(previousDate));
+                if (!date.isValid())
                     for (this.newItemCount = 0; this.newItemCount !== length && this.items.snapshotItem(this.newItemCount).textContent !== previousDate; this.newItemCount++) ;
-                else for (this.newItemCount = 0; this.newItemCount !== length && moment(new Date(this.items.snapshotItem(this.newItemCount).textContent)).isAfter(tmpDate); this.newItemCount++) ;
+                else {
+                    let item, itemDate;
+                    for (this.newItemCount = 0; this.newItemCount !== length; this.newItemCount++) {
+                        item     = this.items.snapshotItem(this.newItemCount).textContent;
+                        itemDate = moment(new Date(item));
+                        if ((itemDate.isValid() && !itemDate.isAfter(date)) || item === previousDate)
+                            break;
+                    }
+                }
             }
             if (this.newItemCount !== 0)
                 this.newDate = this.items.snapshotItem(0).textContent;

@@ -1,5 +1,5 @@
 const chromeI18n = chrome.i18n.getMessage;
-var arrays, date;
+var arrays;
 
 for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i !== length; i++) {
     tmp = elements[i].id;
@@ -41,14 +41,6 @@ function toggleHeaderActive(e) {
     chrome.storage.local.set({ settings: element.id });
 }
 
-function createDateAndRegExpDate() {
-    date             = moment().startOf('day');
-    let year         = date.year();
-    let months       = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    let month        = date.month();
-    Serie.regExpDate = new RegExp('<h4>Season (\\d{1,}), Episode (\\d{1,}): <a [^>]*>([^<]*)</a></h4><b>(\\d{1,2} [A-S][a-z]+ ' + (year + 1) + '|\\d{1,2} (' + months.splice(month + 1, 12).join('|') + ') ' + year + '|(' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31].splice(date.date() - 1, 31).join('|') + ') ' + months[month] + ' ' + year + ')</b>');
-}
-
 function writeArrays() {
     chrome.storage.local.set({ arrays: arrays });
 }
@@ -71,7 +63,7 @@ function parseArrays(tmpArrays) {
 }
 
 function checkArrays() {
-    createDateAndRegExpDate();
+    Serie.createRegExpDate();
     let toCheck = [];
     let arrayType, classType, i, length;
     for (let type in arrays) {
