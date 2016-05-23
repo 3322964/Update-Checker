@@ -7,7 +7,7 @@ class RSSParser {
             this._title        = xml.evaluate(RSSParser.xPathTitle[type.localName], type, null, XPathResult.STRING_TYPE, null).stringValue;
             this._link         = xml.evaluate(RSSParser.xPathLink[type.localName], type, null, XPathResult.STRING_TYPE, null).stringValue;
             let items          = xml.evaluate(RSSParser.xPathItems[type.localName], type, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-            let currentToArray = current == '' ? [] : current.split(';');
+            let currentToArray = current === '' ? [] : current.split(';');
             let itemsToArray   = [];
             this._newItemCount = 0;
             for (let i = 0, length = items.snapshotLength; i !== length; i++) {
