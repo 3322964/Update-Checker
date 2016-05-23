@@ -48,7 +48,7 @@ class New {
                 this.sortOrange();
             else if (this.regexp === '') {
                 let rssParser = new RSSParser(response, this.current);
-                if (rssParser.errorFlag)
+                if (rssParser.errorOccurred)
                     this.sortRed('RSS');
                 else {
                     this.setName(rssParser.title);

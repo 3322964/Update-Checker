@@ -1,6 +1,6 @@
 class RSSParser {
     constructor(stringToParse, previousDate) {
-        this._errorFlag = false;
+        this._errorOccurred = false;
         try {
             let xml     = (new DOMParser()).parseFromString(stringToParse, 'text/xml');
             let type    = xml.evaluate(RSSParser.xPathType, xml, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -30,14 +30,14 @@ class RSSParser {
                 this._newDate = this.items.snapshotItem(0).textContent;
         }
         catch (err) {
-            this._errorFlag = true;
+            this._errorOccurred = true;
         }
     }
-    get errorFlag()    { return this._errorFlag;    }
-    get title()        { return this._title;        }
-    get link()         { return this._link;         }
-    get newItemCount() { return this._newItemCount; }
-    get newDate()      { return this._newDate;      }
+    get errorOccurred() { return this._errorOccurred; }
+    get title()         { return this._title;         }
+    get link()          { return this._link;          }
+    get newItemCount()  { return this._newItemCount;  }
+    get newDate()       { return this._newDate;       }
 }
 
 RSSParser.xPathType  = '*[local-name()=\'rss\']/*[local-name()=\'channel\'] | *[local-name()=\'feed\']';
