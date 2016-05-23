@@ -59,7 +59,7 @@ class New {
                     let result                                      = chromeI18n('newitems', [newItemCount]);
                     if (newItemCount === 0)
                         this.sortNoCurrent(result);
-                    else this.sortCurrent(result, rssParser.newDate);
+                    else this.sortCurrent(result, rssParser.newCurrent);
                 }
             }
             else {
@@ -129,7 +129,6 @@ class New {
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     save(current) {
-        this.value.current = current;
         let i = propertyInArray(this.link, 'link', arrays[this.type]);
         if (i !== -1) {
             arrays[this.type][i].current = current;
