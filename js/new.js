@@ -51,7 +51,7 @@ class New {
                 if (rssParser.getErrorFlag())
                     this.sortRed('RSS');
                 else {
-                    this.setName(rssParser.getName());
+                    this.setName(rssParser.getTitle());
                     let link                                        = rssParser.getLink();
                     this.tr.domName.firstElementChild.href          = escapeAttribute(link);
                     this.tr.firstElementChild.firstElementChild.src = getFavicon(link);
