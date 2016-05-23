@@ -106,13 +106,13 @@ class New {
         for ( ; i !== -1 && trs[i].domResult.className === 'orange' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
-    sortCurrent(result, current) {
+    sortCurrent(result, newCurrent) {
         this.tr.domResult.innerHTML = escapeHTML(result);
         this.tr.domResult.className = 'green';
-        this.tr.domName.firstElementChild.addEventListener('click', () => this.save(current), false);
+        this.tr.domName.firstElementChild.addEventListener('click', () => this.save(newCurrent), false);
         let a       = document.createElement('a');
         a.innerHTML = chromeI18n('save');
-        a.addEventListener('click', () => this.save(current), false);
+        a.addEventListener('click', () => this.save(newCurrent), false);
         this.tr.domActions.insertBefore(document.createTextNode(' · '), this.tr.domActions.firstElementChild);
         this.tr.domActions.insertBefore(a, this.tr.domActions.firstChild);
         let trs = this.body.children;
@@ -128,10 +128,11 @@ class New {
         for ( ; i !== -1 && trs[i].domResult.className === '' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
-    save(current) {
+    save(newCurrent) {
+        this.value.current = newCurrent;
         let i = propertyInArray(this.link, 'link', arrays[this.type]);
         if (i !== -1) {
-            arrays[this.type][i].current = current;
+            arrays[this.type][i].current = newCurrent;
             writeArrays();
         }
         this.reCheck();
