@@ -22,7 +22,7 @@ class New {
             td.innerHTML  = '<a>' + chromeI18n('confirm') + '</a> &middot; <a>' + chromeI18n('cancel') + '</a>';
             addEventsToDropdowns(td2.lastElementChild);
             addEventsToInput(td1.firstElementChild);
-            td.firstElementChild.addEventListener('click', () => New.parse(this.current, this.link, td1.firstElementChild, td2.firstElementChild, () => this.delete()), false);
+            td.firstElementChild.addEventListener('click', () => New.parse(td1.firstElementChild, td2.firstElementChild, this.link, this.current, () => this.delete()), false);
             td.lastElementChild.addEventListener('click', () => {
                 this.tr.replaceChild(this.tr.domName, td1);
                 this.tr.replaceChild(this.tr.domResult, td2);
@@ -152,18 +152,17 @@ class New {
             writeArrays();
         }
     }
-    static parse(current, previousLink, newslink, newsregexp, remove) {
-        newslink.click();
-        let link      = newslink.value.trim();
-        let regexp    = newsregexp.value;
+    static parse(domLink = newslink, domRegExp = newsregexp, previousLink = '', current = '', remove = () => {}) {
+        domLink.click();
+        let link      = domLink.value.trim();
+        let regexp    = domRegExp.value;
         let arrayNews = arrays.news;
-        if (!newslink.validity.valid || (previousLink !== link && propertyInArray(link, 'link', arrayNews) !== -1))
-            newslink.className = 'invalid';
+        if (!domLink.validity.valid || (previousLink !== link && propertyInArray(link, 'link', arrayNews) !== -1))
+            domLink.className = 'invalid';
         else {
-            newslink.value   = '';
-            newsregexp.value = '';
-            if (remove !== undefined)
-                remove();
+            domLink.value   = '';
+            domRegExp.value = '';
+            remove();
             let toCheck = new New(arrayNews[arrayNews.push({ link: link, regexp: regexp, current: current }) - 1]);
             writeArrays();
             toCheck.check();

@@ -238,7 +238,7 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
 }
 
 newsadd.addEventListener('click', function () {
-    New.parse('', '', newslink, newsregexp);
+    New.parse();
 }, false);
 
 function reCheckErrors(body) {

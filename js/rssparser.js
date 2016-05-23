@@ -15,12 +15,14 @@ class RSSParser {
                 if (!date.isValid())
                     for (this.newItemCount = 0; this.newItemCount !== length && this.items.snapshotItem(this.newItemCount).textContent !== previousDate; this.newItemCount++) ;
                 else {
+                    let ok = true;
                     let item, itemDate;
-                    for (this.newItemCount = 0; this.newItemCount !== length; this.newItemCount++) {
+                    for (this.newItemCount = 0; ok && this.newItemCount !== length; this.newItemCount++) {
                         item     = this.items.snapshotItem(this.newItemCount).textContent;
                         itemDate = moment(new Date(item));
-                        if ((itemDate.isValid() && !itemDate.isAfter(date)) || item === previousDate)
-                            break;
+                        if (!itemDate.isValid())
+                            ok = itemDate.isAfter(date);
+                        else ok = item === previousDate;
                     }
                 }
             }
