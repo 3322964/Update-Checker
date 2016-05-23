@@ -1,4 +1,13 @@
 const chromeI18n = chrome.i18n.getMessage;
+var dropdownNews = [
+    { title: 'Chrome Web Store', link: 'https://chrome.google.com/webstore/detail/*', regexp: 'itemprop="version" content="([^"]*)' },
+    { title: 'Facebook', link: 'https://www.facebook.com*', regexp: 'id="requestsCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="mercurymessagesCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="notificationsCountValue">([^<]*)</span> <i [^>]*>([^<]*)' },
+    { title: 'Facebook Page', link: 'https://www.facebook.com/*', regexp: 'class="_5pcq"[^>]*><abbr title="([^"]*)' },
+    { title: 'Google Play Store Apps', link: 'https://play.google.com/store/apps/details?id=*', regexp: 'itemprop="softwareVersion"> v(\\S*)' },
+    { title: 'Outlook', link: 'https://*.mail.live.com*', regexp: '<span\\s+class="count">\\s*([^<]*)(?:<[^>]*>[^<]*){17}<span\\s+class="count">\\s*([^<]*)' },
+    { title: 'RuTracker', link: 'http://rutracker.org/forum/tracker.php?nm=*', regexp: 'data-topic_id="([^"]*)' },
+    { title: 'YouTube', link: 'https://www.youtube.com/*/*/videos', regexp: 'class="yt-lockup-title "><a [^>]*>([^<]*)' }
+];
 var arrays;
 
 for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i !== length; i++) {
@@ -31,18 +40,17 @@ function objectInArray(value, array) {
     return i;
 }
 
-function toggleHeaderActive(e) {
-    var element                                                 = e.target;
-    var activeHeader                                            = element.parentElement.getElementsByClassName('active')[0];
-    document.getElementById(activeHeader.id + 'content').hidden = true;
-    activeHeader.classList.remove('active');
-    element.classList.add('active');
-    document.getElementById(element.id + 'content').hidden = false;
-    chrome.storage.local.set({ settings: element.id });
-}
-
 function writeArrays() {
     chrome.storage.local.set({ arrays: arrays });
+}
+
+function addEventsToDropdowns(newsregexpdropdown) {
+    for (let i = 0, length = dropdownNews.length; i !== length; i++) {
+        let option       = document.createElement('option');
+        option.value     = dropdownNews[i].regexp;
+        option.innerHTML = dropdownNews[i].title + ' (' + dropdownNews[i].link + ')';
+        newsregexpdropdown.appendChild(option);
+    }
 }
 
 function parseArrays(tmpArrays) {
@@ -81,107 +89,17 @@ function checkArrays() {
         toCheck[i].check();
 }
 
-window.addEventListener('load', function () {
-    let headers = header.children;
-    for (let i = 0, length = headers.length; i !== length; i++) {
-        headers[i].innerHTML = chromeI18n(headers[i].id);
-        headers[i].addEventListener('click', toggleHeaderActive, false);
-    }
-
-    viewmoviesreleasedate.innerHTML = viewbluraysreleasedate.innerHTML = chromeI18n('releasedate');
-    viewseriesseason.innerHTML                  = chromeI18n('season');
-    viewseriesepisode.innerHTML                 = chromeI18n('episode');
-    viewseriesepisodename.innerHTML             = chromeI18n('episodename');
-    viewseriesepisodebroadcastingdate.innerHTML = chromeI18n('episodebroadcastingdate');
-    viewblurayscountry.innerHTML                = chromeI18n('country');
-    viewnewsname.innerHTML                      = chromeI18n('name');
-    viewnewsresult.innerHTML                    = chromeI18n('result');
-    viewnewsactions.innerHTML                   = chromeI18n('actions');
-
-    addEventsToInputsSMB('series', Serie, seriesbody, viewseriesgeneralactions, seriesrecheckall, seriesrecheckerrors, viewseriesname, viewseriesactions, seriesname, seriesresults, seriesadd);
-    addEventsToInputsSMB('movies', Movie, moviesbody, viewmoviesgeneralactions, moviesrecheckall, moviesrecheckerrors, viewmoviesname, viewmoviesactions, moviesname, moviesresults, moviesadd);
-    addEventsToInputsSMB('blurays', Bluray, bluraysbody, viewbluraysgeneralactions, bluraysrecheckall, bluraysrecheckerrors, viewbluraysname, viewbluraysactions, bluraysname, bluraysresults, bluraysadd);
-
-    viewnewsgeneralactions.innerHTML = chromeI18n('generalactions');
-    newsopensavenews.innerHTML       = chromeI18n('opensavenews');
-    newssavenews.innerHTML           = chromeI18n('savenews');
-    newsrecheckall.innerHTML         = chromeI18n('recheckall');
-    newsrecheckerrors.innerHTML      = chromeI18n('recheckerrors');
-    newslink.placeholder             = chromeI18n('link');
-    newsregexp.placeholder           = chromeI18n('regexp');
-    newsadd.innerHTML                = chromeI18n('add');
-    newsopensavenews.addEventListener('click', function () {
-        let toClick = [];
-        let trs     = newsbody.children;
-        let i, length;
-        for (i = 0, length = trs.length - 1; i !== length; i++) {
-            if (trs[i].domResult.className === 'green')
-                toClick.push(trs[i].domName.firstElementChild);
-        }
-        for (i = 0, length = toClick.length; i !== length; i++)
-            toClick[i].click();
+for (let i = 0, headers = header.children, length = headers.length; i !== length; i++) {
+    headers[i].innerHTML = chromeI18n(headers[i].id);
+    headers[i].addEventListener('click', function (e) {
+        var element                                                 = e.target;
+        var activeHeader                                            = element.parentElement.getElementsByClassName('active')[0];
+        document.getElementById(activeHeader.id + 'content').hidden = true;
+        activeHeader.classList.remove('active');
+        element.classList.add('active');
+        document.getElementById(element.id + 'content').hidden = false;
+        chrome.storage.local.set({ settings: element.id });
     }, false);
-    newssavenews.addEventListener('click', function () {
-        let toClick = [];
-        let trs     = newsbody.children;
-        let i, length;
-        for (i = 0, length = trs.length - 1; i !== length; i++) {
-            if (trs[i].domResult.className === 'green')
-                toClick.push(trs[i].domActions.firstElementChild);
-        }
-        for (i = 0, length = toClick.length; i !== length; i++)
-            toClick[i].click();
-    }, false);
-    newsrecheckall.addEventListener('click', function () {
-        let toClick = [];
-        let trs     = newsbody.children;
-        let i, length;
-        for (i = 0, length = trs.length - 1; i !== length; i++) {
-            if (trs[i].domResult.className === 'green')
-                toClick.push(trs[i].domActions.children[1]);
-            else toClick.push(trs[i].domActions.firstElementChild);
-        }
-        for (i = 0, length = toClick.length; i !== length; i++)
-            toClick[i].click();
-    }, false);
-    newsrecheckerrors.addEventListener('click', function () {
-        reCheckErrors(newsbody);
-    }, false);
-    addEventsToInput(newslink);
-    addEventsToDropdowns(newsregexpdropdown);
-
-    viewdatamanagement.innerHTML = chromeI18n('datamanagement');
-    importdata.innerHTML         = chromeI18n('importdata');
-    exportdata.innerHTML         = chromeI18n('exportdata');
-
-    moment.locale(window.navigator.language);
-
-    chrome.storage.local.get(null, function (items) {
-        let settings = (!('settings' in items) || typeof items.settings !== 'string') ? 'viewseries' : items.settings;
-        document.getElementById(settings).classList.add('active');
-        document.getElementById(settings + 'content').hidden = false;
-        parseArrays(items.arrays);
-        checkArrays();
-    });
-}, false);
-
-var dropdownNews = [
-    { title: 'Chrome Web Store', link: 'https://chrome.google.com/webstore/detail/*', regexp: 'itemprop="version" content="([^"]*)' },
-    { title: 'Facebook', link: 'https://www.facebook.com*', regexp: 'id="requestsCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="mercurymessagesCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="notificationsCountValue">([^<]*)</span> <i [^>]*>([^<]*)' },
-    { title: 'Facebook Page', link: 'https://www.facebook.com/*', regexp: 'class="_5pcq"[^>]*><abbr title="([^"]*)' },
-    { title: 'Google Play Store Apps', link: 'https://play.google.com/store/apps/details?id=*', regexp: 'itemprop="softwareVersion"> v(\\S*)' },
-    { title: 'Outlook', link: 'https://*.mail.live.com*', regexp: '<span\\s+class="count">\\s*([^<]*)(?:<[^>]*>[^<]*){17}<span\\s+class="count">\\s*([^<]*)' },
-    { title: 'RuTracker', link: 'http://rutracker.org/forum/tracker.php?nm=*', regexp: 'data-topic_id="([^"]*)' },
-    { title: 'YouTube', link: 'https://www.youtube.com/*/*/videos', regexp: 'class="yt-lockup-title "><a [^>]*>([^<]*)' }
-];
-
-function addEventsToDropdowns(newsregexpdropdown) {
-    for (let i = 0, length = dropdownNews.length; i !== length; i++) {
-        let option       = document.createElement('option');
-        option.value     = dropdownNews[i].regexp;
-        option.innerHTML = dropdownNews[i].title + ' (' + dropdownNews[i].link + ')';
-        newsregexpdropdown.appendChild(option);
-    }
 }
 
 function removeInvalid(e) {
@@ -237,10 +155,6 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
     }, false);
 }
 
-newsadd.addEventListener('click', function () {
-    New.parse();
-}, false);
-
 function reCheckErrors(body) {
     let toClick = [];
     let trs     = body.children;
@@ -252,6 +166,91 @@ function reCheckErrors(body) {
     for (i = 0, length = toClick.length; i !== length; i++)
         toClick[i].click();
 }
+
+viewmoviesreleasedate.innerHTML = viewbluraysreleasedate.innerHTML = chromeI18n('releasedate');
+viewseriesseason.innerHTML                  = chromeI18n('season');
+viewseriesepisode.innerHTML                 = chromeI18n('episode');
+viewseriesepisodename.innerHTML             = chromeI18n('episodename');
+viewseriesepisodebroadcastingdate.innerHTML = chromeI18n('episodebroadcastingdate');
+viewblurayscountry.innerHTML                = chromeI18n('country');
+viewnewsname.innerHTML                      = chromeI18n('name');
+viewnewsresult.innerHTML                    = chromeI18n('result');
+viewnewsactions.innerHTML                   = chromeI18n('actions');
+
+addEventsToInputsSMB('series', Serie, seriesbody, viewseriesgeneralactions, seriesrecheckall, seriesrecheckerrors, viewseriesname, viewseriesactions, seriesname, seriesresults, seriesadd);
+addEventsToInputsSMB('movies', Movie, moviesbody, viewmoviesgeneralactions, moviesrecheckall, moviesrecheckerrors, viewmoviesname, viewmoviesactions, moviesname, moviesresults, moviesadd);
+addEventsToInputsSMB('blurays', Bluray, bluraysbody, viewbluraysgeneralactions, bluraysrecheckall, bluraysrecheckerrors, viewbluraysname, viewbluraysactions, bluraysname, bluraysresults, bluraysadd);
+
+viewnewsgeneralactions.innerHTML = chromeI18n('generalactions');
+newsopensavenews.innerHTML       = chromeI18n('opensavenews');
+newssavenews.innerHTML           = chromeI18n('savenews');
+newsrecheckall.innerHTML         = chromeI18n('recheckall');
+newsrecheckerrors.innerHTML      = chromeI18n('recheckerrors');
+newslink.placeholder             = chromeI18n('link');
+newsregexp.placeholder           = chromeI18n('regexp');
+newsadd.innerHTML                = chromeI18n('add');
+
+newsopensavenews.addEventListener('click', function () {
+    let toClick = [];
+    let trs     = newsbody.children;
+    let i, length;
+    for (i = 0, length = trs.length - 1; i !== length; i++) {
+        if (trs[i].domResult.className === 'green')
+            toClick.push(trs[i].domName.firstElementChild);
+    }
+    for (i = 0, length = toClick.length; i !== length; i++)
+        toClick[i].click();
+}, false);
+
+newssavenews.addEventListener('click', function () {
+    let toClick = [];
+    let trs     = newsbody.children;
+    let i, length;
+    for (i = 0, length = trs.length - 1; i !== length; i++) {
+        if (trs[i].domResult.className === 'green')
+            toClick.push(trs[i].domActions.firstElementChild);
+    }
+    for (i = 0, length = toClick.length; i !== length; i++)
+        toClick[i].click();
+}, false);
+
+newsrecheckall.addEventListener('click', function () {
+    let toClick = [];
+    let trs     = newsbody.children;
+    let i, length;
+    for (i = 0, length = trs.length - 1; i !== length; i++) {
+        if (trs[i].domResult.className === 'green')
+            toClick.push(trs[i].domActions.children[1]);
+        else toClick.push(trs[i].domActions.firstElementChild);
+    }
+    for (i = 0, length = toClick.length; i !== length; i++)
+        toClick[i].click();
+}, false);
+
+newsrecheckerrors.addEventListener('click', function () {
+    reCheckErrors(newsbody);
+}, false);
+
+newsadd.addEventListener('click', function () {
+    New.parse();
+}, false);
+
+addEventsToInput(newslink);
+addEventsToDropdowns(newsregexpdropdown);
+
+viewdatamanagement.innerHTML = chromeI18n('datamanagement');
+importdata.innerHTML         = chromeI18n('importdata');
+exportdata.innerHTML         = chromeI18n('exportdata');
+
+moment.locale(window.navigator.language);
+
+chrome.storage.local.get(null, function (items) {
+    let settings = (!('settings' in items) || typeof items.settings !== 'string') ? 'viewseries' : items.settings;
+    document.getElementById(settings).classList.add('active');
+    document.getElementById(settings + 'content').hidden = false;
+    parseArrays(items.arrays);
+    checkArrays();
+});
 
 importdatah.addEventListener('change', function (event) {
     let file    = new FileReader();
