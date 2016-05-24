@@ -7,16 +7,17 @@ class RSSParser {
             this._title        = xml.evaluate(RSSParser.xPathTitle[type.localName], type, null, XPathResult.STRING_TYPE, null).stringValue;
             this._link         = xml.evaluate(RSSParser.xPathLink[type.localName], type, null, XPathResult.STRING_TYPE, null).stringValue;
             let items          = xml.evaluate(RSSParser.xPathItems[type.localName], type, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-            let currentToArray = current === '' ? [] : current.split(';');
-            let itemsToArray   = [];
+            let currentToArray = current === '' ? [] : current[0] != '[' ? [current] : JSON.parse(current);
+            let length         = items.snapshotLength;
+            let itemsToArray   = new Array(length);
             this._newItemCount = 0;
-            for (let i = 0, length = items.snapshotLength; i !== length; i++) {
-                itemsToArray.push(items.snapshotItem(i).textContent);
+            for (let i = 0; i !== length; i++) {
+                itemsToArray[i] = items.snapshotItem(i).textContent;
                 if (objectInArray(itemsToArray[i], currentToArray) === -1)
                     this._newItemCount++;
             }
             if (this._newItemCount !== 0)
-                this._newCurrent = itemsToArray.join(';');
+                this._newCurrent = JSON.stringify(itemsToArray);
         }
         catch (err) {
             this._errorOccurred = true;
