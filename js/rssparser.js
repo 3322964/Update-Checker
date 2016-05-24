@@ -37,7 +37,7 @@ class RSSParser {
             if (this._newItemCount !== 0)
                 this._newCurrent = JSON.stringify(itemsToArray);
         }
-        catch (err) {console.log(err);
+        catch (err) {
             this._errorOccurred = true;
         }
     }
