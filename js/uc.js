@@ -258,7 +258,13 @@ importdatah.addEventListener('change', function (event) {
         event.target.value = '';
         try {
             parseArrays(JSON.parse(e.target.result).arrays);
-            window.location.reload();
+            let body;
+            for (let type in arrays) {
+                body = document.getElementById(type + 'body');
+                while (body.children.length !== 1)
+                    body.removeChild(body.firstElementChild);
+            }
+            checkArrays();
         }
         catch (err) {}
     };
