@@ -8,18 +8,36 @@ class RSSParser {
             this._link         = xml.evaluate(RSSParser.xPathLink[type.localName], type, null, XPathResult.STRING_TYPE, null).stringValue;
             let items          = xml.evaluate(RSSParser.xPathItems[type.localName], type, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
             let currentToArray = current === '' ? [] : current[0] != '[' ? [current] : JSON.parse(current);
-            let length         = items.snapshotLength;
-            let itemsToArray   = new Array(length);
+            let currentLength  = currentToArray.length;
+            let itemsLength    = items.snapshotLength;
+            let itemsToArray   = new Array(itemsLength);
             this._newItemCount = 0;
-            for (let i = 0; i !== length; i++) {
+            let itemDate, j, currentDate;
+            for (let i = 0; i !== itemsLength; i++) {
                 itemsToArray[i] = items.snapshotItem(i).textContent;
-                if (objectInArray(itemsToArray[i], currentToArray) === -1)
-                    this._newItemCount++;
+                itemDate        = moment(new Date(itemsToArray[i]));
+                if (!itemDate.isValid()) {
+                    if (objectInArray(itemsToArray[i], currentToArray) === -1)
+                        this._newItemCount++;
+                }
+                else {
+                    for (j = 0; j !== currentLength; j++) {
+                        currentDate = moment(new Date(currentToArray[j]));
+                        if (!currentDate.isValid()) {
+                            if (currentToArray[j] === itemsToArray[i])
+                                break;
+                        }
+                        else if (currentDate.isSame(itemDate))
+                            break;
+                    }
+                    if (j === currentLength)
+                        this._newItemCount++;
+                }
             }
             if (this._newItemCount !== 0)
                 this._newCurrent = JSON.stringify(itemsToArray);
         }
-        catch (err) {
+        catch (err) {console.log(err);
             this._errorOccurred = true;
         }
     }
