@@ -197,7 +197,7 @@ nav {
         background: #ceffc7; }
     .table-body > tr > td.loading {
         background: url(/img/ajax-loader.gif) no-repeat;
-        background-position: 5px center; }
+        background-position: 10px center; }
     .table-body > tr > td > a {
         cursor: pointer; }
 
