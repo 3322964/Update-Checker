@@ -44,15 +44,6 @@ function writeArrays() {
     chrome.storage.local.set({ arrays: arrays });
 }
 
-function addEventsToDropdowns(newsregexpdropdown) {
-    for (let i = 0, length = dropdownNews.length; i !== length; i++) {
-        let option       = document.createElement('option');
-        option.value     = dropdownNews[i].regexp;
-        option.innerHTML = dropdownNews[i].title + ' (' + dropdownNews[i].link + ')';
-        newsregexpdropdown.appendChild(option);
-    }
-}
-
 function parseArrays(tmpArrays) {
     arrays = { series: [], movies: [], blurays: [], news: [] };
     for (let type in tmpArrays) {
@@ -236,7 +227,13 @@ newsadd.addEventListener('click', function () {
 }, false);
 
 addEventsToInput(newslink);
-addEventsToDropdowns(newsregexpdropdown);
+
+for (let i = 0, length = dropdownNews.length; i !== length; i++) {
+    let option       = document.createElement('option');
+    option.value     = dropdownNews[i].regexp;
+    option.innerHTML = dropdownNews[i].title + ' (' + dropdownNews[i].link + ')';
+    newsregexpdropdown.appendChild(option);
+}
 
 viewdatamanagement.innerHTML = chromeI18n('datamanagement');
 importdata.innerHTML         = chromeI18n('importdata');

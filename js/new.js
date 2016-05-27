@@ -18,9 +18,8 @@ class New {
             let td2       = document.createElement('td');
             let td        = document.createElement('td');
             td1.innerHTML = '<input type="url" placeholder="' + chromeI18n('link') + '" required value="' + escapeAttribute(this.link) + '">';
-            td2.innerHTML = '<input type="text" placeholder="' + chromeI18n('regexp') + '" list="news' + escapeAttribute(this.link) + '" value="' + escapeAttribute(this.regexp) + '"><datalist id="news' + escapeAttribute(this.link) + '"></datalist>';
+            td2.innerHTML = '<input type="text" placeholder="' + chromeI18n('regexp') + '" list="newsregexpdropdown" value="' + escapeAttribute(this.regexp) + '">';
             td.innerHTML  = '<a>' + chromeI18n('confirm') + '</a> &middot; <a>' + chromeI18n('cancel') + '</a>';
-            addEventsToDropdowns(td2.lastElementChild);
             addEventsToInput(td1.firstElementChild);
             td.firstElementChild.addEventListener('click', () => New.parse(td1.firstElementChild, td2.firstElementChild, this.link, this.current, () => this.delete()), false);
             td.lastElementChild.addEventListener('click', () => {
