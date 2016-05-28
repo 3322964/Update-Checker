@@ -1,7 +1,6 @@
 class New {
     constructor(value) {
         this.body          = newsbody;
-        this.type          = 'news';
         this.value         = value;
         this.link          = value.link;
         this.regexp        = value.regexp;
@@ -129,9 +128,9 @@ class New {
     }
     save(newCurrent) {
         this.value.current = newCurrent;
-        let i = propertyInArray(this.link, 'link', arrays[this.type]);
+        let i = propertyInArray(this.link, 'link', arrays.news);
         if (i !== -1) {
-            arrays[this.type][i].current = newCurrent;
+            arrays.news[i].current = newCurrent;
             writeArrays();
         }
         this.reCheck();
@@ -139,32 +138,31 @@ class New {
     reCheck() {
         this.request.abort();
         this.body.removeChild(this.tr);
-        let toCheck = new New(this.value);
-        toCheck.check();
+        (new New(this.value)).check();
     }
     delete() {
         this.request.abort();
         this.body.removeChild(this.tr);
-        let i = propertyInArray(this.link, 'link', arrays[this.type]);
+        let i = propertyInArray(this.link, 'link', arrays.news);
         if (i !== -1) {
-            arrays[this.type].splice(i, 1);
+            arrays.news.splice(i, 1);
             writeArrays();
         }
     }
     static parse(domLink = newslink, domRegExp = newsregexp, previousLink = '', current = '', remove = () => {}) {
         domLink.click();
-        let link      = domLink.value.trim();
-        let regexp    = domRegExp.value;
-        let arrayNews = arrays.news;
-        if (!domLink.validity.valid || (previousLink !== link && propertyInArray(link, 'link', arrayNews) !== -1))
+        let link   = domLink.value.trim();
+        let regexp = domRegExp.value;
+        if (!domLink.validity.valid || (previousLink !== link && propertyInArray(link, 'link', arrays.news) !== -1))
             domLink.className = 'invalid';
         else {
             domLink.value   = '';
             domRegExp.value = '';
             remove();
-            let toCheck = new New(arrayNews[arrayNews.push({ link: link, regexp: regexp, current: current }) - 1]);
+            let object = { link: link, regexp: regexp, current: current };
+            arrays.news.push(object);
             writeArrays();
-            toCheck.check();
+            (new New(object)).check();
         }
     }
 }

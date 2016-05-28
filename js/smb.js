@@ -1,12 +1,12 @@
 class SMB {
     constructor(dateId, body, type, value, link, favicon) {
-        this.body      = body;
-        this.type      = type;
-        this.value     = value;
-        this.link      = link;
-        this.name      = this.link;
-        this.tr        = document.createElement('tr');
-        let string     = '<td><img src="' + getFavicon(favicon) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td>';
+        this.body  = body;
+        this.type  = type;
+        this.value = value;
+        this.link  = link;
+        this.name  = this.link;
+        this.tr    = document.createElement('tr');
+        let string = '<td><img src="' + getFavicon(favicon) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td>';
         for (let i = 1; i !== dateId; i++)
             string += '<td></td>';
         this.tr.innerHTML  = string + '<td><a>' + chromeI18n('recheck') + '</a> &middot; <a>' + chromeI18n('delete') + '</a></td>';
@@ -74,8 +74,7 @@ class SMB {
     reCheck() {
         this.request.abort();
         this.body.removeChild(this.tr);
-        let toCheck = new this.constructor(this.value);
-        toCheck.check();
+        (new this.constructor(this.value)).check();
     }
     delete() {
         this.request.abort();

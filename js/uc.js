@@ -138,10 +138,10 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
         else {
             name.value     = '';
             results.hidden = true;
-            let arrayType  = arrays[type];
-            let toCheck    = new classType(arrayType[arrayType.push(results.value) - 1]);
+            let object     = results.value;
+            arrays[type].push(object);
             writeArrays();
-            toCheck.check();
+            (new classType(object)).check();
         }
     }, false);
 }
