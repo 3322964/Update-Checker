@@ -1,17 +1,8 @@
-class New {
+class New extends Base {
     constructor(value) {
-        this.body          = newsbody;
-        this.value         = value;
-        this.link          = value.link;
-        this.regexp        = value.regexp;
-        this.current       = value.current;
-        this.name          = this.link;
-        this.tr            = document.createElement('tr');
-        this.tr.innerHTML  = '<td><img src="' + getFavicon(this.link) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td><td></td><td><a>' + chromeI18n('recheck') + '</a> &middot; <a>' + chromeI18n('edit') + '</a> &middot; <a>' + chromeI18n('delete') + '</a></td>';
-        this.tr.domName    = this.tr.children[1];
-        this.tr.domResult  = this.tr.children[2];
-        this.tr.domActions = this.tr.lastElementChild;
-        this.tr.domActions.firstElementChild.addEventListener('click', () => this.reCheck(), false);
+        super(newsbody, 'news', value, value.link, value.link, 2, '<a>' + chromeI18n('edit') + '</a> &middot; ');
+        this.regexp  = value.regexp;
+        this.current = value.current;
         this.tr.domActions.children[1].addEventListener('click', () => {
             let td1       = document.createElement('td');
             let td2       = document.createElement('td');
@@ -30,14 +21,6 @@ class New {
             this.tr.replaceChild(td2, this.tr.domResult);
             this.tr.replaceChild(td, this.tr.domActions);
         }, false);
-        this.tr.domActions.lastElementChild.addEventListener('click', () => {
-            let td       = document.createElement('td');
-            td.innerHTML = '<a>' + chromeI18n('confirm') + '</a> &middot; <a>' + chromeI18n('cancel') + '</a>';
-            td.firstElementChild.addEventListener('click', () => this.delete(), false);
-            td.lastElementChild.addEventListener('click', () => this.tr.replaceChild(this.tr.domActions, td), false);
-            this.tr.replaceChild(td, this.tr.domActions);
-        }, false);
-        this.body.insertBefore(this.tr, this.body.firstElementChild);
     }
     check() {
         this.request = new GetRequest(this.tr.domResult, this.link);
@@ -78,10 +61,6 @@ class New {
                 }
             }
         });
-    }
-    setName(name) {
-        this.name                                   = escapeHTML(name);
-        this.tr.domName.firstElementChild.innerHTML = this.name;
     }
     sortRed(string) {
         this.tr.domResult.className = 'red';
@@ -135,19 +114,8 @@ class New {
         }
         this.reCheck();
     }
-    reCheck() {
-        this.request.abort();
-        this.body.removeChild(this.tr);
-        (new New(this.value)).check();
-    }
     delete() {
-        this.request.abort();
-        this.body.removeChild(this.tr);
-        let i = propertyInArray(this.link, 'link', arrays.news);
-        if (i !== -1) {
-            arrays.news.splice(i, 1);
-            writeArrays();
-        }
+        super.delete(propertyInArray(this.link, 'link', arrays.news));
     }
     static parse(domLink = newslink, domRegExp = newsregexp, previousLink = '', current = '', remove = () => {}) {
         domLink.click();
