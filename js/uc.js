@@ -21,7 +21,7 @@ function escapeHTML(string) {
 }
 
 function escapeAttribute(string) {
-    return string.replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+    return string.replace(/"/g, '&quot;');
 }
 
 function getFavicon(link) {
@@ -51,11 +51,16 @@ function parseArrays(tmpArrays) {
             arrays[type] = tmpArrays[type];
     }
     if (tmpArrays !== undefined) { // A SUPPRIMER DANS LONGTEMPS
-        for (let i = 0, length = arrays.news.length; i !== length; i++)
+        let i, length;
+        for (i = 0, length = arrays.news.length; i !== length; i++)
             delete arrays.news[i].name;
         if ('rss' in tmpArrays) {
-            for (let i = 0, length = tmpArrays.rss.length; i !== length; i++)
+            for (i = 0, length = tmpArrays.rss.length; i !== length; i++)
                 arrays.news.push({ link: tmpArrays.rss[i].link, regexp: '', current: tmpArrays.rss[i].current });
+        }
+        for (i = 0, length = arrays.news.length; i !== length; i++) {
+            if (arrays.news[i].regexp === '' && arrays.news[i].current !== '' && arrays.news[i].current[0] !== '[')
+                arrays.news[i].current = '';
         }
     }
     writeArrays();
@@ -83,8 +88,8 @@ function checkArrays() {
 for (let i = 0, headers = header.children, length = headers.length; i !== length; i++) {
     headers[i].innerHTML = chromeI18n(headers[i].id);
     headers[i].addEventListener('click', function (e) {
-        var element                                                 = e.target;
-        var activeHeader                                            = element.parentElement.getElementsByClassName('active')[0];
+        let element                                                 = e.target;
+        let activeHeader                                            = element.parentElement.getElementsByClassName('active')[0];
         document.getElementById(activeHeader.id + 'content').hidden = true;
         activeHeader.classList.remove('active');
         element.classList.add('active');
@@ -239,16 +244,6 @@ viewdatamanagement.innerHTML = chromeI18n('datamanagement');
 importdata.innerHTML         = chromeI18n('importdata');
 exportdata.innerHTML         = chromeI18n('exportdata');
 
-moment.locale(window.navigator.language);
-
-chrome.storage.local.get(null, function (items) {
-    let settings = (!('settings' in items) || typeof items.settings !== 'string') ? 'viewseries' : items.settings;
-    document.getElementById(settings).classList.add('active');
-    document.getElementById(settings + 'content').hidden = false;
-    parseArrays(items.arrays);
-    checkArrays();
-});
-
 importdatah.addEventListener('change', function (event) {
     let file    = new FileReader();
     file.onload = function (e) {
@@ -279,3 +274,13 @@ exportdata.addEventListener('click', function () {
     a.click();
     window.URL.revokeObjectURL(a.href);
 }, false);
+
+moment.locale(window.navigator.language);
+
+chrome.storage.local.get(null, function (items) {
+    let settings = (!('settings' in items) || typeof items.settings !== 'string') ? 'viewseries' : items.settings;
+    document.getElementById(settings).classList.add('active');
+    document.getElementById(settings + 'content').hidden = false;
+    parseArrays(items.arrays);
+    checkArrays();
+});

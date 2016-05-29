@@ -1,12 +1,12 @@
 class Base {
     constructor(body, type, value, link, favicon, resultId, editString = '') {
-        this.body    = body;
-        this.type    = type;
-        this.value   = value;
-        this.link    = link;
-        this.name    = link;
-        this.tr      = document.createElement('tr');
-        let string   = '<td><img src="' + getFavicon(favicon) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td>';
+        this.body  = body;
+        this.type  = type;
+        this.value = value;
+        this.link  = link;
+        this.name  = link;
+        this.tr    = document.createElement('tr');
+        let string = '<td><img src="' + getFavicon(favicon) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td>';
         for (let i = 1; i !== resultId; i++)
             string += '<td></td>';
         this.tr.innerHTML  = string + '<td><a>' + chromeI18n('recheck') + '</a> &middot; ' + editString + '<a>' + chromeI18n('delete') + '</a></td>';
