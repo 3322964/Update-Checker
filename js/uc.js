@@ -253,7 +253,7 @@ importdatah.addEventListener('change', function (event) {
             let body;
             for (let type in arrays) {
                 body = document.getElementById(type + 'body');
-                while (body.children.length !== 1)
+                while (body.childElementCount !== 1)
                     body.removeChild(body.firstElementChild);
             }
             checkArrays();
