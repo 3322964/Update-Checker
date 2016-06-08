@@ -1,5 +1,5 @@
-const chromeI18n = chrome.i18n.getMessage;
-var dropdownNews = [
+const chromeI18n   = chrome.i18n.getMessage;
+const dropdownNews = [
     { title: 'Chrome Web Store', link: 'https://chrome.google.com/webstore/detail/*', regexp: 'itemprop="version" content="([^"]*)' },
     { title: 'Facebook', link: 'https://www.facebook.com*', regexp: 'id="requestsCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="mercurymessagesCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="notificationsCountValue">([^<]*)</span> <i [^>]*>([^<]*)' },
     { title: 'Facebook Page', link: 'https://www.facebook.com/*', regexp: 'class="_5pcq"[^>]*><abbr title="([^"]*)' },
@@ -233,8 +233,9 @@ newsadd.addEventListener('click', function () {
 
 addEventsToInput(newslink);
 
+let option;
 for (let i = 0, length = dropdownNews.length; i !== length; i++) {
-    let option       = document.createElement('option');
+    option           = document.createElement('option');
     option.value     = dropdownNews[i].regexp;
     option.innerHTML = dropdownNews[i].title + ' (' + dropdownNews[i].link + ')';
     newsregexpdropdown.appendChild(option);
