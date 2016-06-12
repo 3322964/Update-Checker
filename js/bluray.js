@@ -12,8 +12,10 @@ class Bluray extends SMB {
                 if (name === null)
                     this.sortRed();
                 else {
-                    if (name.length === 3)
-                        this.tr.children[2].innerHTML = '<img src="' + escapeAttribute(name[2]) + '">';
+                    if (name.length === 3) {
+                        this.tr.children[2].innerHTML             = '<img>';
+                        this.tr.children[2].firstElementChild.src = name[2];
+                    }
                     let result = response.match(Bluray.regExpDate);
                     if (result === null)
                         this.sortNoDate(name[1]);

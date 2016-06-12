@@ -4,9 +4,8 @@ class Base {
         this.type  = type;
         this.value = value;
         this.link  = link;
-        this.name  = link;
         this.tr    = document.createElement('tr');
-        let string = '<td><img src="' + getFavicon(favicon) + '"></td><td><a href="' + escapeAttribute(this.link) + '" target="_blank">' + escapeHTML(this.name) + '</a></td>';
+        let string = '<td><img></td><td><a target="_blank"></a></td>';
         for (let i = 1; i !== resultId; i++)
             string += '<td></td>';
         this.tr.innerHTML  = string + '<td><a>' + chromeI18n('recheck') + '</a> &middot; ' + editString + '<a>' + chromeI18n('delete') + '</a></td>';
@@ -21,11 +20,23 @@ class Base {
             td.lastElementChild.addEventListener('click', () => this.tr.replaceChild(this.tr.domActions, td), false);
             this.tr.replaceChild(td, this.tr.domActions);
         }, false);
+        this.setFavicon(favicon);
+        this.setLink(this.link);
+        this.setName(link);
         this.body.insertBefore(this.tr, this.body.firstElementChild);
+    }
+    setFavicon(favicon) {
+        this.tr.firstElementChild.firstElementChild.src = 'http://www.google.com/s2/favicons?domain_url=' + encodeURIComponent(favicon);
+    }
+    setLink(link) {
+        this.tr.domName.firstElementChild.href = link;
     }
     setName(name) {
         this.name                                   = escapeHTML(name);
         this.tr.domName.firstElementChild.innerHTML = this.name;
+    }
+    setResult(result) {
+        this.tr.domResult.innerHTML = escapeHTML(result);
     }
     reCheck() {
         this.request.abort();

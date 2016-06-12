@@ -20,14 +20,6 @@ function escapeHTML(string) {
     return string.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function escapeAttribute(string) {
-    return string.replace(/"/g, '&quot;');
-}
-
-function getFavicon(link) {
-    return 'http://www.google.com/s2/favicons?domain_url=' + encodeURIComponent(link);
-}
-
 function propertyInArray(value, property, array) {
     let i;
     for (i = array.length - 1; i !== -1 && array[i][property] !== value; i--) ;

@@ -3,8 +3,8 @@ class SMB extends Base {
         super(body, type, value, link, favicon, resultId);
     }
     sortRed() {
+        this.setResult(chromeI18n('error', ['RegExp']));
         this.tr.domResult.className = 'red';
-        this.tr.domResult.innerHTML = chromeI18n('error', ['RegExp']);
         let trs                     = this.body.children;
         let i                       = trs.length - 2;
         for ( ; i !== -1 && trs[i].domResult.className === 'nodate'; i--) ;
@@ -15,8 +15,8 @@ class SMB extends Base {
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortOrange() {
+        this.setResult(chromeI18n('error', [chromeI18n('link')]));
         this.tr.domResult.className = 'orange';
-        this.tr.domResult.innerHTML = chromeI18n('error', [chromeI18n('link')]);
         let trs                     = this.body.children;
         let i                       = trs.length - 2;
         for ( ; i !== -1 && trs[i].domResult.className === 'nodate'; i--) ;
@@ -28,11 +28,11 @@ class SMB extends Base {
     sortDate(name, result) {
         this.setName(name);
         this.date = moment(new Date(result));
+        this.setResult(this.date.format('LL'));
         if (!this.date.isAfter(moment().startOf('day')))
             this.tr.domResult.className = 'green';
-        this.tr.domResult.innerHTML = this.date.format('LL');
-        let trs                     = this.body.children;
-        let i                       = trs.length - 2;
+        let trs = this.body.children;
+        let i   = trs.length - 2;
         for ( ; i !== -1 && trs[i].domResult.className === 'nodate'; i--) ;
         for ( ; i !== -1 && (trs[i].domResult.className === '' || trs[i].domResult.className === 'green') && this.date.isBefore(moment(trs[i].domResult.innerHTML, 'LL')); i--) ;
         for ( ; i !== -1 && (trs[i].domResult.className === '' || trs[i].domResult.className === 'green') && this.date.isSame(moment(trs[i].domResult.innerHTML, 'LL')) && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
