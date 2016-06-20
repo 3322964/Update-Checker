@@ -42,19 +42,6 @@ function parseArrays(tmpArrays) {
         if (type in arrays)
             arrays[type] = tmpArrays[type];
     }
-    if (tmpArrays !== undefined) { // A SUPPRIMER DANS LONGTEMPS
-        let i, length;
-        for (i = 0, length = arrays.news.length; i !== length; i++)
-            delete arrays.news[i].name;
-        if ('rss' in tmpArrays) {
-            for (i = 0, length = tmpArrays.rss.length; i !== length; i++)
-                arrays.news.push({ link: tmpArrays.rss[i].link, regexp: '', current: tmpArrays.rss[i].current });
-        }
-        for (i = 0, length = arrays.news.length; i !== length; i++) {
-            if (arrays.news[i].regexp === '' && arrays.news[i].current !== '' && arrays.news[i].current[0] !== '[')
-                arrays.news[i].current = '';
-        }
-    }
     writeArrays();
 }
 
