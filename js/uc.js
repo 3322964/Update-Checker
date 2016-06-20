@@ -125,6 +125,7 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
 
     addEventsToInput(name);
 
+    name.addEventListener('input', classType.parse, false);
     name.addEventListener('keyup', classType.parse, false);
     name.addEventListener('search', classType.parse, false);
 
