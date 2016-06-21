@@ -7,7 +7,13 @@ class RSSParser {
             this._title        = xml.evaluate(RSSParser.xPathTitle[type.localName], type, null, XPathResult.STRING_TYPE, null).stringValue;
             this._link         = xml.evaluate(RSSParser.xPathLink[type.localName], type, null, XPathResult.STRING_TYPE, null).stringValue;
             let items          = xml.evaluate(RSSParser.xPathItems[type.localName], type, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-            let currentToArray = current === '' ? [] : JSON.parse(current);
+            let currentToArray;
+            try {
+                currentToArray = JSON.parse(current);
+            }
+            catch (err) {
+                currentToArray = [];
+            }
             let currentLength  = currentToArray.length;
             let itemsLength    = items.snapshotLength;
             let itemsToArray   = new Array(itemsLength);
