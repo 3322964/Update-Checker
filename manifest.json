@@ -13,6 +13,5 @@
     "background": {
         "scripts": ["/js/background.js"]
     },
-    "minimum_chrome_version": "49",
     "permissions": ["tabs", "storage", "unlimitedStorage", "*://*/*"]
 }
