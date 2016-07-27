@@ -12,10 +12,7 @@ class Bluray extends SMB {
                 if (name === null)
                     this.sortRed();
                 else {
-                    if (name.length === 3) {
-                        this.tr.children[2].innerHTML             = '<img>';
-                        this.tr.children[2].firstElementChild.src = name[2];
-                    }
+                    this.tr.children[2].innerHTML = escapeHTML(name[2]);
                     let result = response.match(Bluray.regExpDate);
                     if (result === null)
                         this.sortNoDate(name[1]);
@@ -42,13 +39,13 @@ class Bluray extends SMB {
                     if (tmp === null)
                         bluraysname.classList.add('invalid');
                     else {
-                        let URLs      = tmp[1].replace(/'|http:\/\/www\.blu-ray\.com\/movies\//g, '').split(', ');
+                        let urls      = tmp[1].replace(/'|http:\/\/www\.blu-ray\.com\/movies\//g, '').split(', ');
                         let regExp    = /<img src="http:\/\/images.static-bluray.com\/flags\/([^.]*).png" [^>]*>&nbsp;([^\n<]*)/g;
                         let output    = '';
                         let arrayType = arrays.blurays;
                         for (let i = 0; (tmp = regExp.exec(response)) !== null; i++) {
-                            if (objectInArray(URLs[i], arrayType) === -1)
-                                output += '<option value="' + URLs[i] + '">' + tmp[2] + ' (' + tmp[1] + ')</option>';
+                            if (objectInArray(urls[i], arrayType) === -1)
+                                output += '<option value="' + urls[i] + '">' + tmp[2] + ' (' + tmp[1] + ')</option>';
                         }
                         if (output === '')
                             bluraysname.classList.add('invalid');
@@ -63,5 +60,5 @@ class Bluray extends SMB {
     }
 }
 
-Bluray.regExpName = /itemprop="itemReviewed">([^<]*) Blu-ray<\/h1>(?:<\/a>)?<img src="([^\.]*\.static-bluray.com\/flags\/[^"]*)/;
+Bluray.regExpName = /itemprop="itemReviewed">([^<]*) Blu-ray<\/h1>(?:<\/a>)?<img [^>]*title="([^"]*)/;
 Bluray.regExpDate = /style="text-decoration: none; color: #666666">([^<]*)/;

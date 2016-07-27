@@ -58,6 +58,7 @@
                     <tr>
                         <th></th>
                         <th id="viewmoviesname"></th>
+                        <th id="viewmoviescountry"></th>
                         <th id="viewmoviesreleasedate"></th>
                         <th id="viewmoviesactions"></th>
                     </tr>
@@ -65,7 +66,7 @@
                 <tbody id="moviesbody" class="table-body">
                     <tr>
                         <td></td>
-                        <td><input id="moviesname" type="search"></td>
+                        <td colspan="2"><input id="moviesname" type="search"></td>
                         <td><select id="moviesresults" hidden></select></td>
                         <td><a id="moviesadd"></a></td>
                     </tr>
@@ -144,7 +145,6 @@
             </div>
         </div>
 
-        <script src="/js/lib/countries.min.js"></script>
         <script src="/js/lib/moment-with-locales.min.js"></script>
         <script src="/js/request.js"></script>
         <script src="/js/base.js"></script>

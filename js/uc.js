@@ -143,12 +143,12 @@ function reCheckErrors(body) {
         toClick[i].click();
 }
 
+viewmoviescountry.innerHTML     = viewblurayscountry.innerHTML     = chromeI18n('country');
 viewmoviesreleasedate.innerHTML = viewbluraysreleasedate.innerHTML = chromeI18n('releasedate');
 viewseriesseason.innerHTML                  = chromeI18n('season');
 viewseriesepisode.innerHTML                 = chromeI18n('episode');
 viewseriesepisodename.innerHTML             = chromeI18n('episodename');
 viewseriesepisodebroadcastingdate.innerHTML = chromeI18n('episodebroadcastingdate');
-viewblurayscountry.innerHTML                = chromeI18n('country');
 viewnewsname.innerHTML                      = chromeI18n('name');
 viewnewsresult.innerHTML                    = chromeI18n('result');
 viewnewsactions.innerHTML                   = chromeI18n('actions');

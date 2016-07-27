@@ -1,6 +1,6 @@
 class Movie extends SMB {
     constructor(value) {
-        super(moviesbody, 'movies', value, 'http://www.imdb.com/title/' + value + '/', 'http://www.imdb.com/', 2);
+        super(moviesbody, 'movies', value, 'http://www.imdb.com/title/' + value + '/', 'http://www.imdb.com/', 3);
     }
     check() {
         this.request = new GetRequest(this.tr.domResult, this.link);
@@ -13,9 +13,12 @@ class Movie extends SMB {
                     this.sortRed();
                 else {
                     let result = response.match(Movie.regExpDate);
-                    if (result === null || iso.findCountryByName(result[3]).value !== result[1])
+                    if (result === null)
                         this.sortNoDate(name[1]);
-                    else this.sortDate(name[1], result[2]);
+                    else {
+                        this.tr.children[2].innerHTML = escapeHTML(result[2]);
+                        this.sortDate(name[1], result[1]);
+                    }
                 }
             }
         });
@@ -55,5 +58,4 @@ class Movie extends SMB {
 }
 
 Movie.regExpName = /<title>([^<]*) \(/;
-Movie.regExpDate = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See more release dates" >(.*) \(([^\)]*)/;
-// Movie.regExpDate = /set_twilight_info\(\n"title",\n"([A-Z][A-Z])"[\s\S]*title="See all release dates" > ([^<]*).*\n\(([^\)]*)/;
+Movie.regExpDate = /title="See more release dates" >(.*) \(([^\)]*)/;
