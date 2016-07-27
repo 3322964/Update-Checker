@@ -57,5 +57,5 @@ class Movie extends SMB {
     }
 }
 
-Movie.regExpName = /<title>([^<]*) \(/;
+Movie.regExpName = /<h1 itemprop="name"[^>]*>([^<]*)&nbsp;/;
 Movie.regExpDate = /title="See more release dates" >(.*) \(([^\)]*)/;
