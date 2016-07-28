@@ -35,12 +35,12 @@ class Bluray extends SMB {
                 if (!ok)
                     bluraysname.classList.add('invalid');
                 else {
-                    let tmp = response.match(/var urls = new Array\(([^\)]*)/);
+                    let tmp = response.match(/var urls = new Array\(([^\)]+)/);
                     if (tmp === null)
                         bluraysname.classList.add('invalid');
                     else {
                         let urls      = tmp[1].replace(/'|http:\/\/www\.blu-ray\.com\/movies\//g, '').split(', ');
-                        let regExp    = /<img src="http:\/\/images.static-bluray.com\/flags\/([^.]*).png" [^>]*>&nbsp;([^\n<]*)/g;
+                        let regExp    = /<img src="http:\/\/images.static-bluray.com\/flags\/([^.]+).png" [^>]*>&nbsp;([^\n<]+)/g;
                         let output    = '';
                         let arrayType = arrays.blurays;
                         for (let i = 0; (tmp = regExp.exec(response)) !== null; i++) {
@@ -60,5 +60,5 @@ class Bluray extends SMB {
     }
 }
 
-Bluray.regExpName = /itemprop="itemReviewed">([^<]*) Blu-ray<\/h1>(?:<\/a>)?<img [^>]*title="([^"]*)/;
-Bluray.regExpDate = /style="text-decoration: none; color: #666666">([^<]*)/;
+Bluray.regExpName = /itemprop="itemReviewed">([^<]+) Blu-ray<\/h1>(?:<\/a>)?<img [^>]*title="([^"]+)/;
+Bluray.regExpDate = /style="text-decoration: none; color: #666666">([^<]+)/;

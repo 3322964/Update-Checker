@@ -43,7 +43,7 @@ class Serie extends SMB {
                 if (!ok)
                     seriesname.classList.add('invalid');
                 else {
-                    let regExp    = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>([^<]*Series\)) </g;
+                    let regExp    = /class="result_text"> <a href="\/title\/(tt[^\/]+)\/[^>]*>([^<]+)<\/a>([^<]+Series\)) </g;
                     let output    = '';
                     let arrayType = arrays.series;
                     let tmp;
@@ -70,4 +70,4 @@ class Serie extends SMB {
     }
 }
 
-Serie.regExpName = /<title>&#x22;([^<]*)&#x22;/;
+Serie.regExpName = /<title>&#x22;([^<]+)&#x22;/;

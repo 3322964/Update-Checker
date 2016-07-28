@@ -34,9 +34,12 @@ class New extends Base {
                 if (rssParser.errorOccurred)
                     this.sortRed('RSS');
                 else {
-                    this.setName(rssParser.title);
-                    this.setLink(rssParser.link);
-                    this.setFavicon(rssParser.link);
+                    if (rssParser.title.trim() !== '')
+                        this.setName(rssParser.title);
+                    if (rssParser.link.trim() !== '') {
+                        this.setLink(rssParser.link);
+                        this.setFavicon(rssParser.link);
+                    }
                     let newItemCount = rssParser.newItemCount;
                     let result       = chromeI18n('newitems', [newItemCount]);
                     if (newItemCount === 0)
@@ -46,7 +49,7 @@ class New extends Base {
             }
             else {
                 let tmp = response.match(New.regExpName);
-                if (tmp !== null && tmp.length === 2)
+                if (tmp !== null && tmp[1].trim() !== '')
                     this.setName(tmp[1]);
                 try {
                     let result = response.match(new RegExp(this.regexp));
@@ -136,4 +139,4 @@ class New extends Base {
     }
 }
 
-New.regExpName = /<title(?: [^>]*)?>([^<]*)/;
+New.regExpName = /<title(?: [^>]*)?>([^<]+)/;

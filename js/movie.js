@@ -37,7 +37,7 @@ class Movie extends SMB {
                 if (!ok)
                     moviesname.classList.add('invalid');
                 else {
-                    let regExp    = /class="result_text"> <a href="\/title\/(tt[^\/]*)\/[^>]*>([^<]*)<\/a>(?![^<]*(?:Series|\(Video Game|\(Video|\(TV Episode)\) <)([^<]*) </g;
+                    let regExp    = /class="result_text"> <a href="\/title\/(tt[^\/]+)\/[^>]*>([^<]+)<\/a>(?![^<]*(?:Series|\(Video Game|\(Video|\(TV Episode)\) <)([^<]*) </g;
                     let output    = '';
                     let arrayType = arrays.movies;
                     let tmp;
@@ -57,5 +57,5 @@ class Movie extends SMB {
     }
 }
 
-Movie.regExpName = /<h1 itemprop="name"[^>]*>([^<]*)&nbsp;/;
-Movie.regExpDate = /title="See more release dates" >(.*) \(([^\)]*)/;
+Movie.regExpName = /<h1 itemprop="name"[^>]*>([^<]+)&nbsp;/;
+Movie.regExpDate = /title="See more release dates" >(.+) \(([^\)]+)/;
