@@ -96,9 +96,9 @@
         "message": "Data management"
     },
     "importdata": {
-        "message": "Import data"
+        "message": "Import"
     },
     "exportdata": {
-        "message": "Export data"
+        "message": "Export"
     }
 }
