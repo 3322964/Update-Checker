@@ -97,16 +97,10 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
     add.innerHTML                = chromeI18n('add');
 
     recheckall.addEventListener('click', function () {
-        let toClick = [];
-        let trs     = body.children;
-        let i, length;
-        for (i = 0, length = trs.length - 1; i !== length; i++)
-            toClick.push(trs[i].domActions.firstElementChild);
-        for (i = 0, length = toClick.length; i !== length; i++)
-            toClick[i].click();
+        reCheckAll(body);
     }, false);
 
-    recheckerrors.addEventListener('click', function() {
+    recheckerrors.addEventListener('click', function () {
         reCheckErrors(body);
     }, false);
 
@@ -131,16 +125,26 @@ function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheck
     }, false);
 }
 
+function reCheckAll(body) {
+    let toReCheck = [];
+    let trs       = body.children;
+    let i, length;
+    for (i = 0, length = trs.length - 1; i !== length; i++)
+        toReCheck.push(trs[i].obj);
+    for (i = 0, length = toReCheck.length; i !== length; i++)
+        toReCheck[i].reCheck();
+}
+
 function reCheckErrors(body) {
-    let toClick = [];
-    let trs     = body.children;
+    let toReCheck = [];
+    let trs       = body.children;
     let i, length;
     for (i = 0, length = trs.length - 1; i !== length; i++) {
-        if (trs[i].domResult.className === 'red' || trs[i].domResult.className === 'orange')
-            toClick.push(trs[i].domActions.firstElementChild);
+        if (trs[i].obj.color === 'red' || trs[i].obj.color === 'orange')
+            toReCheck.push(trs[i].obj);
     }
-    for (i = 0, length = toClick.length; i !== length; i++)
-        toClick[i].click();
+    for (i = 0, length = toReCheck.length; i !== length; i++)
+        toReCheck[i].reCheck();
 }
 
 viewmoviescountry.innerHTML     = viewblurayscountry.innerHTML     = chromeI18n('country');
@@ -166,41 +170,28 @@ newslink.placeholder             = chromeI18n('link');
 newsregexp.placeholder           = chromeI18n('regexp');
 newsadd.innerHTML                = chromeI18n('add');
 
-newsopensavenews.addEventListener('click', function () {
-    let toClick = [];
-    let trs     = newsbody.children;
+function saveGreen(method) {
+    let toSave = [];
+    let trs    = newsbody.children;
     let i, length;
     for (i = 0, length = trs.length - 1; i !== length; i++) {
-        if (trs[i].domResult.className === 'green')
-            toClick.push(trs[i].domName.firstElementChild);
+        if (trs[i].obj.color === 'green')
+            toSave.push(trs[i].obj);
     }
-    for (i = 0, length = toClick.length; i !== length; i++)
-        toClick[i].click();
+    for (i = 0, length = toSave.length; i !== length; i++)
+        toSave[i][method]();
+}
+
+newsopensavenews.addEventListener('click', function () {
+    saveGreen('openSave');
 }, false);
 
 newssavenews.addEventListener('click', function () {
-    let toClick = [];
-    let trs     = newsbody.children;
-    let i, length;
-    for (i = 0, length = trs.length - 1; i !== length; i++) {
-        if (trs[i].domResult.className === 'green')
-            toClick.push(trs[i].domActions.firstElementChild);
-    }
-    for (i = 0, length = toClick.length; i !== length; i++)
-        toClick[i].click();
+    saveGreen('save');
 }, false);
 
 newsrecheckall.addEventListener('click', function () {
-    let toClick = [];
-    let trs     = newsbody.children;
-    let i, length;
-    for (i = 0, length = trs.length - 1; i !== length; i++) {
-        if (trs[i].domResult.className === 'green')
-            toClick.push(trs[i].domActions.children[1]);
-        else toClick.push(trs[i].domActions.firstElementChild);
-    }
-    for (i = 0, length = toClick.length; i !== length; i++)
-        toClick[i].click();
+    reCheckAll(newsbody);
 }, false);
 
 newsrecheckerrors.addEventListener('click', function () {
@@ -260,7 +251,7 @@ moment.locale(window.navigator.language);
 
 chrome.storage.local.get(null, function (items) {
     let settings;
-    if (!('settings' in items) || typeof items.settings !== 'string') { // SUPPRIMER LA SECONDE PARTIE DANS LONGTEMPS
+    if (!('settings' in items)) {
         settings = 'viewseries';
         chrome.storage.local.set({ settings: settings });
     }

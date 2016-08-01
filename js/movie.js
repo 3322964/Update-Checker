@@ -3,7 +3,7 @@ class Movie extends SMB {
         super(moviesbody, 'movies', value, 'http://www.imdb.com/title/' + value + '/', 'http://www.imdb.com/', 3);
     }
     check() {
-        this.request = new GetRequest(this.tr.domResult, this.link);
+        this.request = new GetRequest(this.domResult, this.link);
         this.request.send((ok, response) => {
             if (!ok)
                 this.sortOrange();

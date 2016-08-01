@@ -3,7 +3,7 @@ class Serie extends SMB {
         super(seriesbody, 'series', value, 'http://www.imdb.com/title/' + value + '/', 'http://www.imdb.com/', 5);
     }
     check() {
-        this.request = new GetRequest(this.tr.domResult, this.link + 'epcast');
+        this.request = new GetRequest(this.domResult, this.link + 'epcast');
         this.request.send((ok, response) => {
             if (!ok)
                 this.sortOrange();

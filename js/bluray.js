@@ -3,7 +3,7 @@ class Bluray extends SMB {
         super(bluraysbody, 'blurays', value, 'http://www.blu-ray.com/movies/' + value, 'http://www.blu-ray.com/', 3);
     }
     check() {
-        this.request = new GetRequest(this.tr.domResult, this.link);
+        this.request = new GetRequest(this.domResult, this.link);
         this.request.send((ok, response) => {
             if (!ok)
                 this.sortOrange();

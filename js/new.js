@@ -3,7 +3,7 @@ class New extends Base {
         super(newsbody, 'news', value, value.link, value.link, 2, '<a>' + chromeI18n('edit') + '</a> &middot; ');
         this.regexp  = value.regexp;
         this.current = value.current;
-        this.tr.domActions.children[1].addEventListener('click', () => {
+        this.domActions.children[1].addEventListener('click', () => {
             let td1                     = document.createElement('td');
             let td2                     = document.createElement('td');
             let td                      = document.createElement('td');
@@ -15,17 +15,17 @@ class New extends Base {
             addEventsToInput(td1.firstElementChild);
             td.firstElementChild.addEventListener('click', () => New.parse(td1.firstElementChild, td2.firstElementChild, this.link, this.current, () => this.delete()), false);
             td.lastElementChild.addEventListener('click', () => {
-                this.tr.replaceChild(this.tr.domName, td1);
-                this.tr.replaceChild(this.tr.domResult, td2);
-                this.tr.replaceChild(this.tr.domActions, td);
+                this.tr.replaceChild(this.domName, td1);
+                this.tr.replaceChild(this.domResult, td2);
+                this.tr.replaceChild(this.domActions, td);
             }, false);
-            this.tr.replaceChild(td1, this.tr.domName);
-            this.tr.replaceChild(td2, this.tr.domResult);
-            this.tr.replaceChild(td, this.tr.domActions);
+            this.tr.replaceChild(td1, this.domName);
+            this.tr.replaceChild(td2, this.domResult);
+            this.tr.replaceChild(td, this.domActions);
         }, false);
     }
     check() {
-        this.request = new GetRequest(this.tr.domResult, this.link);
+        this.request = new GetRequest(this.domResult, this.link);
         this.request.send((ok, response) => {
             if (!ok)
                 this.sortOrange();
@@ -68,55 +68,60 @@ class New extends Base {
     }
     sortRed(string) {
         this.setResult(chromeI18n('error', [string]));
-        this.tr.domResult.className = 'red';
-        let trs                     = this.body.children;
-        let i                       = trs.length - 2;
-        for ( ; i !== -1 && trs[i].domResult.className === ''; i--) ;
-        for ( ; i !== -1 && trs[i].domResult.className === 'green'; i--) ;
-        for ( ; i !== -1 && trs[i].domResult.className === 'orange'; i--) ;
-        for ( ; i !== -1 && trs[i].domResult.className === 'red' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        this.setColor('red');
+        let trs = this.body.children;
+        let i   = trs.length - 2;
+        for ( ; i !== -1 && trs[i].obj.color === 'black'; i--) ;
+        for ( ; i !== -1 && trs[i].obj.color === 'green'; i--) ;
+        for ( ; i !== -1 && trs[i].obj.color === 'orange'; i--) ;
+        for ( ; i !== -1 && trs[i].obj.color === 'red' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortOrange() {
         this.setResult(chromeI18n('error', [chromeI18n('link')]));
-        this.tr.domResult.className = 'orange';
-        let trs                     = this.body.children;
-        let i                       = trs.length - 2;
-        for ( ; i !== -1 && trs[i].domResult.className === ''; i--) ;
-        for ( ; i !== -1 && trs[i].domResult.className === 'green'; i--) ;
-        for ( ; i !== -1 && trs[i].domResult.className === 'orange' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        this.setColor('orange');
+        let trs = this.body.children;
+        let i   = trs.length - 2;
+        for ( ; i !== -1 && trs[i].obj.color === 'black'; i--) ;
+        for ( ; i !== -1 && trs[i].obj.color === 'green'; i--) ;
+        for ( ; i !== -1 && trs[i].obj.color === 'orange' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortCurrent(result, newCurrent) {
+        this.newCurrent = newCurrent;
         this.setResult(result);
-        this.tr.domResult.className = 'green';
-        this.tr.domName.firstElementChild.addEventListener('click', () => this.save(newCurrent), false);
+        this.setColor('green');
+        this.domName.firstElementChild.addEventListener('click', this.save, false);
         let a       = document.createElement('a');
         a.innerHTML = chromeI18n('save');
-        a.addEventListener('click', () => this.save(newCurrent), false);
-        this.tr.domActions.insertBefore(document.createTextNode(' · '), this.tr.domActions.firstElementChild);
-        this.tr.domActions.insertBefore(a, this.tr.domActions.firstChild);
+        a.addEventListener('click', this.save, false);
+        this.domActions.insertBefore(document.createTextNode(' · '), this.domActions.firstElementChild);
+        this.domActions.insertBefore(a, this.domActions.firstChild);
         let trs = this.body.children;
         let i   = trs.length - 2;
-        for ( ; i !== -1 && trs[i].domResult.className === ''; i--) ;
-        for ( ; i !== -1 && trs[i].domResult.className === 'green' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        for ( ; i !== -1 && trs[i].obj.color === ''; i--) ;
+        for ( ; i !== -1 && trs[i].obj.color === 'green' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortNoCurrent(result) {
         this.setResult(result);
+        this.setColor('black');
         let trs = this.body.children;
         let i   = trs.length - 2;
-        for ( ; i !== -1 && trs[i].domResult.className === '' && trs[i].domName.firstElementChild.innerHTML.localeCompare(this.name) > 0; i--) ;
+        for ( ; i !== -1 && trs[i].obj.color === '' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
-    save(newCurrent) {
-        this.value.current = newCurrent;
+    save() {
+        this.value.current = this.newCurrent;
         let i              = propertyInArray(this.link, 'link', arrays.news);
         if (i !== -1) {
-            arrays.news[i].current = newCurrent;
+            arrays.news[i].current = this.newCurrent;
             writeArrays();
         }
         this.reCheck();
+    }
+    openSave() {
+        this.domName.firstElementChild.click();
     }
     delete() {
         super.delete(propertyInArray(this.link, 'link', arrays.news));
