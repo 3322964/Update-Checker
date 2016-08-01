@@ -2,9 +2,6 @@ class SMB extends Base {
     constructor(body, type, value, link, favicon, resultId) {
         super(body, type, value, link, favicon, resultId);
     }
-    setDate(result) {
-        this._date = moment(new Date(result));
-    }
     sortRed() {
         this.setResult(chromeI18n('error', ['RegExp']));
         this.setColor('red');
@@ -30,14 +27,14 @@ class SMB extends Base {
     }
     sortDate(name, result) {
         this.setName(name);
-        this.setDate(result);
+        this._date = moment(new Date(result));
         this.setResult(this._date.format('LL'));
         this.setColor(!this._date.isAfter(moment().startOf('day')) ? 'green' : 'black');
         let trs = this.body.children;
         let i   = trs.length - 2;
         for ( ; i !== -1 && trs[i].obj.color === 'empty'; i--) ;
-        for ( ; i !== -1 && (trs[i].obj.color === 'black' || trs[i].obj.color === 'green') && this.date.isBefore(trs[i].obj.date); i--) ;
-        for ( ; i !== -1 && (trs[i].obj.color === 'black' || trs[i].obj.color === 'green') && this.date.isSame(trs[i].obj.date) && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
+        for ( ; i !== -1 && (trs[i].obj.color === 'black' || trs[i].obj.color === 'green') && this._date.isBefore(trs[i].obj.date); i--) ;
+        for ( ; i !== -1 && (trs[i].obj.color === 'black' || trs[i].obj.color === 'green') && this._date.isSame(trs[i].obj.date) && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortNoDate(name) {
