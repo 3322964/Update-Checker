@@ -153,12 +153,12 @@ nav {
     .table-head > tr > th:last-child {
         border-right-color: #ccc;
         border-top-right-radius: 3px; }
-    .table-head > tr > th:after {
+    /*.table-head > tr > th:after {
         float: right; }
     .table-head > tr > th.asc:after {
         content: '\25B2'; }
     .table-head > tr > th.desc:after {
-        content: '\25BC'; }
+        content: '\25BC'; }*/
 
     .table-head > tr > th:first-child {
         width: 16px; }

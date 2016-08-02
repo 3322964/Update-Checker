@@ -99,7 +99,7 @@ class New extends Base {
         this.domActions.insertBefore(a, this.domActions.firstChild);
         let trs = this.body.children;
         let i   = trs.length - 2;
-        for ( ; i !== -1 && trs[i].obj.color === ''; i--) ;
+        for ( ; i !== -1 && trs[i].obj.color === 'black'; i--) ;
         for ( ; i !== -1 && trs[i].obj.color === 'green' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
@@ -108,7 +108,7 @@ class New extends Base {
         this.setColor('black');
         let trs = this.body.children;
         let i   = trs.length - 2;
-        for ( ; i !== -1 && trs[i].obj.color === '' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
+        for ( ; i !== -1 && trs[i].obj.color === 'black' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     save() {
