@@ -91,10 +91,10 @@ class New extends Base {
         this.newCurrent = newCurrent;
         this.setResult(result);
         this.setColor('green');
-        this.domName.firstElementChild.addEventListener('click', this.save, false);
+        this.domName.firstElementChild.addEventListener('click', () => this.save(), false);
         let a       = document.createElement('a');
         a.innerHTML = chromeI18n('save');
-        a.addEventListener('click', this.save, false);
+        a.addEventListener('click', () => this.save(), false);
         this.domActions.insertBefore(document.createTextNode(' · '), this.domActions.firstElementChild);
         this.domActions.insertBefore(a, this.domActions.firstChild);
         let trs = this.body.children;
