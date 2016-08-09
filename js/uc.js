@@ -8,13 +8,7 @@ const dropdownNews = [
     { title: 'RuTracker', link: 'http://rutracker.org/forum/tracker.php?nm=*', regexp: 'data-topic_id="([^"]*)' },
     { title: 'YouTube', link: 'https://www.youtube.com/*/*/videos', regexp: 'class="yt-lockup-title "><a [^>]*>([^<]*)' }
 ];
-var arrays;
-
-for (let i = 0, tmp, elements = document.getElementsByTagName('*'), length = elements.length; i !== length; i++) {
-    tmp = elements[i].id;
-    if (tmp !== '')
-        window[tmp] = elements[i];
-}
+let arrays;
 
 function escapeHTML(string) {
     return string.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
