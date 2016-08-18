@@ -32,7 +32,7 @@ class Movie extends SMB {
 
         let value = moviesname.value.trim();
         if (value !== '') {
-            Movie.request = new GetRequest(moviesname, 'http://www.imdb.com/find?s=tt&q=' + encodeURIComponent(value));
+            Movie.request = new GetRequest(moviesresults.parentElement, 'http://www.imdb.com/find?s=tt&q=' + encodeURIComponent(value));
             Movie.request.send(function (ok, response) {
                 if (!ok)
                     moviesname.classList.add('invalid');

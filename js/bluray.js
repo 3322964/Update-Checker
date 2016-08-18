@@ -30,7 +30,7 @@ class Bluray extends SMB {
 
         let value = bluraysname.value.trim();
         if (value !== '') {
-            Bluray.request = new PostRequest(bluraysname, 'http://www.blu-ray.com/search/quicksearch.php');
+            Bluray.request = new PostRequest(bluraysresults.parentElement, 'http://www.blu-ray.com/search/quicksearch.php');
             Bluray.request.send(function (ok, response) {
                 if (!ok)
                     bluraysname.classList.add('invalid');

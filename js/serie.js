@@ -38,7 +38,7 @@ class Serie extends SMB {
 
         let value = seriesname.value.trim();
         if (value !== '') {
-            Serie.request = new GetRequest(seriesname, 'http://www.imdb.com/find?s=tt&q=' + encodeURIComponent(value));
+            Serie.request = new GetRequest(seriesresults.parentElement, 'http://www.imdb.com/find?s=tt&q=' + encodeURIComponent(value));
             Serie.request.send(function (ok, response) {
                 if (!ok)
                     seriesname.classList.add('invalid');
