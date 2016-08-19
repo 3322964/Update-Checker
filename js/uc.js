@@ -1,4 +1,3 @@
-const chromeI18n   = chrome.i18n.getMessage;
 const dropdownNews = [
     { title: 'Chrome Web Store', link: 'https://chrome.google.com/webstore/detail/*', regexp: 'itemprop="version" content="([^"]*)' },
     { title: 'Facebook', link: 'https://www.facebook.com*', regexp: 'id="requestsCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="mercurymessagesCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="notificationsCountValue">([^<]*)</span> <i [^>]*>([^<]*)' },
@@ -58,14 +57,13 @@ function checkArrays() {
 }
 
 for (let i = 0, headers = header.children, length = headers.length; i !== length; i++) {
-    headers[i].innerHTML = chromeI18n(headers[i].id);
     headers[i].addEventListener('click', function (e) {
-        let element                                                 = e.target;
-        let activeHeader                                            = element.parentElement.getElementsByClassName('active')[0];
-        document.getElementById(activeHeader.id + 'content').hidden = true;
+        let element                                                   = e.target;
+        let activeHeader                                              = element.parentElement.getElementsByClassName('active')[0];
+        document.getElementById(activeHeader.id + 'container').hidden = true;
         activeHeader.classList.remove('active');
         element.classList.add('active');
-        document.getElementById(element.id + 'content').hidden = false;
+        document.getElementById(element.id + 'container').hidden = false;
         chrome.storage.local.set({ settings: element.id });
     }, false);
 }
@@ -80,15 +78,7 @@ function addEventsToInput(input) {
     input.addEventListener('click', removeInvalid, false);
 }
 
-function addEventsToInputsSMB(type, classType, body, viewgeneralactions, recheckall, recheckerrors, viewname, viewactions, name, results, add) {
-    viewgeneralactions.innerHTML = chromeI18n('generalactions');
-    recheckall.innerHTML         = chromeI18n('recheckall');
-    recheckerrors.innerHTML      = chromeI18n('recheckerrors');
-    viewname.innerHTML           = chromeI18n('name');
-    viewactions.innerHTML        = chromeI18n('actions');
-    name.placeholder             = chromeI18n('name');
-    add.innerHTML                = chromeI18n('add');
-
+function addEventsToInputsSMB(type, classType, body, recheckall, recheckerrors, name, results, add) {
     recheckall.addEventListener('click', function () {
         reCheckAll(body);
     }, false);
@@ -140,28 +130,9 @@ function reCheckErrors(body) {
         toReCheck[i].reCheck();
 }
 
-viewmoviescountry.innerHTML     = viewblurayscountry.innerHTML     = chromeI18n('country');
-viewmoviesreleasedate.innerHTML = viewbluraysreleasedate.innerHTML = chromeI18n('releasedate');
-viewseriesseason.innerHTML                  = chromeI18n('season');
-viewseriesepisode.innerHTML                 = chromeI18n('episode');
-viewseriesepisodename.innerHTML             = chromeI18n('episodename');
-viewseriesepisodebroadcastingdate.innerHTML = chromeI18n('episodebroadcastingdate');
-viewnewsname.innerHTML                      = chromeI18n('name');
-viewnewsresult.innerHTML                    = chromeI18n('result');
-viewnewsactions.innerHTML                   = chromeI18n('actions');
-
-addEventsToInputsSMB('series', Serie, seriesbody, viewseriesgeneralactions, seriesrecheckall, seriesrecheckerrors, viewseriesname, viewseriesactions, seriesname, seriesresults, seriesadd);
-addEventsToInputsSMB('movies', Movie, moviesbody, viewmoviesgeneralactions, moviesrecheckall, moviesrecheckerrors, viewmoviesname, viewmoviesactions, moviesname, moviesresults, moviesadd);
-addEventsToInputsSMB('blurays', Bluray, bluraysbody, viewbluraysgeneralactions, bluraysrecheckall, bluraysrecheckerrors, viewbluraysname, viewbluraysactions, bluraysname, bluraysresults, bluraysadd);
-
-viewnewsgeneralactions.innerHTML = chromeI18n('generalactions');
-newsopensavenews.innerHTML       = chromeI18n('opensavenews');
-newssavenews.innerHTML           = chromeI18n('savenews');
-newsrecheckall.innerHTML         = chromeI18n('recheckall');
-newsrecheckerrors.innerHTML      = chromeI18n('recheckerrors');
-newslink.placeholder             = chromeI18n('link');
-newsregexp.placeholder           = chromeI18n('regexp');
-newsadd.innerHTML                = chromeI18n('add');
+addEventsToInputsSMB('series', Serie, seriesbody, seriesrecheckall, seriesrecheckerrors, seriesname, seriesresults, seriesadd);
+addEventsToInputsSMB('movies', Movie, moviesbody, moviesrecheckall, moviesrecheckerrors, moviesname, moviesresults, moviesadd);
+addEventsToInputsSMB('blurays', Bluray, bluraysbody, bluraysrecheckall, bluraysrecheckerrors, bluraysname, bluraysresults, bluraysadd);
 
 function saveGreen(method) {
     let toSave = [];
@@ -205,10 +176,6 @@ for (let i = 0, length = dropdownNews.length; i !== length; i++) {
     newsregexpdropdown.appendChild(option);
 }
 
-viewdatamanagement.innerHTML = chromeI18n('datamanagement');
-importdata.innerHTML         = chromeI18n('importdata');
-exportdata.innerHTML         = chromeI18n('exportdata');
-
 importdatah.addEventListener('change', function (event) {
     let file    = new FileReader();
     file.onload = function (e) {
@@ -250,7 +217,7 @@ chrome.storage.local.get(null, function (items) {
     }
     else settings = items.settings;
     document.getElementById(settings).classList.add('active');
-    document.getElementById(settings + 'content').hidden = false;
+    document.getElementById(settings + 'container').hidden = false;
     parseArrays(items.arrays);
     checkArrays();
 });

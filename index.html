@@ -8,127 +8,127 @@
     <body>
         <header><nav><div class="header">
             <ul id="header">
-                <li id="viewseries" class="yellow"></li>
-                <li id="viewmovies" class="green"></li>
-                <li id="viewblurays" class="blue"></li>
-                <li id="viewnews" class="red"></li>
+                <li id="viewseries" class="yellow" data-i18n="series"></li>
+                <li id="viewmovies" class="green" data-i18n="movies"></li>
+                <li id="viewblurays" class="blue" data-i18n="blurays"></li>
+                <li id="viewnews" class="red" data-i18n="news"></li>
             </ul>
         </div></nav></header>
 
-        <div id="viewseriescontent" class="container" hidden>
+        <div id="viewseriescontainer" class="container" hidden>
             <div class="heading">
-                <h2 id="viewseriesgeneralactions"></h2>
+                <h2 data-i18n="generalactions"></h2>
                 <ul class="heading-links">
-                    <li><a id="seriesrecheckall"></a></li>
-                    <li><a id="seriesrecheckerrors"></a></li>
+                    <li><a id="seriesrecheckall" data-i18n="recheckall"></a></li>
+                    <li><a id="seriesrecheckerrors" data-i18n="recheckerrors"></a></li>
                 </ul>
             </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th id="viewseriesname"></th>
-                        <th id="viewseriesseason"></th>
-                        <th id="viewseriesepisode"></th>
-                        <th id="viewseriesepisodename"></th>
-                        <th id="viewseriesepisodebroadcastingdate"></th>
-                        <th id="viewseriesactions"></th>
+                        <th data-i18n="name"></th>
+                        <th data-i18n="season"></th>
+                        <th data-i18n="episode"></th>
+                        <th data-i18n="episodename"></th>
+                        <th data-i18n="episodebroadcastingdate"></th>
+                        <th data-i18n="actions"></th>
                     </tr>
                 </thead>
                 <tbody id="seriesbody" class="table-body">
                     <tr>
                         <td></td>
-                        <td colspan="4"><input id="seriesname" type="search"></td>
+                        <td colspan="4"><input id="seriesname" type="search" data-i18n="name"></td>
                         <td><select id="seriesresults" hidden></select></td>
-                        <td><a id="seriesadd"></a></td>
+                        <td><a id="seriesadd" data-i18n="add"></a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div id="viewmoviescontent" class="container" hidden>
+        <div id="viewmoviescontainer" class="container" hidden>
             <div class="heading">
-                <h2 id="viewmoviesgeneralactions"></h2>
+                <h2 data-i18n="generalactions"></h2>
                 <ul class="heading-links">
-                    <li><a id="moviesrecheckall"></a></li>
-                    <li><a id="moviesrecheckerrors"></a></li>
+                    <li><a id="moviesrecheckall" data-i18n="recheckall"></a></li>
+                    <li><a id="moviesrecheckerrors" data-i18n="recheckerrors"></a></li>
                 </ul>
             </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th id="viewmoviesname"></th>
-                        <th id="viewmoviescountry"></th>
-                        <th id="viewmoviesreleasedate"></th>
-                        <th id="viewmoviesactions"></th>
+                        <th data-i18n="name"></th>
+                        <th data-i18n="country"></th>
+                        <th data-i18n="releasedate"></th>
+                        <th data-i18n="actions"></th>
                     </tr>
                 </thead>
                 <tbody id="moviesbody" class="table-body">
                     <tr>
                         <td></td>
-                        <td colspan="2"><input id="moviesname" type="search"></td>
+                        <td colspan="2"><input id="moviesname" type="search" data-i18n="name"></td>
                         <td><select id="moviesresults" hidden></select></td>
-                        <td><a id="moviesadd"></a></td>
+                        <td><a id="moviesadd" data-i18n="add"></a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div id="viewblurayscontent" class="container" hidden>
+        <div id="viewblurayscontainer" class="container" hidden>
             <div class="heading">
-                <h2 id="viewbluraysgeneralactions"></h2>
+                <h2 data-i18n="generalactions"></h2>
                 <ul class="heading-links">
-                    <li><a id="bluraysrecheckall"></a></li>
-                    <li><a id="bluraysrecheckerrors"></a></li>
+                    <li><a id="bluraysrecheckall" data-i18n="recheckall"></a></li>
+                    <li><a id="bluraysrecheckerrors" data-i18n="recheckerrors"></a></li>
                 </ul>
             </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th id="viewbluraysname"></th>
-                        <th id="viewblurayscountry"></th>
-                        <th id="viewbluraysreleasedate"></th>
-                        <th id="viewbluraysactions"></th>
+                        <th data-i18n="name"></th>
+                        <th data-i18n="country"></th>
+                        <th data-i18n="releasedate"></th>
+                        <th data-i18n="actions"></th>
                     </tr>
                 </thead>
                 <tbody id="bluraysbody" class="table-body">
                     <tr>
                         <td></td>
-                        <td colspan="2"><input id="bluraysname" type="search"></td>
+                        <td colspan="2"><input id="bluraysname" type="search" data-i18n="name"></td>
                         <td><select id="bluraysresults" hidden></select></td>
-                        <td><a id="bluraysadd"></a></td>
+                        <td><a id="bluraysadd" data-i18n="add"></a></td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div id="viewnewscontent" class="container" hidden>
+        <div id="viewnewscontainer" class="container" hidden>
             <div class="heading">
-                <h2 id="viewnewsgeneralactions"></h2>
+                <h2 data-i18n="generalactions"></h2>
                 <ul class="heading-links">
-                    <li><a id="newsopensavenews"></a></li>
-                    <li><a id="newssavenews"></a></li>
-                    <li><a id="newsrecheckall"></a></li>
-                    <li><a id="newsrecheckerrors"></a></li>
+                    <li><a id="newsopensavenews" data-i18n="opensavenews"></a></li>
+                    <li><a id="newssavenews" data-i18n="savenews"></a></li>
+                    <li><a id="newsrecheckall" data-i18n="recheckall"></a></li>
+                    <li><a id="newsrecheckerrors" data-i18n="recheckerrors"></a></li>
                 </ul>
             </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th id="viewnewsname"></th>
-                        <th id="viewnewsresult"></th>
-                        <th id="viewnewsactions"></th>
+                        <th data-i18n="name"></th>
+                        <th data-i18n="result"></th>
+                        <th data-i18n="actions"></th>
                     </tr>
                 </thead>
                 <tbody id="newsbody" class="table-body">
                     <tr>
                         <td></td>
-                        <td><input id="newslink" type="url" required></td>
+                        <td><input id="newslink" type="url" required data-i18n="link"></td>
                         <td>
-                            <input id="newsregexp" type="text" list="newsregexpdropdown">
+                            <input id="newsregexp" type="text" list="newsregexpdropdown" data-i18n="regexp">
                             <datalist id="newsregexpdropdown"></datalist>
                         </td>
-                        <td><a id="newsadd"></a></td>
+                        <td><a id="newsadd" data-i18n="add"></a></td>
                     </tr>
                 </tbody>
             </table>
@@ -137,15 +137,16 @@
         <input id="importdatah" type="file" accept=".json" hidden>
         <div class="container">
             <div class="heading">
-                <h2 id="viewdatamanagement"></h2>
+                <h2 data-i18n="datamanagement"></h2>
                 <ul class="heading-links">
-                    <li><a id="importdata"></a></li>
-                    <li><a id="exportdata"></a></li>
+                    <li><a id="importdata" data-i18n="importdata"></a></li>
+                    <li><a id="exportdata" data-i18n="exportdata"></a></li>
                 </ul>
             </div>
         </div>
 
         <script src="/js/lib/moment-with-locales.min.js"></script>
+        <script src="/js/i18n.js"></script>
         <script src="/js/request.js"></script>
         <script src="/js/base.js"></script>
         <script src="/js/smb.js"></script>

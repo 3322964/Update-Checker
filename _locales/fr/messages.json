@@ -2,16 +2,16 @@
     "description": {
         "message": "Update Checker vérifie les dates de sortie des séries TV, films & Blu-ray, et changements dans toute page Web (RSS ou RegExp)."
     },
-    "viewseries": {
+    "series": {
         "message": "Séries TV"
     },
-    "viewmovies": {
+    "movies": {
         "message": "Films"
     },
-    "viewblurays": {
+    "blurays": {
         "message": "Blu-ray"
     },
-    "viewnews": {
+    "news": {
         "message": "Actualités"
     },
     "name": {

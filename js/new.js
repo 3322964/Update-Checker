@@ -1,17 +1,17 @@
 class New extends Base {
     constructor(value) {
-        super(newsbody, 'news', value, value.link, value.link, 2, '<a>' + chromeI18n('edit') + '</a> &middot; ');
+        super(newsbody, 'news', value, value.link, value.link, 2, '<a>' + chrome.i18n.getMessage('edit') + '</a> &middot; ');
         this.regexp  = value.regexp;
         this.current = value.current;
         this.domActions.children[1].addEventListener('click', () => {
             let td1                     = document.createElement('td');
             let td2                     = document.createElement('td');
             let td                      = document.createElement('td');
-            td1.innerHTML               = '<input type="url" placeholder="' + chromeI18n('link') + '" required>';
+            td1.innerHTML               = '<input type="url" placeholder="' + chrome.i18n.getMessage('link') + '" required>';
             td1.firstElementChild.value = this.link;
-            td2.innerHTML               = '<input type="text" placeholder="' + chromeI18n('regexp') + '" list="newsregexpdropdown">';
+            td2.innerHTML               = '<input type="text" placeholder="' + chrome.i18n.getMessage('regexp') + '" list="newsregexpdropdown">';
             td2.firstElementChild.value = this.regexp;
-            td.innerHTML                = '<a>' + chromeI18n('confirm') + '</a> &middot; <a>' + chromeI18n('cancel') + '</a>';
+            td.innerHTML                = '<a>' + chrome.i18n.getMessage('confirm') + '</a> &middot; <a>' + chrome.i18n.getMessage('cancel') + '</a>';
             addEventsToInput(td1.firstElementChild);
             td.firstElementChild.addEventListener('click', () => New.parse(td1.firstElementChild, td2.firstElementChild, this.link, this.current, () => this.delete()), false);
             td.lastElementChild.addEventListener('click', () => {
@@ -41,7 +41,7 @@ class New extends Base {
                         this.setFavicon(rssParser.link);
                     }
                     let newItemCount = rssParser.newItemCount;
-                    let result       = chromeI18n('newitems', [newItemCount]);
+                    let result       = chrome.i18n.getMessage('newitems', [newItemCount]);
                     if (newItemCount === 0)
                         this.sortNoCurrent(result);
                     else this.sortCurrent(result, rssParser.newCurrent);
@@ -67,7 +67,7 @@ class New extends Base {
         });
     }
     sortRed(string) {
-        this.setResult(chromeI18n('error', [string]));
+        this.setResult(chrome.i18n.getMessage('error', [string]));
         this.setColor('red');
         let trs = this.body.children;
         let i   = trs.length - 2;
@@ -78,7 +78,7 @@ class New extends Base {
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortOrange() {
-        this.setResult(chromeI18n('error', [chromeI18n('link')]));
+        this.setResult(chrome.i18n.getMessage('error', [chrome.i18n.getMessage('link')]));
         this.setColor('orange');
         let trs = this.body.children;
         let i   = trs.length - 2;
@@ -93,7 +93,7 @@ class New extends Base {
         this.setColor('green');
         this.domName.firstElementChild.addEventListener('click', () => this.save(), false);
         let a       = document.createElement('a');
-        a.innerHTML = chromeI18n('save');
+        a.innerHTML = chrome.i18n.getMessage('save');
         a.addEventListener('click', () => this.save(), false);
         this.domActions.insertBefore(document.createTextNode(' · '), this.domActions.firstElementChild);
         this.domActions.insertBefore(a, this.domActions.firstChild);

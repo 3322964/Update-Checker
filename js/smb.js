@@ -3,7 +3,7 @@ class SMB extends Base {
         super(body, type, value, link, favicon, resultId);
     }
     sortRed() {
-        this.setResult(chromeI18n('error', ['RegExp']));
+        this.setResult(chrome.i18n.getMessage('error', ['RegExp']));
         this.setColor('red');
         let trs = this.body.children;
         let i   = trs.length - 2;
@@ -15,7 +15,7 @@ class SMB extends Base {
         this.body.insertBefore(this.tr, trs[i + 1]);
     }
     sortOrange() {
-        this.setResult(chromeI18n('error', [chromeI18n('link')]));
+        this.setResult(chrome.i18n.getMessage('error', [chrome.i18n.getMessage('link')]));
         this.setColor('orange');
         let trs = this.body.children;
         let i   = trs.length - 2;
