@@ -97,5 +97,8 @@
     },
     "newitems": {
         "message": "New items: $1"
+    },
+    "showall": {
+        "message": "Show all"
     }
 }
