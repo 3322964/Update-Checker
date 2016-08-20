@@ -1,8 +1,6 @@
 const dropdownNews = [
     { title: 'Chrome Web Store', link: 'https://chrome.google.com/webstore/detail/*', regexp: 'itemprop="version" content="([^"]*)' },
-    { title: 'Facebook', link: 'https://www.facebook.com*', regexp: 'id="requestsCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="mercurymessagesCountValue">([^<]*)</span> <i [^>]*>([^<]*)<(/).*id="notificationsCountValue">([^<]*)</span> <i [^>]*>([^<]*)' },
     { title: 'Facebook Page', link: 'https://www.facebook.com/*', regexp: 'class="_5pcq"[^>]*><abbr title="([^"]*)' },
-    { title: 'Google Play Store Apps', link: 'https://play.google.com/store/apps/details?id=*', regexp: 'itemprop="softwareVersion"> (\\S*)' },
     { title: 'RuTracker', link: 'http://rutracker.org/forum/tracker.php?nm=*', regexp: 'data-topic_id="([^"]*)' },
     { title: 'YouTube', link: 'https://www.youtube.com/*/*/videos', regexp: 'class="yt-lockup-title "><a [^>]*>([^<]*)' }
 ];
@@ -56,18 +54,6 @@ function checkArrays() {
         toCheck[i].check();
 }
 
-for (let i = 0, headers = header.children, length = headers.length; i !== length; i++) {
-    headers[i].addEventListener('click', function (e) {
-        let element                                                   = e.target;
-        let activeHeader                                              = element.parentElement.getElementsByClassName('active')[0];
-        document.getElementById(activeHeader.id + 'container').hidden = true;
-        activeHeader.classList.remove('active');
-        element.classList.add('active');
-        document.getElementById(element.id + 'container').hidden = false;
-        chrome.storage.local.set({ settings: element.id });
-    }, false);
-}
-
 function removeInvalid(e) {
     e.target.classList.remove('invalid');
 }
@@ -78,15 +64,7 @@ function addEventsToInput(input) {
     input.addEventListener('click', removeInvalid, false);
 }
 
-function addEventsToInputsSMB(type, classType, body, recheckall, recheckerrors, name, results, add) {
-    recheckall.addEventListener('click', function () {
-        reCheckAll(body);
-    }, false);
-
-    recheckerrors.addEventListener('click', function () {
-        reCheckErrors(body);
-    }, false);
-
+function addEventsToInputsSMB(type, classType, name, results, add) {
     addEventsToInput(name);
 
     name.addEventListener('input', classType.parse, false);
@@ -108,31 +86,9 @@ function addEventsToInputsSMB(type, classType, body, recheckall, recheckerrors, 
     }, false);
 }
 
-function reCheckAll(body) {
-    let toReCheck = [];
-    let trs       = body.children;
-    let i, length;
-    for (i = 0, length = trs.length - 1; i !== length; i++)
-        toReCheck.push(trs[i].obj);
-    for (i = 0, length = toReCheck.length; i !== length; i++)
-        toReCheck[i].reCheck();
-}
-
-function reCheckErrors(body) {
-    let toReCheck = [];
-    let trs       = body.children;
-    let i, length;
-    for (i = 0, length = trs.length - 1; i !== length; i++) {
-        if (trs[i].obj.color === 'red' || trs[i].obj.color === 'orange')
-            toReCheck.push(trs[i].obj);
-    }
-    for (i = 0, length = toReCheck.length; i !== length; i++)
-        toReCheck[i].reCheck();
-}
-
-addEventsToInputsSMB('series', Serie, seriesbody, seriesrecheckall, seriesrecheckerrors, seriesname, seriesresults, seriesadd);
-addEventsToInputsSMB('movies', Movie, moviesbody, moviesrecheckall, moviesrecheckerrors, moviesname, moviesresults, moviesadd);
-addEventsToInputsSMB('blurays', Bluray, bluraysbody, bluraysrecheckall, bluraysrecheckerrors, bluraysname, bluraysresults, bluraysadd);
+addEventsToInputsSMB('series', Serie, seriesname, seriesresults, seriesadd);
+addEventsToInputsSMB('movies', Movie, moviesname, moviesresults, moviesadd);
+addEventsToInputsSMB('blurays', Bluray, bluraysname, bluraysresults, bluraysadd);
 
 function saveGreen(method) {
     let toSave = [];
@@ -146,20 +102,38 @@ function saveGreen(method) {
         toSave[i][method]();
 }
 
-newsopensavenews.addEventListener('click', function () {
+opensavenews.addEventListener('click', function () {
     saveGreen('openSave');
 }, false);
 
-newssavenews.addEventListener('click', function () {
+savenews.addEventListener('click', function () {
     saveGreen('save');
 }, false);
 
-newsrecheckall.addEventListener('click', function () {
-    reCheckAll(newsbody);
+recheckall.addEventListener('click', function () {
+    let toReCheck = [];
+    let trs, i, length;
+    for (let type in arrays) {
+        trs = document.getElementById(type + 'body').children;
+        for (i = 0, length = trs.length - 1; i !== length; i++)
+            toReCheck.push(trs[i].obj);
+    }
+    for (i = 0, length = toReCheck.length; i !== length; i++)
+        toReCheck[i].reCheck();
 }, false);
 
-newsrecheckerrors.addEventListener('click', function () {
-    reCheckErrors(newsbody);
+recheckerrors.addEventListener('click', function () {
+    let toReCheck = [];
+    let trs, i, length;
+    for (let type in arrays) {
+        trs = document.getElementById(type + 'body').children;
+        for (i = 0, length = trs.length - 1; i !== length; i++) {
+            if (trs[i].obj.color === 'red' || trs[i].obj.color === 'orange')
+                toReCheck.push(trs[i].obj);
+        }
+    }
+    for (i = 0, length = toReCheck.length; i !== length; i++)
+        toReCheck[i].reCheck();
 }, false);
 
 newsadd.addEventListener('click', function () {
@@ -210,14 +184,6 @@ exportdata.addEventListener('click', function () {
 moment.locale(window.navigator.language);
 
 chrome.storage.local.get(null, function (items) {
-    let settings;
-    if (!('settings' in items)) {
-        settings = 'viewseries';
-        chrome.storage.local.set({ settings: settings });
-    }
-    else settings = items.settings;
-    document.getElementById(settings).classList.add('active');
-    document.getElementById(settings + 'container').hidden = false;
     parseArrays(items.arrays);
     checkArrays();
 });

@@ -2,16 +2,16 @@
     "description": {
         "message": "Update Checker checks TV series, movies & Blu-ray release dates, and changes in any webpage (RSS and RegExp)."
     },
-    "series": {
+    "serie": {
         "message": "TV series"
     },
-    "movies": {
-        "message": "Movies"
+    "movie": {
+        "message": "Movie"
     },
-    "blurays": {
+    "bluray": {
         "message": "Blu-ray"
     },
-    "news": {
+    "new": {
         "message": "News"
     },
     "name": {
@@ -71,6 +71,12 @@
     "generalactions": {
         "message": "General actions"
     },
+    "importdata": {
+        "message": "Import data"
+    },
+    "exportdata": {
+        "message": "Export data"
+    },
     "opensavenews": {
         "message": "Open & save new items"
     },
@@ -91,14 +97,5 @@
     },
     "newitems": {
         "message": "New items: $1"
-    },
-    "datamanagement": {
-        "message": "Data management"
-    },
-    "importdata": {
-        "message": "Import"
-    },
-    "exportdata": {
-        "message": "Export"
     }
 }

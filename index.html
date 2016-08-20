@@ -6,28 +6,24 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
-        <header><nav><div class="header">
-            <ul id="header">
-                <li id="viewseries" class="yellow" data-i18n="series"></li>
-                <li id="viewmovies" class="green" data-i18n="movies"></li>
-                <li id="viewblurays" class="blue" data-i18n="blurays"></li>
-                <li id="viewnews" class="red" data-i18n="news"></li>
-            </ul>
-        </div></nav></header>
-
-        <div id="viewseriescontainer" class="container" hidden>
+        <input id="importdatah" type="file" accept=".json" hidden>
+        <div class="container">
             <div class="heading">
                 <h2 data-i18n="generalactions"></h2>
                 <ul class="heading-links">
-                    <li><a id="seriesrecheckall" data-i18n="recheckall"></a></li>
-                    <li><a id="seriesrecheckerrors" data-i18n="recheckerrors"></a></li>
+                    <li><a id="importdata" data-i18n="importdata"></a></li>
+                    <li><a id="exportdata" data-i18n="exportdata"></a></li>
+                    <li><a id="opensavenews" data-i18n="opensavenews"></a></li>
+                    <li><a id="savenews" data-i18n="savenews"></a></li>
+                    <li><a id="recheckall" data-i18n="recheckall"></a></li>
+                    <li><a id="recheckerrors" data-i18n="recheckerrors"></a></li>
                 </ul>
             </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th data-i18n="name"></th>
+                        <th data-i18n="serie"></th>
                         <th data-i18n="season"></th>
                         <th data-i18n="episode"></th>
                         <th data-i18n="episodename"></th>
@@ -35,6 +31,11 @@
                         <th data-i18n="actions"></th>
                     </tr>
                 </thead>
+                <tfoot class="table-foot">
+                    <tr>
+                        <td colspan="7">&#9660;</td>
+                    </tr>
+                </tfoot>
                 <tbody id="seriesbody" class="table-body">
                     <tr>
                         <td></td>
@@ -44,25 +45,21 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <div id="viewmoviescontainer" class="container" hidden>
-            <div class="heading">
-                <h2 data-i18n="generalactions"></h2>
-                <ul class="heading-links">
-                    <li><a id="moviesrecheckall" data-i18n="recheckall"></a></li>
-                    <li><a id="moviesrecheckerrors" data-i18n="recheckerrors"></a></li>
-                </ul>
-            </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th data-i18n="name"></th>
+                        <th data-i18n="movie"></th>
                         <th data-i18n="country"></th>
                         <th data-i18n="releasedate"></th>
                         <th data-i18n="actions"></th>
                     </tr>
                 </thead>
+                <tfoot class="table-foot">
+                    <tr>
+                        <td colspan="5">&#9660;</td>
+                    </tr>
+                </tfoot>
                 <tbody id="moviesbody" class="table-body">
                     <tr>
                         <td></td>
@@ -72,25 +69,21 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <div id="viewblurayscontainer" class="container" hidden>
-            <div class="heading">
-                <h2 data-i18n="generalactions"></h2>
-                <ul class="heading-links">
-                    <li><a id="bluraysrecheckall" data-i18n="recheckall"></a></li>
-                    <li><a id="bluraysrecheckerrors" data-i18n="recheckerrors"></a></li>
-                </ul>
-            </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th data-i18n="name"></th>
+                        <th data-i18n="bluray"></th>
                         <th data-i18n="country"></th>
                         <th data-i18n="releasedate"></th>
                         <th data-i18n="actions"></th>
                     </tr>
                 </thead>
+                <tfoot class="table-foot">
+                    <tr>
+                        <td colspan="5">&#9660;</td>
+                    </tr>
+                </tfoot>
                 <tbody id="bluraysbody" class="table-body">
                     <tr>
                         <td></td>
@@ -100,26 +93,20 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <div id="viewnewscontainer" class="container" hidden>
-            <div class="heading">
-                <h2 data-i18n="generalactions"></h2>
-                <ul class="heading-links">
-                    <li><a id="newsopensavenews" data-i18n="opensavenews"></a></li>
-                    <li><a id="newssavenews" data-i18n="savenews"></a></li>
-                    <li><a id="newsrecheckall" data-i18n="recheckall"></a></li>
-                    <li><a id="newsrecheckerrors" data-i18n="recheckerrors"></a></li>
-                </ul>
-            </div>
             <table class="table">
                 <thead class="table-head">
                     <tr>
                         <th></th>
-                        <th data-i18n="name"></th>
+                        <th data-i18n="new"></th>
                         <th data-i18n="result"></th>
-                        <th data-i18n="actions"></th>
+                        <th id="newsactions" data-i18n="actions"></th>
                     </tr>
                 </thead>
+                <tfoot class="table-foot">
+                    <tr>
+                        <td colspan="4">&#9660;</td>
+                    </tr>
+                </tfoot>
                 <tbody id="newsbody" class="table-body">
                     <tr>
                         <td></td>
@@ -132,17 +119,6 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-
-        <input id="importdatah" type="file" accept=".json" hidden>
-        <div class="container">
-            <div class="heading">
-                <h2 data-i18n="datamanagement"></h2>
-                <ul class="heading-links">
-                    <li><a id="importdata" data-i18n="importdata"></a></li>
-                    <li><a id="exportdata" data-i18n="exportdata"></a></li>
-                </ul>
-            </div>
         </div>
 
         <script src="/js/lib/moment-with-locales.min.js"></script>

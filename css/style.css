@@ -1,4 +1,4 @@
-html, body, a, div, h2, table, thead, tbody, tr, th, td, header, nav, ul, li, input, datalist, select {
+html, body, a, div, h2, table, thead, tfoot, tbody, tr, th, td, ul, li, input, datalist, select {
     margin: 0;
     padding: 0;
     border: 0;
@@ -21,65 +21,6 @@ a {
     a:hover {
         color: #0072ba;
         text-decoration: underline; }
-
-header {
-    padding-top: 50px;
-    background: #3d4144 url(/img/bg.png) 0 0 repeat;
-    border-bottom: 5px solid #ddd; }
-
-.header {
-    margin: 0 auto;
-    width: fit-content; }
-
-nav {
-    height: 36px;
-    background: #464b4c;
-    border-top: 1px solid #353939;
-    border-bottom: 1px solid #2e3131;
-    background-image: linear-gradient(to bottom, #464b4c, #3f4344);
-    box-shadow: inset 0 1px rgba(255, 255, 255, 0.06); }
-    nav ul {
-        float: left;
-        border-left: 1px solid #353939;
-        border-left: 1px solid rgba(0, 0, 0, 0.2);
-        border-right: 1px solid #4d5354;
-        border-right: 1px solid rgba(255, 255, 255, 0.06); }
-    nav li {
-        float: left;
-        padding: 0 20px;
-        line-height: 36px;
-        color: #ddd;
-        text-shadow: 0 -1px #2e3131;
-        border-left: 1px solid #4d5354;
-        border-left: 1px solid rgba(255, 255, 255, 0.06);
-        border-right: 1px solid #353939;
-        border-right: 1px solid rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        transition: 0.1s ease-out;
-        transition-property: background-color, line-height; }
-        nav li:hover {
-            background: #4d5354;
-            background: rgba(255, 255, 255, 0.05); }
-            nav li.active, nav li.active:hover, nav li:active {
-                padding: 0 21px;
-                line-height: 33px;
-                color: #eee;
-                background: #323637;
-                border-left: 0;
-                border-right: 0;
-                border-bottom: 3px solid;
-                background-image: linear-gradient(to bottom, #484e4f, #323637);
-                box-shadow: inset 0 -1px #151717, inset 0 -1px 8px rgba(0, 0, 0, 0.2); }
-            nav li.active.yellow, nav li.yellow:active {
-                border-bottom-color: #c0bb30; }
-            nav li.active.green, nav li.green:active {
-                border-bottom-color: #56c93d; }
-            nav li.active.blue, nav li.blue:active {
-                border-bottom-color: #48a9c0; }
-            nav li.active.red, nav li.red:active {
-                border-bottom-color: #a54e49; }
-            nav li.active.purple, nav li.purple:active {
-                border-bottom-color: #c052b9; }
 
 .container {
     position: relative;
@@ -132,60 +73,45 @@ nav {
     border-spacing: 0;
     border-radius: 3px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06); }
+    .table + .table {
+        margin-top: 5px; }
 
 .table-head > tr > th {
-    /*cursor: pointer;*/
     padding: 0 10px;
     font-weight: bold;
-    text-shadow: 0 1px rgba(255, 255, 255, 0.5);
-    background: #ecf0f0;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #c8c8c8;
-    border-right: 1px solid #ddd;
-    border-right-color: rgba(0, 0, 0, 0.12);
-    background-image: linear-gradient(to bottom, #f5fafa, #e7eaea);
-    box-shadow: inset 0 1px rgba(255, 255, 255, 0.5), 0 1px rgba(0, 0, 0, 0.04); }
+    color: white;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    background: #2c92ed;
+    border-width: 1px 1px 1px 0;
+    border-style: solid;
+    border-color: #1d87e2 #187ed9 #1670c1;
+    background-image: linear-gradient(to bottom, #49a4fc, #208be7);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 1px rgba(0, 0, 0, 0.04); }
     .table-head > tr > th:first-child {
-        border-left: 1px solid #ccc;
+        border-left-width: 1px;
         border-top-left-radius: 3px; }
     .table-head > tr > th:last-child {
-        border-right-color: #ccc;
         border-top-right-radius: 3px; }
-    /*.table-head > tr > th:hover {
-        text-decoration: underline; }
-    .table-head > tr > th:after {
-        float: right; }
-    .table-head > tr > th.asc:after {
-        content: '\25B2'; }
-    .table-head > tr > th.desc:after {
-        content: '\25BC'; }*/
-
     .table-head > tr > th:first-child {
         width: 16px; }
     .table-head > tr > th:last-child {
         width: 200px; }
-    #viewnewsactions {
+    #newsactions {
         width: 300px; }
 
 .table-body > tr:nth-child(2n) {
-    background: #f8f8f8; }
+    background: #f9f9f9; }
 .table-body > tr:hover {
-    background: #f3f3f3; }
-.table-body > tr:last-child > td {
-    border-bottom: 1px solid #ccc; }
-.table-body > tr:last-child > td:first-child {
-    border-bottom-left-radius: 3px; }
-.table-body > tr:last-child > td:last-child {
-    border-bottom-right-radius: 3px; }
+    background: #f4f4f4; }
 .table-body > tr > td {
     padding: 0 10px;
     text-shadow: 0 1px white;
     border-right: 1px solid #eee;
-    border-right-color: rgba(0, 0, 0, 0.08); }
+    border-right-color: rgba(0, 0, 0, 0.07); }
     .table-body > tr > td:first-child {
-        border-left: 1px solid #ccc; }
+        border-left: 1px solid #d2d2d2; }
     .table-body > tr > td:last-child {
-        border-right-color: #ccc; }
+        border-right-color: #d2d2d2; }
     .table-body > tr > td.red {
         color: #9c0006;
         background: #ffc7ce; }
@@ -200,6 +126,32 @@ nav {
         background-position: 10px center; }
     .table-body > tr > td > a {
         cursor: pointer; }
+
+.table-foot > tr > td {
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+    line-height: 26px;
+    padding-left: 9px;
+    font-size: 11px;
+    color: #777;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+    background: #f4f4f4;
+    border-width: 1px 1px 1px 0;
+    border-style: solid;
+    border-color: #dbdbdb #d2d2d2 #ccc;
+    background-image: linear-gradient(to bottom, #fbfbfb, #ededed);
+    box-shadow: inset 0 1px white, inset 0 0 0 1px rgba(255, 255, 255, 0.2); }
+    .table-foot > tr > td:first-child {
+        border-left-width: 1px;
+        border-bottom-left-radius: 3px; }
+    .table-foot > tr > td:last-child {
+        border-bottom-right-radius: 3px; }
+    .table-foot > tr > td:hover {
+        background: #f2f2f2; }
+    .table-foot > tr > td:active {
+        background: #eee;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.03), 0 -1px rgba(0, 0, 0, 0.02), -1px 0 rgba(255, 255, 255, 0.2); }
 
 input, select {
     height: calc(100% - 4px);
