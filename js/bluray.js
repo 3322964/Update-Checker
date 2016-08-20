@@ -50,8 +50,8 @@ class Bluray extends SMB {
                         if (output === '')
                             bluraysname.classList.add('invalid');
                         else {
-                            bluraysresults.innerHTML = output;
-                            bluraysresults.hidden    = false;
+                            bluraysresults.firstElementChild.innerHTML = output;
+                            bluraysresults.hidden                       = false;
                         }
                     }
                 }

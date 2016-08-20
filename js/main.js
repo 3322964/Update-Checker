@@ -78,7 +78,7 @@ function addEventsToInputsSMB(type, classType, name, results, add) {
         else {
             name.value     = '';
             results.hidden = true;
-            let object     = results.value;
+            let object     = results.firstElementChild.value;
             arrays[type].push(object);
             writeArrays();
             (new classType(object)).check();

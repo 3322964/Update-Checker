@@ -48,8 +48,8 @@ class Movie extends SMB {
                     if (output === '')
                         moviesname.classList.add('invalid');
                     else {
-                        moviesresults.innerHTML = output;
-                        moviesresults.hidden    = false;
+                        moviesresults.firstElementChild.innerHTML = output;
+                        moviesresults.hidden                      = false;
                     }
                 }
             });

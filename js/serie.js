@@ -54,8 +54,8 @@ class Serie extends SMB {
                     if (output === '')
                         seriesname.classList.add('invalid');
                     else {
-                        seriesresults.innerHTML = output;
-                        seriesresults.hidden    = false;
+                        seriesresults.firstElementChild.innerHTML = output;
+                        seriesresults.hidden                      = false;
                     }
                 }
             });
