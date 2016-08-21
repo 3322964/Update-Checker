@@ -203,3 +203,6 @@ chrome.storage.local.get(null, function (items) {
     parseArrays(items.arrays);
     checkArrays();
 });
+
+// A SUPPRIMER DANS LONGTEMPS
+chrome.storage.local.remove(['notifications', 'settings']);
