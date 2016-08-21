@@ -1,8 +1,8 @@
 const dropdownNews = [
-    { title: 'Chrome Web Store', link: 'https://chrome.google.com/webstore/detail/*', regexp: 'itemprop="version" content="([^"]*)' },
+    { title: 'Chrome Web Store App', link: 'https://chrome.google.com/webstore/detail/*', regexp: 'itemprop="version" content="([^"]*)' },
     { title: 'Facebook Page', link: 'https://www.facebook.com/*', regexp: 'class="_5pcq"[^>]*><abbr title="([^"]*)' },
-    { title: 'RuTracker', link: 'http://rutracker.org/forum/tracker.php?nm=*', regexp: 'data-topic_id="([^"]*)' },
-    { title: 'YouTube', link: 'https://www.youtube.com/*/*/videos', regexp: 'class="yt-lockup-title "><a [^>]*>([^<]*)' }
+    { title: 'RuTracker Search', link: 'http://rutracker.org/forum/tracker.php?nm=*', regexp: 'data-topic_id="([^"]*)' },
+    { title: 'YouTube Channel', link: 'https://www.youtube.com/*/*/videos', regexp: 'class="yt-lockup-title "><a [^>]*>([^<]*)' }
 ];
 let arrays;
 
@@ -88,7 +88,8 @@ function addEventsToInputsSMB(type, classType, name, results, add, body, expand)
     expand.addEventListener('click', function () {
         let hide = expand.innerHTML !== chrome.i18n.getMessage('expand');
         let trs  = body.children;
-        for (let i = 3, length = trs.length; i < length; i++)
+        let i    = trs.length - 2;
+        for ( ; i !== -1 && (trs[i].obj.color === 'empty' || trs[i].obj.color === 'black'); i--)
             trs[i].hidden = hide;
         expand.innerHTML = chrome.i18n.getMessage(hide ? 'expand' : 'reduce');
     }, false);
@@ -149,6 +150,15 @@ newsadd.addEventListener('click', function () {
 }, false);
 
 addEventsToInput(newslink);
+
+newsexpand.addEventListener('click', function () {
+    let hide = newsexpand.innerHTML !== chrome.i18n.getMessage('expand');
+    let trs  = newsbody.children;
+    let i    = trs.length - 2;
+    for ( ; i !== -1 && trs[i].obj.color === 'black'; i--)
+        trs[i].hidden = hide;
+    newsexpand.innerHTML = chrome.i18n.getMessage(hide ? 'expand' : 'reduce');
+}, false);
 
 let option;
 for (let i = 0, length = dropdownNews.length; i !== length; i++) {

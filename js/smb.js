@@ -36,7 +36,8 @@ class SMB extends Base {
         for ( ; i !== -1 && (trs[i].obj.color === 'black' || trs[i].obj.color === 'green') && this._date.isBefore(trs[i].obj.date); i--) ;
         for ( ; i !== -1 && (trs[i].obj.color === 'black' || trs[i].obj.color === 'green') && this._date.isSame(trs[i].obj.date) && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
-        this.setHideProperty(i);
+        if (this._color === 'black')
+            this.hideIfReduced();
     }
     sortNoDate(name) {
         this.setName(name);
@@ -45,7 +46,7 @@ class SMB extends Base {
         let i   = trs.length - 2;
         for ( ; i !== -1 && trs[i].obj.color === 'empty' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
-        this.setHideProperty(i);
+        this.hideIfReduced();
     }
     delete() {
         super.delete(objectInArray(this.value, arrays[this.type]));

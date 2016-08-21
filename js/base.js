@@ -45,11 +45,6 @@ class Base {
         this._color              = color;
         this.domResult.className = color;
     }
-    setHideProperty(i) {
-        if (this.expand.innerHTML === chrome.i18n.getMessage('expand')) {
-
-        }
-    }
     reCheck() {
         this.request.abort();
         this.body.removeChild(this.tr);
@@ -62,6 +57,10 @@ class Base {
             arrays[this.type].splice(i, 1);
             writeArrays();
         }
+    }
+    hideIfReduced() {
+        if (this.expand.innerHTML === chrome.i18n.getMessage('expand'))
+            this.tr.hidden = true;
     }
     get name()  { return this._name;  }
     get color() { return this._color; }

@@ -102,7 +102,6 @@ class New extends Base {
         for ( ; i !== -1 && trs[i].obj.color === 'black'; i--) ;
         for ( ; i !== -1 && trs[i].obj.color === 'green' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
-        this.setHideProperty(i);
     }
     sortNoCurrent(result) {
         this.setResult(result);
@@ -111,7 +110,7 @@ class New extends Base {
         let i   = trs.length - 2;
         for ( ; i !== -1 && trs[i].obj.color === 'black' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
-        this.setHideProperty(i);
+        this.hideIfReduced();
     }
     save() {
         this.value.current = this.newCurrent;
