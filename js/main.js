@@ -88,8 +88,7 @@ function addEventsToInputsSMB(type, classType, name, results, add, body, expand)
     expand.addEventListener('click', function () {
         let hide = expand.innerHTML !== chrome.i18n.getMessage('expand');
         let trs  = body.children;
-        let i    = trs.length - 2;
-        for ( ; i !== -1 && (trs[i].obj.color === 'empty' || trs[i].obj.color === 'black'); i--)
+        for (let i = trs.length - 2; i !== -1 && (trs[i].obj.color === 'empty' || trs[i].obj.color === 'black'); i--)
             trs[i].hidden = hide;
         expand.innerHTML = chrome.i18n.getMessage(hide ? 'expand' : 'reduce');
     }, false);
@@ -154,8 +153,7 @@ addEventsToInput(newslink);
 newsexpand.addEventListener('click', function () {
     let hide = newsexpand.innerHTML !== chrome.i18n.getMessage('expand');
     let trs  = newsbody.children;
-    let i    = trs.length - 2;
-    for ( ; i !== -1 && trs[i].obj.color === 'black'; i--)
+    for (let i = trs.length - 2; i !== -1 && trs[i].obj.color === 'black'; i--)
         trs[i].hidden = hide;
     newsexpand.innerHTML = chrome.i18n.getMessage(hide ? 'expand' : 'reduce');
 }, false);
