@@ -1,6 +1,6 @@
 class New extends Base {
     constructor(value) {
-        super(newsbody, 'news', value, value.link, value.link, 2, '<a>' + chrome.i18n.getMessage('edit') + '</a> &middot; ');
+        super(newsbody, newsexpand, 'news', value, value.link, value.link, 2, '<a>' + chrome.i18n.getMessage('edit') + '</a> &middot; ');
         this.regexp  = value.regexp;
         this.current = value.current;
         this.domActions.children[1].addEventListener('click', () => {
@@ -102,6 +102,7 @@ class New extends Base {
         for ( ; i !== -1 && trs[i].obj.color === 'black'; i--) ;
         for ( ; i !== -1 && trs[i].obj.color === 'green' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
+        this.setHideProperty(i);
     }
     sortNoCurrent(result) {
         this.setResult(result);
@@ -110,6 +111,7 @@ class New extends Base {
         let i   = trs.length - 2;
         for ( ; i !== -1 && trs[i].obj.color === 'black' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
+        this.setHideProperty(i);
     }
     save() {
         this.value.current = this.newCurrent;

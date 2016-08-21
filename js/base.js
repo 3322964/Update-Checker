@@ -1,10 +1,11 @@
 class Base {
-    constructor(body, type, value, link, favicon, resultId, editString = '') {
-        this.body  = body;
-        this.type  = type;
-        this.value = value;
-        this.link  = link;
-        this.tr    = document.createElement('tr');
+    constructor(body, expand, type, value, link, favicon, resultId, editString = '') {
+        this.body   = body;
+        this.expand = expand;
+        this.type   = type;
+        this.value  = value;
+        this.link   = link;
+        this.tr     = document.createElement('tr');
         let string = '<td><img></td><td><a target="_blank"></a></td>';
         for (let i = 1; i !== resultId; i++)
             string += '<td></td>';
@@ -43,6 +44,11 @@ class Base {
     setColor(color) {
         this._color              = color;
         this.domResult.className = color;
+    }
+    setHideProperty(i) {
+        if (this.expand.innerHTML === chrome.i18n.getMessage('expand')) {
+
+        }
     }
     reCheck() {
         this.request.abort();

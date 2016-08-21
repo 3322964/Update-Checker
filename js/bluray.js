@@ -1,6 +1,6 @@
 class Bluray extends SMB {
     constructor(value) {
-        super(bluraysbody, 'blurays', value, 'http://www.blu-ray.com/movies/' + value, 'http://www.blu-ray.com/', 3);
+        super(bluraysbody, bluraysexpand, 'blurays', value, 'http://www.blu-ray.com/movies/' + value, 'http://www.blu-ray.com/', 3);
     }
     check() {
         this.request = new GetRequest(this.domResult, this.link);

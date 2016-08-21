@@ -1,6 +1,6 @@
 class Serie extends SMB {
     constructor(value) {
-        super(seriesbody, 'series', value, 'http://www.imdb.com/title/' + value + '/', 'http://www.imdb.com/', 5);
+        super(seriesbody, seriesexpand, 'series', value, 'http://www.imdb.com/title/' + value + '/', 'http://www.imdb.com/', 5);
     }
     check() {
         this.request = new GetRequest(this.domResult, this.link + 'epcast');

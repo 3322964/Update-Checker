@@ -98,7 +98,10 @@
     "newitems": {
         "message": "Nouveautés : $1"
     },
-    "showall": {
-        "message": "Tout montrer"
+    "expand": {
+        "message": "Développer"
+    },
+    "reduce": {
+        "message": "Réduire"
     }
 }

@@ -1,6 +1,6 @@
 class SMB extends Base {
-    constructor(body, type, value, link, favicon, resultId) {
-        super(body, type, value, link, favicon, resultId);
+    constructor(body, expand, type, value, link, favicon, resultId) {
+        super(body, expand, type, value, link, favicon, resultId);
     }
     sortRed() {
         this.setResult(chrome.i18n.getMessage('error', ['RegExp']));
@@ -36,6 +36,7 @@ class SMB extends Base {
         for ( ; i !== -1 && (trs[i].obj.color === 'black' || trs[i].obj.color === 'green') && this._date.isBefore(trs[i].obj.date); i--) ;
         for ( ; i !== -1 && (trs[i].obj.color === 'black' || trs[i].obj.color === 'green') && this._date.isSame(trs[i].obj.date) && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
+        this.setHideProperty(i);
     }
     sortNoDate(name) {
         this.setName(name);
@@ -44,6 +45,7 @@ class SMB extends Base {
         let i   = trs.length - 2;
         for ( ; i !== -1 && trs[i].obj.color === 'empty' && trs[i].obj.name.localeCompare(this._name) > 0; i--) ;
         this.body.insertBefore(this.tr, trs[i + 1]);
+        this.setHideProperty(i);
     }
     delete() {
         super.delete(objectInArray(this.value, arrays[this.type]));

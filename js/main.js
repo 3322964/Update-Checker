@@ -64,7 +64,7 @@ function addEventsToInput(input) {
     input.addEventListener('click', removeInvalid, false);
 }
 
-function addEventsToInputsSMB(type, classType, name, results, add) {
+function addEventsToInputsSMB(type, classType, name, results, add, body, expand) {
     addEventsToInput(name);
 
     name.addEventListener('input', classType.parse, false);
@@ -84,11 +84,19 @@ function addEventsToInputsSMB(type, classType, name, results, add) {
             (new classType(object)).check();
         }
     }, false);
+
+    expand.addEventListener('click', function () {
+        let hide = expand.innerHTML !== chrome.i18n.getMessage('expand');
+        let trs  = body.children;
+        for (let i = 3, length = trs.length; i < length; i++)
+            trs[i].hidden = hide;
+        expand.innerHTML = chrome.i18n.getMessage(hide ? 'expand' : 'reduce');
+    }, false);
 }
 
-addEventsToInputsSMB('series', Serie, seriesname, seriesresults, seriesadd);
-addEventsToInputsSMB('movies', Movie, moviesname, moviesresults, moviesadd);
-addEventsToInputsSMB('blurays', Bluray, bluraysname, bluraysresults, bluraysadd);
+addEventsToInputsSMB('series', Serie, seriesname, seriesresults, seriesadd, seriesbody, seriesexpand);
+addEventsToInputsSMB('movies', Movie, moviesname, moviesresults, moviesadd, moviesbody, moviesexpand);
+addEventsToInputsSMB('blurays', Bluray, bluraysname, bluraysresults, bluraysadd, bluraysbody, bluraysexpand);
 
 function saveGreen(method) {
     let toSave = [];

@@ -1,4 +1,4 @@
-html, body, a, div, h2, table, thead, tfoot, tbody, tr, th, td, ul, li, input, datalist, select {
+html, body, a, div, h2, table, thead, tfoot, tbody, tr, th, td, ul, li {
     margin: 0;
     padding: 0;
     border: 0;
@@ -23,8 +23,10 @@ a {
         text-decoration: underline; }
 
 input, select {
+    margin: 0;
     line-height: normal;
     font-family: inherit;
+    font-size: 100%;
     box-sizing: border-box; }
 
 .container {
@@ -160,7 +162,7 @@ input, select {
 input[type=text], input[type=url], input[type=search] {
     width: 100%;
     padding: 0 7px;
-    height: 29px;
+    height: 27px;
     color: #666666;
     background: white;
     border: 1px solid #c6c6c6;
